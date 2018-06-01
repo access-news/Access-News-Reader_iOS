@@ -11,6 +11,7 @@ import Firebase
 
 class LoginViewController: UIViewController {
 
+    @IBOutlet weak var signInError: UILabel!
     @IBOutlet weak var username: UITextField!
     @IBOutlet weak var password: UITextField!
     
@@ -23,14 +24,28 @@ class LoginViewController: UIViewController {
         } else if (self.password.text == "") {
             self.password.placeholder = "Password missing"
             self.password.becomeFirstResponder()
-        }
-        
-        Auth.auth().signIn(withEmail: username.text!, password: password.text!) {
-            (user, error) in
-            if error != nil {
-                
-            } else {
-                print(error?.localizedDescription)
+        } else {
+            Auth.auth().signIn(withEmail: username.text!, password: password.text!) {
+                (user, error) in
+                if error != nil {
+                    let errorCode = AuthErrorCode(rawValue: (error! as NSError).code)!
+
+                    // https://stackoverflow.com/questions/37449919/reading-firebase-auth-error-thrown-firebase-3-x-and-swift
+                    switch errorCode {
+                        case .invalidEmail:
+                            self.signInError.text = "Incorrect email or password."
+                        case .wrongPassword:
+                            self.signInError.text = "Incorrect email or password."
+                        case .userDisabled:
+                            self.signInError.text = error?.localizedDescription
+                        default:
+                            break
+                    }
+                } else {
+                    let storyboard = UIStoryboard(name: "Main", bundle: .main)
+                    let nvc = storyboard.instantiateViewController(withIdentifier: "NVC")
+                    self.present(nvc, animated: true, completion: nil)
+                }
             }
         }
     }
@@ -38,15 +53,18 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.username.delegate = self
         self.password.delegate = self
-        
-        self.username.clearButtonMode = .always
         self.password.clearButtonMode = .always
+        self.password.isSecureTextEntry = true
+        
+        self.username.delegate = self
+        self.username.clearButtonMode = .always
+        self.username.keyboardType = .emailAddress
         
         self.username.becomeFirstResponder()
         
-        self.username.keyboardType = .emailAddress
+        self.signInError.textColor = .red
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -70,12 +88,12 @@ extension LoginViewController: UITextFieldDelegate {
            but this works.
         */
         switch textField {
-        case self.username:
-            password.becomeFirstResponder()
-        case self.password:
-            self.tapSignInButton(self)
-        default:
-            break
+            case self.username:
+                password.becomeFirstResponder()
+            case self.password:
+                self.tapSignInButton(self)
+            default:
+                break
         }
     }
 }

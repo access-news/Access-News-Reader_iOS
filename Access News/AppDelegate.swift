@@ -19,15 +19,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         FirebaseApp.configure()
-        Auth.auth().addStateDidChangeListener { (auth, user) in
-            if user == nil {
-                let storyboard = UIStoryboard(name: "Main", bundle: .main)
-                let loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController")
-                self.window?.rootViewController = loginViewController
-                self.window?.makeKeyAndVisible()
-            } else {
-                
-            }
+        
+        if Auth.auth().currentUser != nil {
+            let storyboard = UIStoryboard(name: "Main", bundle: .main)
+            let nvc = storyboard.instantiateViewController(withIdentifier: "NVC")
+            self.window?.rootViewController = nvc
+            self.window?.makeKeyAndVisible()
         }
         
         return true
