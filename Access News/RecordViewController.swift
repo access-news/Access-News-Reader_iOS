@@ -13,25 +13,33 @@ class RecordViewController: UIViewController {
 
     var recordingSession: AVAudioSession!
 
+    @IBOutlet weak var recordButton: UIButton!
+    @IBOutlet weak var stopButton: UIButton!
+    @IBOutlet weak var playButton: UIButton!
+    @IBOutlet weak var disabledNotice: UITextView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        self.disabledNotice.isHidden = true
+        
         /* https://www.hackingwithswift.com/example-code/media/how-to-record-audio-using-avaudiorecorder
         */
         self.recordingSession = AVAudioSession.sharedInstance()
         do {
+            
             try self.recordingSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
             try self.recordingSession.setActive(true)
+            
             self.recordingSession.requestRecordPermission() { [unowned self] allowed in
                 DispatchQueue.main.async {
 
-                    if allowed == true {
-
-                    } else {
-
+                    if allowed != true {
+                        self.disabledNotice.isHidden = false
+                        self.recordButton.isHidden = true
+                        self.stopButton.isHidden   = true
+                        self.playButton.isHidden   = true
                     }
-
                 }
             }
         } catch {
