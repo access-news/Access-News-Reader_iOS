@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Access News/LoginViewController.swift"
-            timestampString = "549839685.4888541"
+            timestampString = "550095668.260906"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "33"
-            endingLineNumber = "33"
+            startingLineNumber = "39"
+            endingLineNumber = "39"
             landmarkName = "tapSignInButton(_:)"
             landmarkType = "7">
          </BreakpointContent>
