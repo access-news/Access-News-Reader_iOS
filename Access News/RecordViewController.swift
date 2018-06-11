@@ -16,7 +16,12 @@ class RecordViewController: UIViewController {
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var stopButton: UIButton!
     @IBOutlet weak var playButton: UIButton!
+    @IBOutlet weak var submitButton: UIButton!
+    
     @IBOutlet weak var disabledNotice: UITextView!
+    
+    @IBOutlet weak var playbackSlider: UISlider!
+    @IBOutlet weak var recordCounter: UILabel!
     
     let disabledGrey = UIColor(red: 0.910, green: 0.910, blue: 0.910, alpha: 1.0)
     
@@ -34,6 +39,11 @@ class RecordViewController: UIViewController {
         
         self.stopButton.isEnabled = false
         self.stopButton.backgroundColor = self.disabledGrey
+        
+        self.playbackSlider.isHidden = true	
+        self.recordCounter.textColor = self.disabledGrey
+        
+        self.submitButton.isHidden = true
         /* --- */
         
         /* Set up audio session for recording and ask permission
@@ -50,9 +60,7 @@ class RecordViewController: UIViewController {
 
                     if allowed != true {
                         self.disabledNotice.isHidden = false
-                        self.recordButton.isHidden = true
-                        self.stopButton.isHidden   = true
-                        self.playButton.isHidden   = true
+                        self.recordButton.superview?.isHidden = true
                     }
                 }
             }
