@@ -18,13 +18,27 @@ class RecordViewController: UIViewController {
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var disabledNotice: UITextView!
     
+    let disabledGrey = UIColor(red: 0.910, green: 0.910, blue: 0.910, alpha: 1.0)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        /* Set default UI properties, assuming that permission to record is given. */
+        
         self.disabledNotice.isHidden = true
         
-        /* https://www.hackingwithswift.com/example-code/media/how-to-record-audio-using-avaudiorecorder
-        */
+        // recordButton is enabled by default
+        
+        self.playButton.isEnabled = false
+        self.playButton.backgroundColor = self.disabledGrey
+        
+        self.stopButton.isEnabled = false
+        self.stopButton.backgroundColor = self.disabledGrey
+        /* --- */
+        
+        /* Set up audio session for recording and ask permission
+           https://www.hackingwithswift.com/example-code/media/how-to-record-audio-using-avaudiorecorder
+         */
         self.recordingSession = AVAudioSession.sharedInstance()
         do {
             
