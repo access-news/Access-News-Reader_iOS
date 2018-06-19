@@ -22,9 +22,10 @@ class RecordViewController: UIViewController {
     @IBOutlet weak var playbackSlider: UISlider!
     @IBOutlet weak var recordCounter: UILabel!
 
-    let disabledGrey = UIColor(red: 0.910, green: 0.910, blue: 0.910, alpha: 1.0)
-    let playGreen    = UIColor(red: 0.238, green: 0.753, blue: 0.323, alpha: 1.0)
-    let recordRed    = UIColor(red: 1.0,   green: 0.2,   blue: 0.169, alpha: 1.0)
+    let disabledGrey    = UIColor(red: 0.910, green: 0.910, blue: 0.910, alpha: 1.0)
+    let playGreen       = UIColor(red: 0.238, green: 0.753, blue: 0.323, alpha: 1.0)
+    let recordRed       = UIColor(red: 1.0,   green: 0.2,   blue: 0.169, alpha: 1.0)
+    let startoverPurple = UIColor(red: 0.633, green: 0.276, blue: 0.425, alpha: 1.0)
 
     var documentDir: URL {
         get {
@@ -43,19 +44,7 @@ class RecordViewController: UIViewController {
 
         self.disabledNotice.isHidden = true
 
-        // recordButton is enabled by default
-
-        self.playButton.isEnabled = false
-        self.playButton.backgroundColor = self.disabledGrey
-
-        self.stopButton.isEnabled = false
-        self.stopButton.backgroundColor = self.disabledGrey
-
-        self.submitButton.isHidden = true
-
-        self.playbackSlider.isHidden = true
-        self.recordCounter.textColor = self.disabledGrey
-        /* --- */
+        self.startUIState()
 
         /* Set up audio session for recording and ask permission
            https://www.hackingwithswift.com/example-code/media/how-to-record-audio-using-avaudiorecorder
@@ -91,23 +80,7 @@ class RecordViewController: UIViewController {
 
         self.startRecorder()
 
-        /* UI state */
-        self.recordButton.isEnabled = false
-        self.recordButton.backgroundColor = self.disabledGrey
-        self.recordButton.setTitle("Continue", for: .normal)
-
-        self.stopButton.isHidden = false
-        self.stopButton.isEnabled = true
-        self.stopButton.backgroundColor = .black
-
-        self.submitButton.isHidden = true
-
-        self.playButton.isEnabled = false
-        self.playButton.backgroundColor = self.disabledGrey
-
-        self.recordCounter.textColor = .black
-
-        self.playbackSlider.isHidden = true
+        self.recordUIState()
     }
 
     @IBOutlet weak var stopButton: UIButton!
@@ -123,21 +96,7 @@ class RecordViewController: UIViewController {
             self.stopPlayer()
         }
 
-        /* UI state */
-        self.recordButton.isEnabled = true
-        self.recordButton.backgroundColor = self.recordRed
-        self.recordButton.setTitle("Continue", for: .normal)
-        
-        self.stopButton.isHidden = true
-        
-        self.submitButton.isHidden = false
-        
-        self.playButton.isEnabled = true
-        self.playButton.backgroundColor = self.playGreen
-        
-        self.recordCounter.textColor = self.disabledGrey
-        
-        self.playbackSlider.isHidden = true
+        self.stoppedUIState()
     }
 
     @IBOutlet weak var playButton: UIButton!
@@ -145,23 +104,7 @@ class RecordViewController: UIViewController {
 
         self.startPlayer()
 
-        /* UI state */
-        self.recordButton.isEnabled = false
-        self.recordButton.backgroundColor = self.disabledGrey
-        self.recordButton.setTitle("Continue", for: .normal)
-
-        self.stopButton.isHidden = false
-        self.stopButton.isEnabled = true
-        self.stopButton.backgroundColor = .black
-
-        self.submitButton.isHidden = true
-
-        self.playButton.isEnabled = false
-        self.playButton.backgroundColor = self.disabledGrey
-
-        self.recordCounter.textColor = .black
-
-        self.playbackSlider.isHidden = false
+        self.playUIState()
     }
 
     @IBOutlet weak var submitButton: UIButton!
@@ -169,25 +112,19 @@ class RecordViewController: UIViewController {
 
         // TODO: Insert SubmitViewController
 
-        /* UI state */
-        self.recordButton.isEnabled = true
-        self.recordButton.backgroundColor = self.recordRed
-        self.recordButton.setTitle("Record", for: .normal)
-
-        self.stopButton.isHidden = false
-        self.stopButton.isEnabled = false
-        self.stopButton.backgroundColor = self.disabledGrey
-
-        self.submitButton.isHidden = true
-
-        self.playButton.isEnabled = false
-        self.playButton.backgroundColor = self.disabledGrey
-
-        self.recordCounter.textColor = self.disabledGrey
-
-        self.playbackSlider.isHidden = true
+        self.startUIState()
     }
 
+    @IBOutlet weak var startoverButton: UIButton!
+    @IBAction func startoverTapped(_ sender: Any) {
+
+        /* Zeroing out whatever has been recorded up to
+           this point.
+        */
+        self.articleChunks = [AVURLAsset]()
+
+        self.startUIState()
+    }
     // MARK: - Audio commands
 
     func startRecorder() {
@@ -399,6 +336,84 @@ class RecordViewController: UIViewController {
             case .none: break
             }
         }
+    }
+
+    // MARK: - UI states
+
+    func startUIState() {
+        self.recordButton.isEnabled = true
+        self.recordButton.backgroundColor = self.recordRed
+        self.recordButton.setTitle("Record", for: .normal)
+
+        self.stopButton.isHidden = false
+        self.stopButton.isEnabled = false
+        self.stopButton.backgroundColor = self.disabledGrey
+
+        self.submitButton.isHidden = true
+
+        self.playButton.isEnabled = false
+        self.playButton.backgroundColor = self.disabledGrey
+
+        self.recordCounter.isHidden   = true
+        self.playbackSlider.isHidden  = true
+        self.startoverButton.isHidden = true
+    }
+
+    func recordUIState() {
+        self.recordButton.isEnabled = false
+        self.recordButton.backgroundColor = self.disabledGrey
+        self.recordButton.setTitle("Continue", for: .normal)
+
+        self.stopButton.isHidden = false
+        self.stopButton.isEnabled = true
+        self.stopButton.backgroundColor = .black
+
+        self.submitButton.isHidden = true
+
+        self.playButton.isEnabled = false
+        self.playButton.backgroundColor = self.disabledGrey
+
+        self.recordCounter.isHidden   = false
+        self.playbackSlider.isHidden  = true
+        self.startoverButton.isHidden = true
+    }
+
+    func stoppedUIState() {
+        self.recordButton.isEnabled = true
+        self.recordButton.backgroundColor = self.recordRed
+        self.recordButton.setTitle("Continue", for: .normal)
+
+        self.stopButton.isHidden = true
+
+        self.submitButton.isHidden = false
+
+        self.playButton.isEnabled = true
+        self.playButton.backgroundColor = self.playGreen
+
+        // TODO: timer should stop and should show the time elapsed
+        self.recordCounter.isHidden   = false
+
+        self.playbackSlider.isHidden  = true
+        self.startoverButton.isHidden = false
+    }
+
+    func playUIState() {
+        self.recordButton.isEnabled = false
+        self.recordButton.backgroundColor = self.disabledGrey
+        self.recordButton.setTitle("Continue", for: .normal)
+
+        self.stopButton.isHidden = false
+        self.stopButton.isEnabled = true
+        self.stopButton.backgroundColor = .black
+
+        self.submitButton.isHidden = true
+
+        self.playButton.isEnabled = false
+        self.playButton.backgroundColor = self.disabledGrey
+
+        self.recordCounter.isHidden   = false
+        self.playbackSlider.isHidden  = false
+        self.startoverButton.isHidden = true
     }
 
     /*
