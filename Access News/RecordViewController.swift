@@ -79,6 +79,7 @@ class RecordViewController: UIViewController {
     @IBAction func recordTapped(_ sender: Any) {
 
         self.startRecorder()
+        self.startTimer()
 
         self.recordUIState()
     }
@@ -146,7 +147,6 @@ class RecordViewController: UIViewController {
 
             // TODO: add audio recorder delegate? Interruptions (e.g., calls)
             //       are handled elsewhere anyway
-            self.startRecTimer()
 
         } catch {
             NSLog("Unable to init audio recorder.")
@@ -210,42 +210,40 @@ class RecordViewController: UIViewController {
         return self.documentDir.appendingPathComponent(fileURL)
     }
 
-    func startRecTimer() {
-        Timer.scheduledTimer(timeInterval: 0.01  , target: self, selector: #selector(self.updateRecTimerLabel), userInfo: nil, repeats: true)
+    func startTimer() {
+        Timer.scheduledTimer(timeInterval: 0.01  , target: self, selector: #selector(updateCounter), userInfo: nil, repeats: true)
     }
 
     // Currently in centiseconds (10^-2)
     var timerFraction : Double = 0.0
 
-    @objc func updateRecTimerLabel(_ t: Timer) {
-
-        func addOneSecToPart(_ s: Substring) -> String {
+    @objc func updateCounter() {
+        func addOneToPart(_ s: Substring) -> String {
             self.timerFraction = 0.0
             return String(format: "%02u", Int(String(s))!+1)
         }
 
-        func tick(_ label: String) -> String {
-            let parts = label.split(separator: ":")
+        let parts = self.recordCounter.text!.split(separator: ":")
+        let frac  = String(self.timerFraction).prefix(4)
 
-            switch (parts[0], parts[1], parts[2], self.timerFraction) {
+        switch (parts[0], parts[1], parts[2], frac) {
 
-            case (let p, "59", "59", 0.99):
-                return [addOneSecToPart(p), "00", "00"].joined(separator: ":")
+        case (let p, "59", "59", "0.99"):
+            self.recordCounter.text =
+                [addOneToPart(p), "00", "00"].joined(separator: ":")
 
-            case (let a, let b, "59", 0.99):
-                return [String(a), addOneSecToPart(b), "00"].joined(separator: ":")
+        case (let a, let b, "59", "0.99"):
+            self.recordCounter.text =
+                [String(a), addOneToPart(b), "00"].joined(separator: ":")
 
-            case (let a, let b, let c, 0.99):
-                return [String(a), String(b), addOneSecToPart(c)].joined(separator: ":")
+        case (let a, let b, let c, "0.99"):
+            self.recordCounter.text =
+                [String(a), String(b), addOneToPart(c)].joined(separator: ":")
 
-            case (let a, let b, let c, _):
-                self.timerFraction += 0.01
-                return [String(a), String(b), String(c)].joined(separator: ":")
-            }
+        default: // xx:yy:zz (!0.99)
+            self.timerFraction += 0.01
         }
 
-        let oldValue = self.recordCounter.text!
-        self.recordCounter.text = tick(oldValue)
     }
 
     /**
