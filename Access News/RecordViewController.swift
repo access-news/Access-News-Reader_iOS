@@ -13,14 +13,22 @@ class RecordViewController: UIViewController {
 
     var recordingSession: AVAudioSession!
     var audioRecorder:    AVAudioRecorder?
-    var queuePlayer:      AVQueuePlayer?
+    var audioPlayer:      AVPlayer?
 
-    var articleChunks = [AVURLAsset]()
+    // Initialized in `viewDidLoad` via `zeroAudioArtifacts()`
+    var articleSoFar: AVMutableComposition!
+    var latestChunk: AVURLAsset?
+    var insertAt: CMTimeRange!
+    /* To store reference to partial recordings. Unsure whether adding an AVAsset
+       to an AVComposition copies the data or references them, therefore keeping
+       their references here and remove the files when exporting. */
+    var leftoverChunks: [AVURLAsset]!
+    // --------------------------------------------------------
 
     @IBOutlet weak var disabledNotice: UITextView!
 
     @IBOutlet weak var playbackSlider: UISlider!
-    @IBOutlet weak var recordCounter: UILabel!
+    @IBOutlet weak var timerLabel: UILabel!
 
     let disabledGrey    = UIColor(red: 0.910, green: 0.910, blue: 0.910, alpha: 1.0)
     let playGreen       = UIColor(red: 0.238, green: 0.753, blue: 0.323, alpha: 1.0)
@@ -43,7 +51,7 @@ class RecordViewController: UIViewController {
         /* Set default UI properties, assuming that permission to record is given. */
 
         self.disabledNotice.isHidden = true
-
+        self.zeroAudioArtifacts()
         self.startUIState()
 
         /* Set up audio session for recording and ask permission
@@ -87,6 +95,7 @@ class RecordViewController: UIViewController {
     @IBOutlet weak var stopButton: UIButton!
     @IBAction func stopTapped(_ sender: Any) {
 
+        self.stopTimer()
         /* If `self.audioRecorder` is not empty, that means that
            recording is in progress, otherwise it must be called
            when playing back audio.
@@ -113,6 +122,11 @@ class RecordViewController: UIViewController {
 
         // TODO: Insert SubmitViewController
 
+
+        /* Does not need to invoke `self.zeroAudioArtifacts()` because
+           `self.exportArticle()` calles it on successful completion.
+        */
+        self.resetTimerLabel()
         self.startUIState()
     }
 
@@ -122,8 +136,8 @@ class RecordViewController: UIViewController {
         /* Zeroing out whatever has been recorded up to
            this point.
         */
-        self.articleChunks = [AVURLAsset]()
-
+        self.zeroAudioArtifacts()
+        self.resetTimerLabel()
         self.startUIState()
     }
     // MARK: - Audio commands
@@ -164,31 +178,25 @@ class RecordViewController: UIViewController {
          value of true is recommended."
          */
         let assetOpts = [AVURLAssetPreferPreciseDurationAndTimingKey: true]
-        let asset     = AVURLAsset(url: assetURL, options: assetOpts)
-
-        self.articleChunks.append(asset)
+        self.latestChunk = AVURLAsset(url: assetURL, options: assetOpts)
+        self.appendChunk()
     }
 
     func startPlayer() {
         let assetKeys = ["playable"]
-        let playerItems = self.articleChunks.map {
-            AVPlayerItem(asset: $0, automaticallyLoadedAssetKeys: assetKeys)
-        }
+        let playerItem =
+            AVPlayerItem(
+                asset:                        self.articleSoFar,
+                automaticallyLoadedAssetKeys: assetKeys)
 
-        //        playerItem.addObserver(
-        //            self,
-        //            forKeyPath: #keyPath(AVPlayerItem.status),
-        //            options:    [.old, .new],
-        //            context:    &RecordViewController.playerItemContext)
-        self.queuePlayer = AVQueuePlayer(items: playerItems)
-        self.queuePlayer?.actionAtItemEnd = .advance
+        self.audioPlayer = AVPlayer(playerItem: playerItem)
 
-        self.queuePlayer?.play()
+        self.audioPlayer?.play()
     }
 
     func stopPlayer() {
-        self.queuePlayer?.pause()
-        self.queuePlayer = nil
+        self.audioPlayer?.pause()
+        self.audioPlayer = nil
     }
 
     // MARK: Audio command helpers
@@ -210,8 +218,10 @@ class RecordViewController: UIViewController {
         return self.documentDir.appendingPathComponent(fileURL)
     }
 
+    var timer: Timer!
+
     func startTimer() {
-        Timer.scheduledTimer(timeInterval: 0.01  , target: self, selector: #selector(updateCounter), userInfo: nil, repeats: true)
+        self.timer = Timer.scheduledTimer(timeInterval: 0.01  , target: self, selector: #selector(updateCounter), userInfo: nil, repeats: true)
     }
 
     // Currently in centiseconds (10^-2)
@@ -223,27 +233,34 @@ class RecordViewController: UIViewController {
             return String(format: "%02u", Int(String(s))!+1)
         }
 
-        let parts = self.recordCounter.text!.split(separator: ":")
+        let parts = self.timerLabel.text!.split(separator: ":")
         let frac  = String(self.timerFraction).prefix(4)
 
         switch (parts[0], parts[1], parts[2], frac) {
 
         case (let p, "59", "59", "0.99"):
-            self.recordCounter.text =
+            self.timerLabel.text =
                 [addOneToPart(p), "00", "00"].joined(separator: ":")
 
         case (let a, let b, "59", "0.99"):
-            self.recordCounter.text =
+            self.timerLabel.text =
                 [String(a), addOneToPart(b), "00"].joined(separator: ":")
 
         case (let a, let b, let c, "0.99"):
-            self.recordCounter.text =
+            self.timerLabel.text =
                 [String(a), String(b), addOneToPart(c)].joined(separator: ":")
 
         default: // xx:yy:zz (!0.99)
             self.timerFraction += 0.01
         }
+    }
 
+    func stopTimer() {
+        self.timer.invalidate()
+    }
+
+    func resetTimerLabel() {
+        self.timerLabel.text = "00:00:00"
     }
 
     /**
@@ -258,33 +275,57 @@ class RecordViewController: UIViewController {
 
      See [How to create a pausable audio recording app on iOS](https://medium.com/scientific-breakthrough-of-the-afternoon/how-to-create-a-pausable-audio-recording-app-on-ios-9cc19d709356)
     */
-    func concatChunks() {
-        let composition = AVMutableComposition()
+    func appendChunk() {
 
-        var insertAt = CMTimeRange(start: kCMTimeZero, end: kCMTimeZero)
+        /* Using `self.articleChunk!` because it has to have content
+           when the program execution gets here. If that is not the
+           case, then I messed up somehow.
+        */
 
-        for asset in self.articleChunks {
-            let assetTimeRange = CMTimeRange(
-                start: kCMTimeZero,
-                end:   asset.duration)
+        let chunkTimeRange = CMTimeRange(
+            start: kCMTimeZero,
+            end:   self.latestChunk!.duration)
 
-            do {
-                try composition.insertTimeRange(assetTimeRange,
-                                                of: asset,
-                                                at: insertAt.end)
-            } catch {
-                NSLog("Unable to compose asset track.")
-            }
+        do {
+            try self.articleSoFar.insertTimeRange(
+                chunkTimeRange,
+                of: self.latestChunk!,
+                at: self.insertAt.end)
+        } catch {
+            NSLog("Unable to compose asset track.")
+        }
 
-            let nextDuration = insertAt.duration + assetTimeRange.duration
-            insertAt = CMTimeRange(
-                start:    kCMTimeZero,
-                duration: nextDuration)
+        let nextDuration = self.insertAt.duration + chunkTimeRange.duration
+        self.insertAt = CMTimeRange(
+            start:    kCMTimeZero,
+            duration: nextDuration)
+
+
+        self.leftoverChunks.append(self.latestChunk!)
+
+        // Making sure that this chunk is not lying around to mess things up later.
+        self.latestChunk = nil
+    }
+
+    func zeroAudioArtifacts() {
+        self.articleSoFar = AVMutableComposition()
+        self.latestChunk = nil
+        self.insertAt = CMTimeRange(start: kCMTimeZero, end: kCMTimeZero)
+        self.leftoverChunks = [AVURLAsset]()
+    }
+
+    func exportArticle() {
+
+        /* Making sure that `self.articleSoFar` (AVMutableComposition) already contains
+           the very last `self.articleChunk` (AVURLAsset).
+         */
+        if self.latestChunk != nil {
+            self.appendChunk()
         }
 
         let exportSession =
             AVAssetExportSession(
-                asset:      composition,
+                asset:      self.articleSoFar,
                 presetName: AVAssetExportPresetAppleM4A)
 
         exportSession?.outputFileType = AVFileType.m4a
@@ -319,7 +360,7 @@ class RecordViewController: UIViewController {
             case .completed?:
                 /* Cleaning up partial recordings
                  */
-                for asset in self.articleChunks {
+                for asset in self.leftoverChunks {
                     try! FileManager.default.removeItem(at: asset.url)
                 }
 
@@ -327,7 +368,7 @@ class RecordViewController: UIViewController {
                  called asynchronously and calling it from `queueTapped` or
                  `submitTapped` may delete the files prematurely.
                  */
-                self.articleChunks = [AVURLAsset]()
+                self.zeroAudioArtifacts()
 
             case .failed?: break
             case .cancelled?: break
@@ -352,7 +393,7 @@ class RecordViewController: UIViewController {
         self.playButton.isEnabled = false
         self.playButton.backgroundColor = self.disabledGrey
 
-        self.recordCounter.isHidden   = true
+        self.timerLabel.isHidden   = true
         self.playbackSlider.isHidden  = true
         self.startoverButton.isHidden = true
     }
@@ -371,7 +412,7 @@ class RecordViewController: UIViewController {
         self.playButton.isEnabled = false
         self.playButton.backgroundColor = self.disabledGrey
 
-        self.recordCounter.isHidden   = false
+        self.timerLabel.isHidden   = false
         self.playbackSlider.isHidden  = true
         self.startoverButton.isHidden = true
     }
@@ -389,7 +430,7 @@ class RecordViewController: UIViewController {
         self.playButton.backgroundColor = self.playGreen
 
         // TODO: timer should stop and should show the time elapsed
-        self.recordCounter.isHidden   = false
+        self.timerLabel.isHidden   = false
 
         self.playbackSlider.isHidden  = true
         self.startoverButton.isHidden = false
@@ -409,7 +450,7 @@ class RecordViewController: UIViewController {
         self.playButton.isEnabled = false
         self.playButton.backgroundColor = self.disabledGrey
 
-        self.recordCounter.isHidden   = false
+        self.timerLabel.isHidden   = false
         self.playbackSlider.isHidden  = false
         self.startoverButton.isHidden = true
     }

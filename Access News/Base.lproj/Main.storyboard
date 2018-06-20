@@ -258,10 +258,10 @@ Cgo
                         <outlet property="playButton" destination="2Rb-XV-05C" id="Cdr-uw-1NI"/>
                         <outlet property="playbackSlider" destination="AMh-74-mM9" id="iK4-I7-Z4L"/>
                         <outlet property="recordButton" destination="GYF-hw-sgp" id="Toy-F0-DyE"/>
-                        <outlet property="recordCounter" destination="f4K-DF-WQN" id="Xrs-HW-nnv"/>
                         <outlet property="startoverButton" destination="dPf-Rc-VPJ" id="9mW-Xs-5fz"/>
                         <outlet property="stopButton" destination="z6G-lE-URb" id="jJx-Jz-7bw"/>
                         <outlet property="submitButton" destination="M6T-0H-nR5" id="Wkv-iJ-TyB"/>
+                        <outlet property="timerLabel" destination="f4K-DF-WQN" id="OsA-ct-bri"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ltZ-Bl-JkB" userLabel="First Responder" sceneMemberID="firstResponder"/>
