@@ -234,6 +234,23 @@ Cgo
                                             <action selector="startoverTapped:" destination="Ha9-TU-hvE" eventType="touchUpInside" id="OLL-Mc-jd4"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RQt-Kf-9dy">
+                                        <rect key="frame" x="39" y="246" width="266" height="70"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.73669922056467996" green="0.76595454453578316" blue="0.77125161917098439" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="45"/>
+                                        <state key="normal" title="Pause">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="19"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="playbackPauseTapped:" destination="Ha9-TU-hvE" eventType="touchUpInside" id="rUN-CX-YAU"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
@@ -256,6 +273,7 @@ Cgo
                     <connections>
                         <outlet property="disabledNotice" destination="ZJn-YY-5KY" id="CJO-j0-nYa"/>
                         <outlet property="playButton" destination="2Rb-XV-05C" id="Cdr-uw-1NI"/>
+                        <outlet property="playbackPauseButton" destination="RQt-Kf-9dy" id="0Ir-2j-Qxe"/>
                         <outlet property="playbackSlider" destination="AMh-74-mM9" id="iK4-I7-Z4L"/>
                         <outlet property="recordButton" destination="GYF-hw-sgp" id="Toy-F0-DyE"/>
                         <outlet property="startoverButton" destination="dPf-Rc-VPJ" id="9mW-Xs-5fz"/>

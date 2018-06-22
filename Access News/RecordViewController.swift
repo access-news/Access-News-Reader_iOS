@@ -31,10 +31,11 @@ class RecordViewController: UIViewController {
     @IBOutlet weak var timerLabel: UILabel!
     var saveTimerLabel = ""
 
-    let disabledGrey    = UIColor(red: 0.910, green: 0.910, blue: 0.910, alpha: 1.0)
-    let playGreen       = UIColor(red: 0.238, green: 0.753, blue: 0.323, alpha: 1.0)
-    let recordRed       = UIColor(red: 1.0,   green: 0.2,   blue: 0.169, alpha: 1.0)
-    let startoverPurple = UIColor(red: 0.633, green: 0.276, blue: 0.425, alpha: 1.0)
+    let disabledGrey      = UIColor(red: 0.910, green: 0.910, blue: 0.910, alpha: 1.0)
+    let playGreen         = UIColor(red: 0.238, green: 0.753, blue: 0.323, alpha: 1.0)
+    let recordRed         = UIColor(red: 1.0,   green: 0.2,   blue: 0.169, alpha: 1.0)
+    let startoverPurple   = UIColor(red: 0.633, green: 0.276, blue: 0.425, alpha: 1.0)
+    let pausePlaybackGrey = UIColor(red: 0.737, green: 0.766, blue: 0.771, alpha: 1.0)
 
     var documentDir: URL {
         get {
@@ -141,6 +142,15 @@ class RecordViewController: UIViewController {
         self.resetTimerLabel()
         self.startUIState()
     }
+
+    @IBOutlet weak var playbackPauseButton: UIButton!
+    @IBAction func playbackPauseTapped(_ sender: Any) {
+
+        self.pausePlayer()
+
+        self.resumePlaybackUIState()
+    }
+
     // MARK: - Audio commands
 
     func startRecorder() {
@@ -185,64 +195,72 @@ class RecordViewController: UIViewController {
 
     func startPlayer() {
 
-        self.saveTimerLabel = self.timerLabel.text!
-        self.saveTimerFraction = self.timerFraction
+        if self.audioPlayer == nil {
 
-        self.timerLabel.text = "00:00:00"
-        self.timerFraction = 0.0
+            self.saveTimerLabel = self.timerLabel.text!
+            self.saveTimerFraction = self.timerFraction
 
-        let assetKeys = ["playable"]
-        let playerItem =
-            AVPlayerItem(
-                asset: self.articleSoFar,
-                automaticallyLoadedAssetKeys: assetKeys)
+            self.timerLabel.text = "00:00:00"
+            self.timerFraction = 0.0
 
-        self.audioPlayer = AVPlayer(playerItem: playerItem)
+            let assetKeys = ["playable"]
+            let playerItem =
+                AVPlayerItem(
+                    asset: self.articleSoFar,
+                    automaticallyLoadedAssetKeys: assetKeys)
 
-        self.playbackSlider.minimumValue = 0.0
-        self.playbackSlider.maximumValue = 1.0
-        self.playbackSlider.setValue(0.0, animated: false)
+            self.audioPlayer = AVPlayer(playerItem: playerItem)
 
-        /* Fires at times, but I had a hard time reasoning about how it is
-           supposed to work. */
-        self.audioPlayer?.addPeriodicTimeObserver(
-            forInterval: CMTime(seconds: 0.01, preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
-            queue: DispatchQueue.main) {
-                 [weak self] time in
-                    func addOneToPart(_ s: Substring) -> String {
-                        self?.timerFraction = 0.0
-                        return String(format: "%02u", Int(String(s))!+1)
-                    }
+            self.playbackSlider.minimumValue = 0.0
+            self.playbackSlider.maximumValue = 1.0
+            self.playbackSlider.setValue(0.0, animated: false)
 
-                    let parts = self?.timerLabel.text!.split(separator: ":")
-                    let frac  = String((self?.timerFraction)!).prefix(4)
 
-                    switch (parts![0], parts![1], parts![2], frac) {
+            /* Fires at times, but I had a hard time reasoning about how it is
+               supposed to work. */
+            self.audioPlayer?.addPeriodicTimeObserver(
+                forInterval: CMTime(seconds: 0.01, preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
+                queue: DispatchQueue.main) {
+                     [weak self] time in
+                        func addOneToPart(_ s: Substring) -> String {
+                            self?.timerFraction = 0.0
+                            return String(format: "%02u", Int(String(s))!+1)
+                        }
 
-                    case (let p, "59", "59", "0.99"):
-                        self?.timerLabel.text =
-                            [addOneToPart(p), "00", "00"].joined(separator: ":")
+                        let parts = self?.timerLabel.text!.split(separator: ":")
+                        let frac  = String((self?.timerFraction)!).prefix(4)
 
-                    case (let a, let b, "59", "0.99"):
-                        self?.timerLabel.text =
-                            [String(a), addOneToPart(b), "00"].joined(separator: ":")
+                        switch (parts![0], parts![1], parts![2], frac) {
 
-                    case (let a, let b, let c, "0.99"):
-                        self?.timerLabel.text =
-                            [String(a), String(b), addOneToPart(c)].joined(separator: ":")
+                        case (let p, "59", "59", "0.99"):
+                            self?.timerLabel.text =
+                                [addOneToPart(p), "00", "00"].joined(separator: ":")
 
-                    default: // xx:yy:zz (!0.99)
-                        self?.timerFraction += 0.01
-                    }
+                        case (let a, let b, "59", "0.99"):
+                            self?.timerLabel.text =
+                                [String(a), addOneToPart(b), "00"].joined(separator: ":")
 
-                let newSliderValue =
-                    CMTimeGetSeconds(time)
-                    / CMTimeGetSeconds(playerItem.duration)
-                self?.playbackSlider.setValue(Float(newSliderValue), animated: true)
-//                print(newSliderValue)
+                        case (let a, let b, let c, "0.99"):
+                            self?.timerLabel.text =
+                                [String(a), String(b), addOneToPart(c)].joined(separator: ":")
+
+                        default: // xx:yy:zz (!0.99)
+                            self?.timerFraction += 0.01
+                        }
+
+                    let newSliderValue =
+                        CMTimeGetSeconds(time)
+                            / CMTimeGetSeconds((self?.audioPlayer?.currentItem?.duration)!)
+                    self?.playbackSlider.setValue(Float(newSliderValue), animated: true)
+                    print(self?.timerLabel.text)
+            }
         }
 
         self.audioPlayer?.play()
+    }
+
+    func resumePlayer() {
+
     }
 
     func stopPlayer() {
@@ -251,6 +269,10 @@ class RecordViewController: UIViewController {
 
         self.timerLabel.text = self.saveTimerLabel
         self.timerFraction = self.saveTimerFraction
+    }
+
+    func pausePlayer() {
+        self.audioPlayer?.pause()
     }
 
     // MARK: Audio command helpers
@@ -439,6 +461,8 @@ class RecordViewController: UIViewController {
         self.recordButton.backgroundColor = self.recordRed
         self.recordButton.setTitle("Record", for: .normal)
 
+        self.playbackPauseButton.isHidden = true
+
         self.stopButton.isHidden = false
         self.stopButton.isEnabled = false
         self.stopButton.backgroundColor = self.disabledGrey
@@ -457,6 +481,8 @@ class RecordViewController: UIViewController {
         self.recordButton.isEnabled = false
         self.recordButton.backgroundColor = self.disabledGrey
         self.recordButton.setTitle("Continue", for: .normal)
+
+        self.playbackPauseButton.isHidden = true
 
         self.stopButton.isHidden = false
         self.stopButton.isEnabled = true
@@ -477,10 +503,13 @@ class RecordViewController: UIViewController {
         self.recordButton.backgroundColor = self.recordRed
         self.recordButton.setTitle("Continue", for: .normal)
 
+        self.playbackPauseButton.isHidden = true
+
         self.stopButton.isHidden = true
 
         self.submitButton.isHidden = false
 
+        self.playButton.isHidden = false
         self.playButton.isEnabled = true
         self.playButton.backgroundColor = self.playGreen
 
@@ -495,18 +524,26 @@ class RecordViewController: UIViewController {
         self.recordButton.backgroundColor = self.disabledGrey
         self.recordButton.setTitle("Continue", for: .normal)
 
+        self.playbackPauseButton.isHidden = false
+
         self.stopButton.isHidden = false
         self.stopButton.isEnabled = true
         self.stopButton.backgroundColor = .black
 
         self.submitButton.isHidden = true
 
-        self.playButton.isEnabled = false
-        self.playButton.backgroundColor = self.disabledGrey
+//        self.playButton.isEnabled = false
+//        self.playButton.backgroundColor = self.disabledGrey
+        self.playButton.isHidden = true
 
         self.timerLabel.isHidden   = false
         self.playbackSlider.isHidden  = false
         self.startoverButton.isHidden = true
+    }
+
+    func resumePlaybackUIState() {
+        self.playbackPauseButton.isHidden = true
+        self.playButton.isHidden = false
     }
 
     /*
