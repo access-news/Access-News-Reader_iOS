@@ -29,6 +29,7 @@ class RecordViewController: UIViewController {
 
     @IBOutlet weak var playbackSlider: UISlider!
     @IBOutlet weak var timerLabel: UILabel!
+    var saveTimerLabel = ""
 
     let disabledGrey    = UIColor(red: 0.910, green: 0.910, blue: 0.910, alpha: 1.0)
     let playGreen       = UIColor(red: 0.238, green: 0.753, blue: 0.323, alpha: 1.0)
@@ -183,6 +184,13 @@ class RecordViewController: UIViewController {
     }
 
     func startPlayer() {
+
+        self.saveTimerLabel = self.timerLabel.text!
+        self.saveTimerFraction = self.timerFraction
+
+        self.timerLabel.text = "00:00:00"
+        self.timerFraction = 0.0
+
         let assetKeys = ["playable"]
         let playerItem =
             AVPlayerItem(
@@ -191,12 +199,48 @@ class RecordViewController: UIViewController {
 
         self.audioPlayer = AVPlayer(playerItem: playerItem)
 
+        /* Fires at times, but I had a hard time reasoning about how it is
+           supposed to work. */
+        self.audioPlayer?.addPeriodicTimeObserver(
+            forInterval: CMTime(seconds: 0.01, preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
+            queue: DispatchQueue.main) {
+                 [weak self] _ in
+                    func addOneToPart(_ s: Substring) -> String {
+                        self?.timerFraction = 0.0
+                        return String(format: "%02u", Int(String(s))!+1)
+                    }
+
+                    let parts = self?.timerLabel.text!.split(separator: ":")
+                    let frac  = String((self?.timerFraction)!).prefix(4)
+
+                    switch (parts![0], parts![1], parts![2], frac) {
+
+                    case (let p, "59", "59", "0.99"):
+                        self?.timerLabel.text =
+                            [addOneToPart(p), "00", "00"].joined(separator: ":")
+
+                    case (let a, let b, "59", "0.99"):
+                        self?.timerLabel.text =
+                            [String(a), addOneToPart(b), "00"].joined(separator: ":")
+
+                    case (let a, let b, let c, "0.99"):
+                        self?.timerLabel.text =
+                            [String(a), String(b), addOneToPart(c)].joined(separator: ":")
+
+                    default: // xx:yy:zz (!0.99)
+                        self?.timerFraction += 0.01
+                    }
+        }
+
         self.audioPlayer?.play()
     }
 
     func stopPlayer() {
         self.audioPlayer?.pause()
         self.audioPlayer = nil
+
+        self.timerLabel.text = self.saveTimerLabel
+        self.timerFraction = self.saveTimerFraction
     }
 
     // MARK: Audio command helpers
@@ -226,6 +270,7 @@ class RecordViewController: UIViewController {
 
     // Currently in centiseconds (10^-2)
     var timerFraction : Double = 0.0
+    var saveTimerFraction: Double!
 
     @objc func updateCounter() {
         func addOneToPart(_ s: Substring) -> String {
@@ -429,7 +474,6 @@ class RecordViewController: UIViewController {
         self.playButton.isEnabled = true
         self.playButton.backgroundColor = self.playGreen
 
-        // TODO: timer should stop and should show the time elapsed
         self.timerLabel.isHidden   = false
 
         self.playbackSlider.isHidden  = true
