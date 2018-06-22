@@ -194,17 +194,21 @@ class RecordViewController: UIViewController {
         let assetKeys = ["playable"]
         let playerItem =
             AVPlayerItem(
-                asset:                        self.articleSoFar,
+                asset: self.articleSoFar,
                 automaticallyLoadedAssetKeys: assetKeys)
 
         self.audioPlayer = AVPlayer(playerItem: playerItem)
+
+        self.playbackSlider.minimumValue = 0.0
+        self.playbackSlider.maximumValue = 1.0
+        self.playbackSlider.setValue(0.0, animated: false)
 
         /* Fires at times, but I had a hard time reasoning about how it is
            supposed to work. */
         self.audioPlayer?.addPeriodicTimeObserver(
             forInterval: CMTime(seconds: 0.01, preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
             queue: DispatchQueue.main) {
-                 [weak self] _ in
+                 [weak self] time in
                     func addOneToPart(_ s: Substring) -> String {
                         self?.timerFraction = 0.0
                         return String(format: "%02u", Int(String(s))!+1)
@@ -230,6 +234,12 @@ class RecordViewController: UIViewController {
                     default: // xx:yy:zz (!0.99)
                         self?.timerFraction += 0.01
                     }
+
+                let newSliderValue =
+                    CMTimeGetSeconds(time)
+                    / CMTimeGetSeconds(playerItem.duration)
+                self?.playbackSlider.setValue(Float(newSliderValue), animated: true)
+//                print(newSliderValue)
         }
 
         self.audioPlayer?.play()
