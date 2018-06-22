@@ -35,7 +35,7 @@ class RecordViewController: UIViewController {
     let playGreen         = UIColor(red: 0.238, green: 0.753, blue: 0.323, alpha: 1.0)
     let recordRed         = UIColor(red: 1.0,   green: 0.2,   blue: 0.169, alpha: 1.0)
     let startoverPurple   = UIColor(red: 0.633, green: 0.276, blue: 0.425, alpha: 1.0)
-    let pausePlaybackGrey = UIColor(red: 0.737, green: 0.766, blue: 0.771, alpha: 1.0)
+    let pausePlaybackGrey = UIColor(red: 0.475, green: 0.494, blue: 0.500, alpha: 1.0)
 
     var documentDir: URL {
         get {
@@ -198,10 +198,6 @@ class RecordViewController: UIViewController {
         if self.audioPlayer == nil {
 
             self.saveTimerLabel = self.timerLabel.text!
-            self.saveTimerFraction = self.timerFraction
-
-            self.timerLabel.text = "00:00:00"
-            self.timerFraction = 0.0
 
             let assetKeys = ["playable"]
             let playerItem =
@@ -215,60 +211,35 @@ class RecordViewController: UIViewController {
             self.playbackSlider.maximumValue = 1.0
             self.playbackSlider.setValue(0.0, animated: false)
 
-
             /* Fires at times, but I had a hard time reasoning about how it is
                supposed to work. */
             self.audioPlayer?.addPeriodicTimeObserver(
                 forInterval: CMTime(seconds: 0.01, preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
                 queue: DispatchQueue.main) {
                      [weak self] time in
-                        func addOneToPart(_ s: Substring) -> String {
-                            self?.timerFraction = 0.0
-                            return String(format: "%02u", Int(String(s))!+1)
-                        }
 
-                        let parts = self?.timerLabel.text!.split(separator: ":")
-                        let frac  = String((self?.timerFraction)!).prefix(4)
+                        let t = CMTimeGetSeconds(time)
+                        self?.tick(Double(t))
 
-                        switch (parts![0], parts![1], parts![2], frac) {
+                        let audioDuration =
+                            self?.audioPlayer != nil
+                            ? CMTimeGetSeconds((self?.audioPlayer?.currentItem?.duration)!)
+                            : 1.0
 
-                        case (let p, "59", "59", "0.99"):
-                            self?.timerLabel.text =
-                                [addOneToPart(p), "00", "00"].joined(separator: ":")
+                        let newSliderValue = t / audioDuration
 
-                        case (let a, let b, "59", "0.99"):
-                            self?.timerLabel.text =
-                                [String(a), addOneToPart(b), "00"].joined(separator: ":")
-
-                        case (let a, let b, let c, "0.99"):
-                            self?.timerLabel.text =
-                                [String(a), String(b), addOneToPart(c)].joined(separator: ":")
-
-                        default: // xx:yy:zz (!0.99)
-                            self?.timerFraction += 0.01
-                        }
-
-                    let newSliderValue =
-                        CMTimeGetSeconds(time)
-                            / CMTimeGetSeconds((self?.audioPlayer?.currentItem?.duration)!)
-                    self?.playbackSlider.setValue(Float(newSliderValue), animated: true)
-                    print(self?.timerLabel.text)
+                        self?.playbackSlider.setValue(Float(newSliderValue), animated: true)
             }
         }
 
         self.audioPlayer?.play()
     }
 
-    func resumePlayer() {
-
-    }
-
     func stopPlayer() {
-        self.audioPlayer?.pause()
+        self.pausePlayer()
         self.audioPlayer = nil
 
         self.timerLabel.text = self.saveTimerLabel
-        self.timerFraction = self.saveTimerFraction
     }
 
     func pausePlayer() {
@@ -297,38 +268,47 @@ class RecordViewController: UIViewController {
     var timer: Timer!
 
     func startTimer() {
-        self.timer = Timer.scheduledTimer(timeInterval: 0.01  , target: self, selector: #selector(updateCounter), userInfo: nil, repeats: true)
+        self.timer = Timer.scheduledTimer(timeInterval: 0.01  , target: self, selector: #selector(updateTimerLabel), userInfo: nil, repeats: true)
     }
 
     // Currently in centiseconds (10^-2)
-    var timerFraction : Double = 0.0
-    var saveTimerFraction: Double!
+    var seconds: String!
 
-    @objc func updateCounter() {
-        func addOneToPart(_ s: Substring) -> String {
-            self.timerFraction = 0.0
-            return String(format: "%02u", Int(String(s))!+1)
-        }
+    @objc func updateTimerLabel() {
 
-        let parts = self.timerLabel.text!.split(separator: ":")
-        let frac  = String(self.timerFraction).prefix(4)
+        let elapsed = CMTimeGetSeconds(self.articleSoFar.duration)
+            + self.audioRecorder!.currentTime
 
-        switch (parts[0], parts[1], parts[2], frac) {
+        self.tick(elapsed)
+    }
 
-        case (let p, "59", "59", "0.99"):
-            self.timerLabel.text =
-                [addOneToPart(p), "00", "00"].joined(separator: ":")
+    func tick(_ time: Double) {
 
-        case (let a, let b, "59", "0.99"):
-            self.timerLabel.text =
-                [String(a), addOneToPart(b), "00"].joined(separator: ":")
+        let elapsedSecond =
+            String(String(time).prefix(while: { c in return c != "."}))
 
-        case (let a, let b, let c, "0.99"):
-            self.timerLabel.text =
-                [String(a), String(b), addOneToPart(c)].joined(separator: ":")
+        if self.seconds != elapsedSecond {
+            self.seconds = elapsedSecond
+            let i = Int(elapsedSecond)!
+            var results = [Int]()
 
-        default: // xx:yy:zz (!0.99)
-            self.timerFraction += 0.01
+            if i <= 3599 {
+                let sec = i % 60
+                let min = i / 60
+
+                results = [0, min, sec]
+
+            } else if i <= 215999 {
+                let sec  = i % 60
+                let tempMin = i / 60
+
+                let min  = tempMin % 60
+                let hour = tempMin / 60
+
+                results = [hour, min, sec]
+            }
+
+            self.timerLabel.text = results.map { String(format: "%02u", $0)}.joined(separator: ":")
         }
     }
 
@@ -459,13 +439,21 @@ class RecordViewController: UIViewController {
     func startUIState() {
         self.recordButton.isEnabled = true
         self.recordButton.backgroundColor = self.recordRed
-        self.recordButton.setTitle("Record", for: .normal)
+        // https://stackoverflow.com/questions/18946490/how-to-stop-unwanted-uibutton-animation-on-title-change
+        UIView.performWithoutAnimation {
+            self.recordButton.setTitle("Record", for: .normal)
+            self.recordButton.layoutIfNeeded()
+        }
 
         self.playbackPauseButton.isHidden = true
 
         self.stopButton.isHidden = false
         self.stopButton.isEnabled = false
         self.stopButton.backgroundColor = self.disabledGrey
+        UIView.performWithoutAnimation {
+            self.stopButton.setTitle("Stop/Pause", for: .normal)
+            self.stopButton.layoutIfNeeded()
+        }
 
         self.submitButton.isHidden = true
 
@@ -480,13 +468,20 @@ class RecordViewController: UIViewController {
     func recordUIState() {
         self.recordButton.isEnabled = false
         self.recordButton.backgroundColor = self.disabledGrey
-        self.recordButton.setTitle("Continue", for: .normal)
+        UIView.performWithoutAnimation {
+            self.recordButton.setTitle("Continue", for: .normal)
+            self.recordButton.layoutIfNeeded()
+        }
 
         self.playbackPauseButton.isHidden = true
 
         self.stopButton.isHidden = false
         self.stopButton.isEnabled = true
         self.stopButton.backgroundColor = .black
+        UIView.performWithoutAnimation {
+            self.stopButton.setTitle("Stop/Pause", for: .normal)
+            self.stopButton.layoutIfNeeded()
+        }
 
         self.submitButton.isHidden = true
 
@@ -501,7 +496,10 @@ class RecordViewController: UIViewController {
     func stoppedUIState() {
         self.recordButton.isEnabled = true
         self.recordButton.backgroundColor = self.recordRed
-        self.recordButton.setTitle("Continue", for: .normal)
+        UIView.performWithoutAnimation {
+            self.recordButton.setTitle("Continue", for: .normal)
+            self.recordButton.layoutIfNeeded()
+        }
 
         self.playbackPauseButton.isHidden = true
 
@@ -522,13 +520,20 @@ class RecordViewController: UIViewController {
     func playUIState() {
         self.recordButton.isEnabled = false
         self.recordButton.backgroundColor = self.disabledGrey
-        self.recordButton.setTitle("Continue", for: .normal)
+        UIView.performWithoutAnimation {
+            self.recordButton.setTitle("Continue", for: .normal)
+            self.recordButton.layoutIfNeeded()
+        }
 
         self.playbackPauseButton.isHidden = false
 
         self.stopButton.isHidden = false
         self.stopButton.isEnabled = true
         self.stopButton.backgroundColor = .black
+        UIView.performWithoutAnimation {
+            self.stopButton.setTitle("Stop", for: .normal)
+            self.stopButton.layoutIfNeeded()
+        }
 
         self.submitButton.isHidden = true
 
@@ -542,8 +547,31 @@ class RecordViewController: UIViewController {
     }
 
     func resumePlaybackUIState() {
+        self.recordButton.isEnabled = false
+        self.recordButton.backgroundColor = self.disabledGrey
+        UIView.performWithoutAnimation {
+            self.recordButton.setTitle("Continue", for: .normal)
+            self.recordButton.layoutIfNeeded()
+        }
+        self.recordButton.setTitle("Continue", for: .normal)
+
         self.playbackPauseButton.isHidden = true
+
+        self.stopButton.isHidden = false
+        self.stopButton.isEnabled = true
+        self.stopButton.backgroundColor = .black
+        UIView.performWithoutAnimation {
+            self.stopButton.setTitle("Stop", for: .normal)
+            self.stopButton.layoutIfNeeded()
+        }
+
+        self.submitButton.isHidden = true
+
         self.playButton.isHidden = false
+
+        self.timerLabel.isHidden   = false
+        self.playbackSlider.isHidden  = false
+        self.startoverButton.isHidden = true
     }
 
     /*
