@@ -205,14 +205,14 @@ class RecordViewController: UIViewController {
                     asset: self.articleSoFar,
                     automaticallyLoadedAssetKeys: assetKeys)
 
+            NotificationCenter.default.addObserver(self, selector: #selector(self.itemDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: playerItem)
+
             self.audioPlayer = AVPlayer(playerItem: playerItem)
 
             self.playbackSlider.minimumValue = 0.0
             self.playbackSlider.maximumValue = 1.0
             self.playbackSlider.setValue(0.0, animated: false)
 
-            /* Fires at times, but I had a hard time reasoning about how it is
-               supposed to work. */
             self.audioPlayer?.addPeriodicTimeObserver(
                 forInterval: CMTime(seconds: 0.01, preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
                 queue: DispatchQueue.main) {
@@ -235,7 +235,15 @@ class RecordViewController: UIViewController {
         self.audioPlayer?.play()
     }
 
+    @objc func itemDidFinishPlaying() {
+        self.resumePlaybackUIState()
+        self.stopPlayer()
+    }
+
     func stopPlayer() {
+
+        NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: self.audioPlayer?.currentItem)
+
         self.pausePlayer()
         self.audioPlayer = nil
 
@@ -553,7 +561,6 @@ class RecordViewController: UIViewController {
             self.recordButton.setTitle("Continue", for: .normal)
             self.recordButton.layoutIfNeeded()
         }
-        self.recordButton.setTitle("Continue", for: .normal)
 
         self.playbackPauseButton.isHidden = true
 
