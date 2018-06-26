@@ -212,6 +212,8 @@ class RecordViewController: UIViewController {
             self.playbackSlider.minimumValue = 0.0
             self.playbackSlider.maximumValue = 1.0
             self.playbackSlider.setValue(0.0, animated: false)
+            self.playbackSlider.isContinuous = false
+            self.playbackSlider.addTarget(self, action: #selector(self.isSliding), for: .valueChanged)
 
             self.audioPlayer?.addPeriodicTimeObserver(
                 forInterval: CMTime(seconds: 0.01, preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
@@ -227,7 +229,6 @@ class RecordViewController: UIViewController {
                             : 1.0
 
                         let newSliderValue = t / audioDuration
-
                         self?.playbackSlider.setValue(Float(newSliderValue), animated: true)
             }
         }
@@ -238,6 +239,11 @@ class RecordViewController: UIViewController {
     @objc func itemDidFinishPlaying() {
         self.resumePlaybackUIState()
         self.stopPlayer()
+    }
+
+    @objc func isSliding() {
+        let slideEndValue = self.playbackSlider.value
+        self.audioPlayer?.seek(to: CMTime(seconds: Double(slideEndValue), preferredTimescale: 1))
     }
 
     func stopPlayer() {
