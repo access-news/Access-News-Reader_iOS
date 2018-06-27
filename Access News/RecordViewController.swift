@@ -193,6 +193,8 @@ class RecordViewController: UIViewController {
         self.appendChunk()
     }
 
+    var timeObserverToken: Any?
+
     func startPlayer() {
 
         if self.audioPlayer == nil {
@@ -215,21 +217,22 @@ class RecordViewController: UIViewController {
             self.playbackSlider.isContinuous = false
             self.playbackSlider.addTarget(self, action: #selector(self.isSliding), for: .valueChanged)
 
-            self.audioPlayer?.addPeriodicTimeObserver(
-                forInterval: CMTime(seconds: 0.01, preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
-                queue: DispatchQueue.main) {
-                     [weak self] time in
+            self.timeObserverToken =
+                self.audioPlayer?.addPeriodicTimeObserver(
+                    forInterval: CMTime(seconds: 0.01, preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
+                    queue: DispatchQueue.main) {
+                         [weak self] time in
 
-                        let t = CMTimeGetSeconds(time)
-                        self?.tick(Double(t))
+                            let t = CMTimeGetSeconds(time)
+                            self?.tick(Double(t))
 
-                        let audioDuration =
-                            self?.audioPlayer != nil
-                            ? CMTimeGetSeconds((self?.audioPlayer?.currentItem?.duration)!)
-                            : 1.0
+                            let audioDuration =
+                                self?.audioPlayer != nil
+                                ? CMTimeGetSeconds((self?.audioPlayer?.currentItem?.duration)!)
+                                : 1.0
 
-                        let newSliderValue = t / audioDuration
-                        self?.playbackSlider.setValue(Float(newSliderValue), animated: true)
+                            let newSliderValue = t / audioDuration
+                            self?.playbackSlider.setValue(Float(newSliderValue), animated: true)
             }
         }
 
@@ -251,9 +254,18 @@ class RecordViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: self.audioPlayer?.currentItem)
 
         self.pausePlayer()
+        self.removePeriodicTimeObserver()
         self.audioPlayer = nil
 
         self.timerLabel.text = self.saveTimerLabel
+    }
+
+    func removePeriodicTimeObserver() {
+        // If a time observer exists, remove it
+        if let token = self.timeObserverToken {
+            self.audioPlayer!.removeTimeObserver(token)
+            self.timeObserverToken = nil
+        }
     }
 
     func pausePlayer() {

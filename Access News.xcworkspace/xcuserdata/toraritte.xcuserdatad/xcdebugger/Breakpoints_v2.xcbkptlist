@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Access News/RecordViewController.swift"
-            timestampString = "551749840.4882571"
+            timestampString = "551814301.55002"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "537"
-            endingLineNumber = "537"
+            startingLineNumber = "549"
+            endingLineNumber = "549"
             landmarkName = "playUIState()"
             landmarkType = "7">
          </BreakpointContent>
