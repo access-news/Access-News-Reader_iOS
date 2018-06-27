@@ -207,7 +207,14 @@ class RecordViewController: UIViewController {
                     asset: self.articleSoFar,
                     automaticallyLoadedAssetKeys: assetKeys)
 
-            NotificationCenter.default.addObserver(self, selector: #selector(self.itemDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: playerItem)
+            /* Change UI if recording finished playing.
+               (Removed in `self.stopPlayer()`)
+            */
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(self.itemDidFinishPlaying),
+                name:     .AVPlayerItemDidPlayToEndTime,
+                object:   playerItem)
 
             self.audioPlayer = AVPlayer(playerItem: playerItem)
 
@@ -215,25 +222,16 @@ class RecordViewController: UIViewController {
             self.playbackSlider.maximumValue = 1.0
             self.playbackSlider.setValue(0.0, animated: false)
             self.playbackSlider.isContinuous = false
-            self.playbackSlider.addTarget(self, action: #selector(self.isSliding), for: .valueChanged)
+            /* React if slider is being interacted with.
+               (Not removed anywhere as invoking it multiple times shouldn't have
+                any effect. Shouldn't.)
+            */
+            self.playbackSlider.addTarget(
+                self,
+                action: #selector(self.isSliding),
+                for: .valueChanged)
 
-            self.timeObserverToken =
-                self.audioPlayer?.addPeriodicTimeObserver(
-                    forInterval: CMTime(seconds: 0.01, preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
-                    queue: DispatchQueue.main) {
-                         [weak self] time in
-
-                            let t = CMTimeGetSeconds(time)
-                            self?.tick(Double(t))
-
-                            let audioDuration =
-                                self?.audioPlayer != nil
-                                ? CMTimeGetSeconds((self?.audioPlayer?.currentItem?.duration)!)
-                                : 1.0
-
-                            let newSliderValue = t / audioDuration
-                            self?.playbackSlider.setValue(Float(newSliderValue), animated: true)
-            }
+            self.registerPeriodicTimeObserver()
         }
 
         self.audioPlayer?.play()
@@ -251,13 +249,43 @@ class RecordViewController: UIViewController {
 
     func stopPlayer() {
 
-        NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: self.audioPlayer?.currentItem)
+        NotificationCenter.default.removeObserver(
+            self,
+            name:   .AVPlayerItemDidPlayToEndTime,
+            object: self.audioPlayer?.currentItem)
 
         self.pausePlayer()
         self.removePeriodicTimeObserver()
         self.audioPlayer = nil
 
         self.timerLabel.text = self.saveTimerLabel
+    }
+
+    func registerPeriodicTimeObserver() {
+        self.timeObserverToken =
+            /* Register a method to fire every 0.01 second when playing audio.
+             (Removed in `self.stopPlayer()`)
+             */
+            self.audioPlayer?.addPeriodicTimeObserver(
+                forInterval: CMTime(seconds: 0.01, preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
+                queue: DispatchQueue.main) {
+                    [weak self] time in
+
+                    let t = CMTimeGetSeconds(time)
+                    self?.tick(Double(t))
+
+                    let audioDuration =
+                        self?.audioPlayer != nil
+                            ? CMTimeGetSeconds(
+                                (self?.audioPlayer?.currentItem?.duration)!
+                                )
+                            : 1.0
+
+                    let newSliderValue = t / audioDuration
+                    self?.playbackSlider.setValue(
+                        Float(newSliderValue),
+                        animated: true)
+        }
     }
 
     func removePeriodicTimeObserver() {
