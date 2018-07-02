@@ -88,7 +88,6 @@ class RecordViewController: UIViewController {
     @IBAction func recordTapped(_ sender: Any) {
 
         self.startRecorder()
-        self.startTimer()
 
         self.recordUIState()
     }
@@ -96,7 +95,6 @@ class RecordViewController: UIViewController {
     @IBOutlet weak var stopButton: UIButton!
     @IBAction func stopTapped(_ sender: Any) {
 
-        self.stopTimer()
         /* If `self.audioRecorder` is not empty, that means that
            recording is in progress, otherwise it must be called
            when playing back audio.
@@ -105,6 +103,8 @@ class RecordViewController: UIViewController {
             self.stopRecorder()
         } else {
             self.stopPlayer()
+            // In this case, `restoreTimerLabel` would be more appropriate...
+            self.updateRecordTimerLabel()
         }
 
         self.stoppedUIState()
@@ -126,7 +126,7 @@ class RecordViewController: UIViewController {
         /* Does not need to invoke `self.zeroAudioArtifacts()` because
            `self.exportArticle()` calles it on successful completion.
         */
-        self.resetTimerLabel()
+        self.resetRecordTimer()
         self.startUIState()
     }
 
@@ -137,7 +137,7 @@ class RecordViewController: UIViewController {
            this point.
         */
         self.zeroAudioArtifacts()
-        self.resetTimerLabel()
+        self.resetRecordTimer()
         self.startUIState()
     }
 
@@ -168,6 +168,8 @@ class RecordViewController: UIViewController {
                 try AVAudioRecorder.init(url: url, settings: settings)
             self.audioRecorder?.record()
 
+            self.startRecordTimer()
+
             // TODO: add audio recorder delegate? Interruptions (e.g., calls)
             //       are handled elsewhere anyway
 
@@ -189,6 +191,8 @@ class RecordViewController: UIViewController {
         let assetOpts = [AVURLAssetPreferPreciseDurationAndTimingKey: true]
         self.latestChunk = AVURLAsset(url: assetURL, options: assetOpts)
         self.appendChunk()
+
+        self.stopRecordTimer()
     }
 
     var timeObserverToken: Any?
@@ -263,6 +267,9 @@ class RecordViewController: UIViewController {
     /* Track whether slider has been tapped during playback or not.
        If yes, resume playback from the position the control has
        been released (i.e., touchUpInside).
+
+       Initialized with `false` because playback only start on tapping
+       the Play button.
      */
     var slidingOnPlayback: Bool = false
 
@@ -356,8 +363,28 @@ class RecordViewController: UIViewController {
 
     var timer: Timer!
 
-    func startTimer() {
-        self.timer = Timer.scheduledTimer(timeInterval: 0.01  , target: self, selector: #selector(updateTimerLabel), userInfo: nil, repeats: true)
+    /* Because paused AVAudioRecorder recording cannot be played
+       back, it needs to be stopped (zeroing out its `currentTime`
+       property as well), but the user should be able to resume
+       recording from this point, seeing the timer updated from there.
+       Hence this global variable.
+
+       Updated from `stopRecordTimer` because once recording is
+       stopped, if
+
+       * "Continue" (recording) button is pressed, this would init,
+         `updateTimerLabel`, called periodically from the timer below.
+
+       * "Play" is tapped, it would be used to restore the timer
+         label once returned from the playback UI. (Plus recording
+         could be resumed, as described in the previous item.)
+
+    */
+    var articleSoFarDuration: Double = 0.0
+
+    func startRecordTimer() {
+
+        self.timer = Timer.scheduledTimer(timeInterval: 0.01  , target: self, selector: #selector(updateRecordTimerLabel), userInfo: nil, repeats: true)
     }
 
     /* `self.timerLabel` only displays elapsed time down to seconds,
@@ -368,10 +395,16 @@ class RecordViewController: UIViewController {
     */
     var seconds: String!
 
-    @objc func updateTimerLabel() {
+    @objc func updateRecordTimerLabel() {
 
-        let elapsed = CMTimeGetSeconds(self.articleSoFar.duration)
-            + self.audioRecorder!.currentTime
+        let recorderTime =
+            self.audioRecorder != nil
+            ? self.audioRecorder!.currentTime
+            : 0.0
+
+        let elapsed =
+              self.articleSoFarDuration
+            + recorderTime
 
         self.tick(elapsed)
     }
@@ -406,12 +439,24 @@ class RecordViewController: UIViewController {
         }
     }
 
-    func stopTimer() {
+    func stopRecordTimer() {
         self.timer.invalidate()
+
+        self.articleSoFarDuration = CMTimeGetSeconds(self.articleSoFar.duration)
     }
 
-    func resetTimerLabel() {
+    /* NOTE: Name may be misleading, but wanted to keep it in sync with
+             `startRecordTimer` and `stopRecordTimer`.
+
+             Timer is already invalidated in `stopRecordTimer` that shouldn't
+             be an issue here, because this function will only be called from
+             UI state where `stopRecordTimer` is already have been called.
+
+             This only resets recording-related artifacts.
+     */
+    func resetRecordTimer() {
         self.timerLabel.text = "00:00:00"
+        self.articleSoFarDuration = 0.0
     }
 
     /**
