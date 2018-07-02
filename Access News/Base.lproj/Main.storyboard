@@ -10,6 +10,32 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--View Controller-->
+        <scene sceneID="5YS-jm-hec">
+            <objects>
+                <viewController id="7G3-FM-EZs" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="9fK-pe-71O">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tKW-Yd-LX6">
+                                <rect key="frame" x="153" y="163" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <segue destination="Ha9-TU-hvE" kind="show" id="AH2-rG-Syx"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="oj6-6k-mrY"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="e2F-CM-TfV"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5rm-c9-Y1w" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="348" y="-281"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="NOL-V7-oXA">
             <objects>
@@ -19,12 +45,12 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="Ha9-TU-hvE" kind="relationship" relationship="rootViewController" id="lmS-jI-SAk"/>
+                        <segue destination="7G3-FM-EZs" kind="relationship" relationship="rootViewController" id="WDM-yb-NaR"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="t6x-lK-UqB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-546" y="-268"/>
+            <point key="canvasLocation" x="-546" y="-281"/>
         </scene>
         <!--Record View Controller-->
         <scene sceneID="muf-bc-eo9">
@@ -284,7 +310,7 @@ Cgo
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ltZ-Bl-JkB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="440.80000000000001" y="-267.61619190404798"/>
+            <point key="canvasLocation" x="1241" y="-281"/>
         </scene>
         <!--SettingsTVC-->
         <scene sceneID="OV0-Qz-blM">
@@ -312,7 +338,7 @@ Cgo
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jAD-o1-vRC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1657" y="107"/>
+            <point key="canvasLocation" x="2372" y="108"/>
         </scene>
         <!--ProfileTVC-->
         <scene sceneID="aLa-Bj-ncY">
@@ -340,7 +366,7 @@ Cgo
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zmy-Zm-MVa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1650" y="-692"/>
+            <point key="canvasLocation" x="2364" y="-690"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="tne-QT-ifu">
