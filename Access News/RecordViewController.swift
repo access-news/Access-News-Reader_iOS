@@ -52,7 +52,7 @@ class RecordViewController: UIViewController {
         /* Set default UI properties, assuming that permission to record is given. */
 
         self.disabledNotice.isHidden = true
-        self.zeroAudioArtifacts()
+        self.zeroRecordArtifacts()
         self.startUIState()
 
         /* Set up audio session for recording and ask permission
@@ -136,7 +136,7 @@ class RecordViewController: UIViewController {
         /* Zeroing out whatever has been recorded up to
            this point.
         */
-        self.zeroAudioArtifacts()
+        self.zeroRecordArtifacts()
         self.resetRecordTimer()
         self.startUIState()
     }
@@ -504,7 +504,7 @@ class RecordViewController: UIViewController {
         self.latestChunk = nil
     }
 
-    func zeroAudioArtifacts() {
+    func zeroRecordArtifacts() {
         self.articleSoFar = AVMutableComposition()
         self.latestChunk = nil
         self.insertAt = CMTimeRange(start: kCMTimeZero, end: kCMTimeZero)
@@ -565,7 +565,7 @@ class RecordViewController: UIViewController {
                  called asynchronously and calling it from `queueTapped` or
                  `submitTapped` may delete the files prematurely.
                  */
-                self.zeroAudioArtifacts()
+                self.zeroRecordArtifacts()
 
             case .failed?: break
             case .cancelled?: break
