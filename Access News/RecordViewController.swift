@@ -29,7 +29,6 @@ class RecordViewController: UIViewController {
 
     @IBOutlet weak var playbackSlider: UISlider!
     @IBOutlet weak var timerLabel: UILabel!
-    var saveTimerLabel = ""
 
     let disabledGrey      = UIColor(red: 0.910, green: 0.910, blue: 0.910, alpha: 1.0)
     let playGreen         = UIColor(red: 0.238, green: 0.753, blue: 0.323, alpha: 1.0)
@@ -115,7 +114,6 @@ class RecordViewController: UIViewController {
     @IBAction func playTapped(_ sender: Any) {
 
         self.startPlayer()
-
         self.playUIState()
     }
 
@@ -199,8 +197,6 @@ class RecordViewController: UIViewController {
 
         if self.audioPlayer == nil {
 
-            self.saveTimerLabel = self.timerLabel.text!
-
             let assetKeys = ["playable"]
             let playerItem =
                 AVPlayerItem(
@@ -218,18 +214,39 @@ class RecordViewController: UIViewController {
 
             self.audioPlayer = AVPlayer(playerItem: playerItem)
 
-            self.playbackSlider.minimumValue = 0.0
-            self.playbackSlider.maximumValue = 1.0
+            /* ADD SLIDER
+
+               http://swiftdeveloperblog.com/code-examples/add-playback-slider-to-avplayer-example-in-swift/
+               Helpful to get the seeking with the slider set up, but does not say
+               anything on how to integrate with `addPeriodicTimeObserver`.
+            */
+
+            let duration : CMTime  = self.audioPlayer!.currentItem!.duration
+            let seconds  : Double = CMTimeGetSeconds(duration)
+
+            self.playbackSlider.minimumValue = 0
+            self.playbackSlider.maximumValue = Float(seconds)
+
             self.playbackSlider.setValue(0.0, animated: false)
-            self.playbackSlider.isContinuous = false
+            self.playbackSlider.isContinuous = true
             /* React if slider is being interacted with.
                (Not removed anywhere as invoking it multiple times shouldn't have
                 any effect. Shouldn't.)
             */
             self.playbackSlider.addTarget(
                 self,
+                action: #selector(self.touchdownSlider),
+                for: .touchDown)
+
+            self.playbackSlider.addTarget(
+                self,
                 action: #selector(self.isSliding),
                 for: .valueChanged)
+
+            self.playbackSlider.addTarget(
+                self,
+                action: #selector(self.touchupinsideSlider),
+                for: .touchUpInside)
 
             self.registerPeriodicTimeObserver()
         }
@@ -239,12 +256,37 @@ class RecordViewController: UIViewController {
 
     @objc func itemDidFinishPlaying() {
         self.resumePlaybackUIState()
-        self.stopPlayer()
+        self.slidingOnPlayback = false
+    }
+
+
+    /* Track whether slider has been tapped during playback or not.
+       If yes, resume playback from the position the control has
+       been released (i.e., touchUpInside).
+     */
+    var slidingOnPlayback: Bool = false
+
+    @objc func touchdownSlider() {
+        if self.audioPlayer!.rate != 0 { // i.e. playing
+            self.pausePlayer()
+            self.slidingOnPlayback = true
+        }
     }
 
     @objc func isSliding() {
-        let slideEndValue = self.playbackSlider.value
-        self.audioPlayer?.seek(to: CMTime(seconds: Double(slideEndValue), preferredTimescale: 1))
+
+        let targetTime =
+            CMTime(
+                seconds: Double(self.playbackSlider.value),
+                preferredTimescale: 100)
+
+        self.audioPlayer!.seek(to: targetTime)
+    }
+
+    @objc func touchupinsideSlider() {
+        if self.slidingOnPlayback {
+            self.startPlayer()
+        }
     }
 
     func stopPlayer() {
@@ -258,7 +300,6 @@ class RecordViewController: UIViewController {
         self.removePeriodicTimeObserver()
         self.audioPlayer = nil
 
-        self.timerLabel.text = self.saveTimerLabel
     }
 
     func registerPeriodicTimeObserver() {
@@ -271,19 +312,13 @@ class RecordViewController: UIViewController {
                 queue: DispatchQueue.main) {
                     [weak self] time in
 
+//                    print(CMTimeGetSeconds(time))
                     let t = CMTimeGetSeconds(time)
                     self?.tick(Double(t))
 
-                    let audioDuration =
-                        self?.audioPlayer != nil
-                            ? CMTimeGetSeconds(
-                                (self?.audioPlayer?.currentItem?.duration)!
-                                )
-                            : 1.0
-
-                    let newSliderValue = t / audioDuration
+                    let newSliderValue = Float(t)
                     self?.playbackSlider.setValue(
-                        Float(newSliderValue),
+                        newSliderValue,
                         animated: true)
         }
     }
@@ -325,7 +360,12 @@ class RecordViewController: UIViewController {
         self.timer = Timer.scheduledTimer(timeInterval: 0.01  , target: self, selector: #selector(updateTimerLabel), userInfo: nil, repeats: true)
     }
 
-    // Currently in centiseconds (10^-2)
+    /* `self.timerLabel` only displays elapsed time down to seconds,
+        but `updateTimerLabel` (and therefore `self.tick()`) fires
+        every 0.01 seconds. This global variable is used to check
+        whether label update is necessary (i.e., did a full second
+        already elapsed).
+    */
     var seconds: String!
 
     @objc func updateTimerLabel() {
