@@ -259,7 +259,8 @@ class RecordViewController: UIViewController {
     }
 
     @objc func itemDidFinishPlaying() {
-        self.resumePlaybackUIState()
+        self.stopPlayer()
+        self.playagainUIState()
         self.slidingOnPlayback = false
     }
 
@@ -649,6 +650,10 @@ class RecordViewController: UIViewController {
         self.playButton.isHidden = false
         self.playButton.isEnabled = true
         self.playButton.backgroundColor = self.playGreen
+        UIView.performWithoutAnimation {
+            self.playButton.setTitle("Play", for: .normal)
+            self.playButton.layoutIfNeeded()
+        }
 
         self.timerLabel.isHidden   = false
 
@@ -676,8 +681,6 @@ class RecordViewController: UIViewController {
 
         self.submitButton.isHidden = true
 
-//        self.playButton.isEnabled = false
-//        self.playButton.backgroundColor = self.disabledGrey
         self.playButton.isHidden = true
 
         self.timerLabel.isHidden   = false
@@ -706,12 +709,46 @@ class RecordViewController: UIViewController {
         self.submitButton.isHidden = true
 
         self.playButton.isHidden = false
+        UIView.performWithoutAnimation {
+            self.playButton.setTitle("Play", for: .normal)
+            self.playButton.layoutIfNeeded()
+        }
 
         self.timerLabel.isHidden   = false
         self.playbackSlider.isHidden  = false
         self.startoverButton.isHidden = true
     }
 
+    func playagainUIState() {
+        self.recordButton.isEnabled = false
+        self.recordButton.backgroundColor = self.disabledGrey
+        UIView.performWithoutAnimation {
+            self.recordButton.setTitle("Continue", for: .normal)
+            self.recordButton.layoutIfNeeded()
+        }
+
+        self.playbackPauseButton.isHidden = true
+
+        self.stopButton.isHidden = false
+        self.stopButton.isEnabled = true
+        self.stopButton.backgroundColor = .black
+        UIView.performWithoutAnimation {
+            self.stopButton.setTitle("Stop", for: .normal)
+            self.stopButton.layoutIfNeeded()
+        }
+
+        self.submitButton.isHidden = true
+
+        self.playButton.isHidden = false
+        UIView.performWithoutAnimation {
+            self.playButton.setTitle("Play Again", for: .normal)
+            self.playButton.layoutIfNeeded()
+        }
+
+        self.timerLabel.isHidden   = false
+        self.playbackSlider.isHidden  = false
+        self.startoverButton.isHidden = true
+    }
     /*
     // MARK: - Navigation
 
