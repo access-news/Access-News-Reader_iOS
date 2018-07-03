@@ -33,8 +33,9 @@ class RecordViewController: UIViewController {
     let disabledGrey      = UIColor(red: 0.910, green: 0.910, blue: 0.910, alpha: 1.0)
     let playGreen         = UIColor(red: 0.238, green: 0.753, blue: 0.323, alpha: 1.0)
     let recordRed         = UIColor(red: 1.0,   green: 0.2,   blue: 0.169, alpha: 1.0)
-    let endsessionPurple   = UIColor(red: 0.633, green: 0.276, blue: 0.425, alpha: 1.0)
+    let endsessionPurple  = UIColor(red: 0.633, green: 0.276, blue: 0.425, alpha: 1.0)
     let pausePlaybackGrey = UIColor(red: 0.475, green: 0.494, blue: 0.500, alpha: 1.0)
+    let startoverGold     = UIColor(red: 1.000, green: 0.694, blue: 0.0,   alpha: 1.0)
 
     var documentDir: URL {
         get {
@@ -169,6 +170,16 @@ class RecordViewController: UIViewController {
         self.startUIState()
     }
 
+    @IBOutlet weak var startoverButton: UIButton!
+    @IBAction func startoverTapped(_ sender: Any) {
+        /* Zeroing out whatever has been recorded up to
+         this point.
+         */
+        self.zeroRecordArtifacts()
+        self.resetRecordTimer()
+        self.startUIState()
+    }
+
     @IBOutlet weak var endsessionButton: UIButton!
     @IBAction func endsessionTapped(_ sender: Any) {
 
@@ -177,14 +188,6 @@ class RecordViewController: UIViewController {
         self.sessionTimer.invalidate()
         self.navigationController?.popViewController(animated: true)
     }
-
-    /* These are instructions for RESET or START OVER */
-    //        /* Zeroing out whatever has been recorded up to
-    //           this point.
-    //        */
-    //        self.zeroRecordArtifacts()
-    //        self.resetRecordTimer()
-    //        self.startUIState()
 
     @IBOutlet weak var playbackPauseButton: UIButton!
     @IBAction func playbackPauseTapped(_ sender: Any) {
@@ -658,6 +661,8 @@ class RecordViewController: UIViewController {
         self.playButton.isEnabled = false
         self.playButton.backgroundColor = self.disabledGrey
 
+        self.startoverButton.isHidden = true
+
         self.timerLabel.isHidden   = true
         self.playbackSlider.isHidden  = true
         self.endsessionButton.isHidden = true
@@ -687,6 +692,8 @@ class RecordViewController: UIViewController {
         self.playButton.backgroundColor = self.disabledGrey
 
         self.timerLabel.isHidden   = false
+        self.startoverButton.isHidden = true
+        
         self.playbackSlider.isHidden  = true
         self.endsessionButton.isHidden = true
     }
@@ -713,7 +720,8 @@ class RecordViewController: UIViewController {
             self.playButton.layoutIfNeeded()
         }
 
-        self.timerLabel.isHidden   = false
+        self.timerLabel.isHidden   = true
+        self.startoverButton.isHidden = false
 
         self.playbackSlider.isHidden  = true
         self.endsessionButton.isHidden = false
@@ -742,6 +750,8 @@ class RecordViewController: UIViewController {
         self.playButton.isHidden = true
 
         self.timerLabel.isHidden   = false
+        self.startoverButton.isHidden = true
+
         self.playbackSlider.isHidden  = false
         self.endsessionButton.isHidden = true
     }
@@ -773,6 +783,8 @@ class RecordViewController: UIViewController {
         }
 
         self.timerLabel.isHidden   = false
+        self.startoverButton.isHidden = true
+
         self.playbackSlider.isHidden  = false
         self.endsessionButton.isHidden = true
     }
@@ -804,6 +816,8 @@ class RecordViewController: UIViewController {
         }
 
         self.timerLabel.isHidden   = false
+        self.startoverButton.isHidden = true
+
         self.playbackSlider.isHidden  = false
         self.endsessionButton.isHidden = true
     }

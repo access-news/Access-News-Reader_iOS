@@ -261,7 +261,7 @@ Cgo
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RQt-Kf-9dy">
-                                        <rect key="frame" x="39" y="246" width="266" height="70"/>
+                                        <rect key="frame" x="37" y="246" width="268" height="70"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="0.47545770460941866" green="0.49425863944393383" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="45"/>
@@ -275,6 +275,23 @@ Cgo
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="playbackPauseTapped:" destination="Ha9-TU-hvE" eventType="touchUpInside" id="rUN-CX-YAU"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OcO-2k-kKU">
+                                        <rect key="frame" x="37" y="349" width="268" height="70"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="0.69389232227616993" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="45"/>
+                                        <state key="normal" title="Start Over">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="19"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="startoverTapped:" destination="Ha9-TU-hvE" eventType="touchUpInside" id="kQg-8o-bg6"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -303,6 +320,7 @@ Cgo
                         <outlet property="playbackPauseButton" destination="RQt-Kf-9dy" id="0Ir-2j-Qxe"/>
                         <outlet property="playbackSlider" destination="AMh-74-mM9" id="iK4-I7-Z4L"/>
                         <outlet property="recordButton" destination="GYF-hw-sgp" id="Toy-F0-DyE"/>
+                        <outlet property="startoverButton" destination="OcO-2k-kKU" id="0us-vs-tQ4"/>
                         <outlet property="stopButton" destination="z6G-lE-URb" id="jJx-Jz-7bw"/>
                         <outlet property="submitButton" destination="M6T-0H-nR5" id="Wkv-iJ-TyB"/>
                         <outlet property="timerLabel" destination="f4K-DF-WQN" id="OsA-ct-bri"/>
@@ -310,7 +328,7 @@ Cgo
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ltZ-Bl-JkB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1241" y="-281"/>
+            <point key="canvasLocation" x="1240.8" y="-281.10944527736132"/>
         </scene>
         <!--SettingsTVC-->
         <scene sceneID="OV0-Qz-blM">
