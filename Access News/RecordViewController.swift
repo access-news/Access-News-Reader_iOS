@@ -33,7 +33,7 @@ class RecordViewController: UIViewController {
     let disabledGrey      = UIColor(red: 0.910, green: 0.910, blue: 0.910, alpha: 1.0)
     let playGreen         = UIColor(red: 0.238, green: 0.753, blue: 0.323, alpha: 1.0)
     let recordRed         = UIColor(red: 1.0,   green: 0.2,   blue: 0.169, alpha: 1.0)
-    let startoverPurple   = UIColor(red: 0.633, green: 0.276, blue: 0.425, alpha: 1.0)
+    let endsessionPurple   = UIColor(red: 0.633, green: 0.276, blue: 0.425, alpha: 1.0)
     let pausePlaybackGrey = UIColor(red: 0.475, green: 0.494, blue: 0.500, alpha: 1.0)
 
     var documentDir: URL {
@@ -130,16 +130,21 @@ class RecordViewController: UIViewController {
         self.startUIState()
     }
 
-    @IBOutlet weak var startoverButton: UIButton!
-    @IBAction func startoverTapped(_ sender: Any) {
+    @IBOutlet weak var endsessionButton: UIButton!
+    @IBAction func endsessionTapped(_ sender: Any) {
 
-        /* Zeroing out whatever has been recorded up to
-           this point.
-        */
-        self.zeroRecordArtifacts()
-        self.resetRecordTimer()
-        self.startUIState()
+        // TODO: submit session time to Firebase
+
+        self.navigationController?.popViewController(animated: true)
     }
+
+    /* These are instructions for RESET or START OVER */
+    //        /* Zeroing out whatever has been recorded up to
+    //           this point.
+    //        */
+    //        self.zeroRecordArtifacts()
+    //        self.resetRecordTimer()
+    //        self.startUIState()
 
     @IBOutlet weak var playbackPauseButton: UIButton!
     @IBAction func playbackPauseTapped(_ sender: Any) {
@@ -385,7 +390,12 @@ class RecordViewController: UIViewController {
 
     func startRecordTimer() {
 
-        self.timer = Timer.scheduledTimer(timeInterval: 0.01  , target: self, selector: #selector(updateRecordTimerLabel), userInfo: nil, repeats: true)
+        self.timer = Timer.scheduledTimer(
+            timeInterval: 0.01,
+            target: self,
+            selector: #selector(updateRecordTimerLabel),
+            userInfo: nil,
+            repeats: true)
     }
 
     /* `self.timerLabel` only displays elapsed time down to seconds,
@@ -602,7 +612,7 @@ class RecordViewController: UIViewController {
 
         self.timerLabel.isHidden   = true
         self.playbackSlider.isHidden  = true
-        self.startoverButton.isHidden = true
+        self.endsessionButton.isHidden = true
     }
 
     func recordUIState() {
@@ -630,7 +640,7 @@ class RecordViewController: UIViewController {
 
         self.timerLabel.isHidden   = false
         self.playbackSlider.isHidden  = true
-        self.startoverButton.isHidden = true
+        self.endsessionButton.isHidden = true
     }
 
     func stoppedUIState() {
@@ -658,7 +668,7 @@ class RecordViewController: UIViewController {
         self.timerLabel.isHidden   = false
 
         self.playbackSlider.isHidden  = true
-        self.startoverButton.isHidden = false
+        self.endsessionButton.isHidden = false
     }
 
     func playUIState() {
@@ -685,7 +695,7 @@ class RecordViewController: UIViewController {
 
         self.timerLabel.isHidden   = false
         self.playbackSlider.isHidden  = false
-        self.startoverButton.isHidden = true
+        self.endsessionButton.isHidden = true
     }
 
     func resumePlaybackUIState() {
@@ -716,7 +726,7 @@ class RecordViewController: UIViewController {
 
         self.timerLabel.isHidden   = false
         self.playbackSlider.isHidden  = false
-        self.startoverButton.isHidden = true
+        self.endsessionButton.isHidden = true
     }
 
     func playagainUIState() {
@@ -747,7 +757,7 @@ class RecordViewController: UIViewController {
 
         self.timerLabel.isHidden   = false
         self.playbackSlider.isHidden  = false
-        self.startoverButton.isHidden = true
+        self.endsessionButton.isHidden = true
     }
     /*
     // MARK: - Navigation

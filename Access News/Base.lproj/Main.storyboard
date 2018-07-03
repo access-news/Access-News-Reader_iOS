@@ -10,10 +10,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Session Start View Controller-->
         <scene sceneID="5YS-jm-hec">
             <objects>
-                <viewController id="7G3-FM-EZs" sceneMemberID="viewController">
+                <viewController id="7G3-FM-EZs" customClass="SessionStartViewController" customModule="Access_News" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9fK-pe-71O">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -248,7 +248,7 @@ Cgo
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="0.63346016839378239" green="0.27579406461804185" blue="0.42462661558993364" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="39"/>
-                                        <state key="normal" title="Start Over">
+                                        <state key="normal" title="End Session">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <userDefinedRuntimeAttributes>
@@ -257,7 +257,7 @@ Cgo
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="startoverTapped:" destination="Ha9-TU-hvE" eventType="touchUpInside" id="OLL-Mc-jd4"/>
+                                            <action selector="endsessionTapped:" destination="Ha9-TU-hvE" eventType="touchUpInside" id="Hxe-pG-fLe"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RQt-Kf-9dy">
@@ -298,11 +298,11 @@ Cgo
                     </navigationItem>
                     <connections>
                         <outlet property="disabledNotice" destination="ZJn-YY-5KY" id="CJO-j0-nYa"/>
+                        <outlet property="endsessionButton" destination="dPf-Rc-VPJ" id="yTc-dh-cBr"/>
                         <outlet property="playButton" destination="2Rb-XV-05C" id="Cdr-uw-1NI"/>
                         <outlet property="playbackPauseButton" destination="RQt-Kf-9dy" id="0Ir-2j-Qxe"/>
                         <outlet property="playbackSlider" destination="AMh-74-mM9" id="iK4-I7-Z4L"/>
                         <outlet property="recordButton" destination="GYF-hw-sgp" id="Toy-F0-DyE"/>
-                        <outlet property="startoverButton" destination="dPf-Rc-VPJ" id="9mW-Xs-5fz"/>
                         <outlet property="stopButton" destination="z6G-lE-URb" id="jJx-Jz-7bw"/>
                         <outlet property="submitButton" destination="M6T-0H-nR5" id="Wkv-iJ-TyB"/>
                         <outlet property="timerLabel" destination="f4K-DF-WQN" id="OsA-ct-bri"/>
