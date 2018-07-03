@@ -46,8 +46,35 @@ class RecordViewController: UIViewController {
         }
     }
 
+    /* `self.timerLabel` only displays elapsed time down to seconds,
+     but `updateTimerLabel` (and therefore `self.tick()`) fires
+     every 0.01 seconds. This global variable is used to check
+     whether label update is necessary (i.e., did a full second
+     already elapsed).
+     */
+    var seconds : [String: String] =
+        [ "record"   : ""
+        , "playback" : ""
+        , "session"  : ""
+        ]
+
+    var sessionTimer: Timer!
+    var sessionDuration: Double!
+
+    var recordTimer:  Timer!
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        self.navigationItem.title = "00:00:00"
+        self.sessionDuration = 0.0
+        self.sessionTimer =
+            Timer.scheduledTimer(
+                timeInterval: 0.01,
+                target: self,
+                selector: #selector(updateSessionTimerLabel),
+                userInfo: nil,
+                repeats: true)
 
         /* Set default UI properties, assuming that permission to record is given. */
 
@@ -76,6 +103,16 @@ class RecordViewController: UIViewController {
         } catch {
             print("Setting up audiosession failed somehow.")
         }
+    }
+
+    @objc func updateSessionTimerLabel(timer: Timer) {
+
+        let newTime = self.sessionDuration + timer.timeInterval
+        self.sessionDuration = newTime
+
+        self.navigationItem.title =
+            self.tick(newTime, compareWith: "playback")
+            ?? self.navigationItem.title
     }
 
     override func didReceiveMemoryWarning() {
@@ -113,6 +150,9 @@ class RecordViewController: UIViewController {
     @IBOutlet weak var playButton: UIButton!
     @IBAction func playTapped(_ sender: Any) {
 
+        if self.playButton.titleLabel?.text == "Play Again" {
+            self.stopPlayer()
+        }
         self.startPlayer()
         self.playUIState()
     }
@@ -133,8 +173,9 @@ class RecordViewController: UIViewController {
     @IBOutlet weak var endsessionButton: UIButton!
     @IBAction func endsessionTapped(_ sender: Any) {
 
-        // TODO: submit session time to Firebase
+        // TODO: submit session timer value to Firebase
 
+        self.sessionTimer.invalidate()
         self.navigationController?.popViewController(animated: true)
     }
 
@@ -264,7 +305,6 @@ class RecordViewController: UIViewController {
     }
 
     @objc func itemDidFinishPlaying() {
-        self.stopPlayer()
         self.playagainUIState()
         self.slidingOnPlayback = false
     }
@@ -297,8 +337,16 @@ class RecordViewController: UIViewController {
     }
 
     @objc func touchupinsideSlider() {
+        /* When sliding all the way to the end, the label does not change
+           to "Play Again", but after pressing "Play", it turns to "Pause",
+           and switches to "Play Again".
+        */
         if self.slidingOnPlayback {
             self.startPlayer()
+        } else if self.playbackSlider.maximumValue != self.playbackSlider.value {
+            self.resumePlaybackUIState()
+        } else {
+            self.playagainUIState()
         }
     }
 
@@ -325,9 +373,10 @@ class RecordViewController: UIViewController {
                 queue: DispatchQueue.main) {
                     [weak self] time in
 
-//                    print(CMTimeGetSeconds(time))
                     let t = CMTimeGetSeconds(time)
-                    self?.tick(Double(t))
+                    self?.timerLabel.text =
+                        self?.tick(Double(t), compareWith: "playback")
+                        ?? self?.timerLabel.text
 
                     let newSliderValue = Float(t)
                     self?.playbackSlider.setValue(
@@ -367,8 +416,6 @@ class RecordViewController: UIViewController {
         return self.documentDir.appendingPathComponent(fileURL)
     }
 
-    var timer: Timer!
-
     /* Because paused AVAudioRecorder recording cannot be played
        back, it needs to be stopped (zeroing out its `currentTime`
        property as well), but the user should be able to resume
@@ -390,21 +437,14 @@ class RecordViewController: UIViewController {
 
     func startRecordTimer() {
 
-        self.timer = Timer.scheduledTimer(
-            timeInterval: 0.01,
-            target: self,
-            selector: #selector(updateRecordTimerLabel),
-            userInfo: nil,
-            repeats: true)
+        self.recordTimer =
+            Timer.scheduledTimer(
+                timeInterval: 0.01,
+                target: self,
+                selector: #selector(updateRecordTimerLabel),
+                userInfo: nil,
+                repeats: true)
     }
-
-    /* `self.timerLabel` only displays elapsed time down to seconds,
-        but `updateTimerLabel` (and therefore `self.tick()`) fires
-        every 0.01 seconds. This global variable is used to check
-        whether label update is necessary (i.e., did a full second
-        already elapsed).
-    */
-    var seconds: String!
 
     @objc func updateRecordTimerLabel() {
 
@@ -417,16 +457,20 @@ class RecordViewController: UIViewController {
               self.articleSoFarDuration
             + recorderTime
 
-        self.tick(elapsed)
+        self.timerLabel.text =
+            self.tick(elapsed, compareWith: "record")
+            ?? self.timerLabel.text
     }
 
-    func tick(_ time: Double) {
+    func tick(_ time: Double, compareWith: String) -> String? {
+
+        var returnLabel: String!
 
         let elapsedSecond =
             String(String(time).prefix(while: { c in return c != "."}))
 
-        if self.seconds != elapsedSecond {
-            self.seconds = elapsedSecond
+        if self.seconds[compareWith] != elapsedSecond {
+            self.seconds[compareWith] = elapsedSecond
             let i = Int(elapsedSecond)!
             var results = [Int]()
 
@@ -446,12 +490,16 @@ class RecordViewController: UIViewController {
                 results = [hour, min, sec]
             }
 
-            self.timerLabel.text = results.map { String(format: "%02u", $0)}.joined(separator: ":")
+            returnLabel = results.map { String(format: "%02u", $0)}.joined(separator: ":")
+        } else {
+            returnLabel = nil
         }
+
+        return returnLabel
     }
 
     func stopRecordTimer() {
-        self.timer.invalidate()
+        self.recordTimer.invalidate()
 
         self.articleSoFarDuration = CMTimeGetSeconds(self.articleSoFar.duration)
     }
