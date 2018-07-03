@@ -53,8 +53,7 @@ class RecordViewController: UIViewController {
      already elapsed).
      */
     var seconds : [String: String] =
-        [ "record"   : ""
-        , "playback" : ""
+        [ "record and playback" : ""
         , "session"  : ""
         ]
 
@@ -111,7 +110,7 @@ class RecordViewController: UIViewController {
         self.sessionDuration = newTime
 
         self.navigationItem.title =
-            self.tick(newTime, compareWith: "playback")
+            self.tick(newTime, compareWith: "record and playback")
             ?? self.navigationItem.title
     }
 
@@ -343,6 +342,7 @@ class RecordViewController: UIViewController {
         */
         if self.slidingOnPlayback {
             self.startPlayer()
+            self.slidingOnPlayback = false
         } else if self.playbackSlider.maximumValue != self.playbackSlider.value {
             self.resumePlaybackUIState()
         } else {
@@ -375,7 +375,7 @@ class RecordViewController: UIViewController {
 
                     let t = CMTimeGetSeconds(time)
                     self?.timerLabel.text =
-                        self?.tick(Double(t), compareWith: "playback")
+                        self?.tick(Double(t), compareWith: "record and playback")
                         ?? self?.timerLabel.text
 
                     let newSliderValue = Float(t)
@@ -458,7 +458,7 @@ class RecordViewController: UIViewController {
             + recorderTime
 
         self.timerLabel.text =
-            self.tick(elapsed, compareWith: "record")
+            self.tick(elapsed, compareWith: "record and playback")
             ?? self.timerLabel.text
     }
 
