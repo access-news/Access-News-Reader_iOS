@@ -129,6 +129,12 @@ class RecordViewController: UIViewController {
         self.recordUIState()
     }
 
+    @IBOutlet weak var backButton: UIButton!
+    @IBAction func backTapped(_ sender: Any) {
+        self.stopTapped(self)
+        self.stoppedUIState()
+    }
+
     @IBOutlet weak var stopButton: UIButton!
     @IBAction func stopTapped(_ sender: Any) {
 
@@ -138,13 +144,13 @@ class RecordViewController: UIViewController {
         */
         if self.audioRecorder != nil {
             self.stopRecorder()
+            self.stoppedUIState()
         } else {
             self.stopPlayer()
             // In this case, `restoreTimerLabel` would be more appropriate...
             self.updateRecordTimerLabel()
+            self.playagainUIState()
         }
-
-        self.stoppedUIState()
     }
 
     @IBOutlet weak var playButton: UIButton!
@@ -646,6 +652,8 @@ class RecordViewController: UIViewController {
             self.recordButton.layoutIfNeeded()
         }
 
+        self.backButton.isHidden = true
+
         self.playbackPauseButton.isHidden = true
 
         self.stopButton.isHidden = false
@@ -676,6 +684,8 @@ class RecordViewController: UIViewController {
             self.recordButton.layoutIfNeeded()
         }
 
+        self.backButton.isHidden = true
+
         self.playbackPauseButton.isHidden = true
 
         self.stopButton.isHidden = false
@@ -693,7 +703,7 @@ class RecordViewController: UIViewController {
 
         self.timerLabel.isHidden   = false
         self.startoverButton.isHidden = true
-        
+
         self.playbackSlider.isHidden  = true
         self.endsessionButton.isHidden = true
     }
@@ -705,6 +715,8 @@ class RecordViewController: UIViewController {
             self.recordButton.setTitle("Continue", for: .normal)
             self.recordButton.layoutIfNeeded()
         }
+
+        self.backButton.isHidden = true
 
         self.playbackPauseButton.isHidden = true
 
@@ -735,6 +747,8 @@ class RecordViewController: UIViewController {
             self.recordButton.layoutIfNeeded()
         }
 
+        self.backButton.isHidden = false
+
         self.playbackPauseButton.isHidden = false
 
         self.stopButton.isHidden = false
@@ -763,6 +777,8 @@ class RecordViewController: UIViewController {
             self.recordButton.setTitle("Continue", for: .normal)
             self.recordButton.layoutIfNeeded()
         }
+
+        self.backButton.isHidden = false
 
         self.playbackPauseButton.isHidden = true
 
@@ -796,6 +812,8 @@ class RecordViewController: UIViewController {
             self.recordButton.setTitle("Continue", for: .normal)
             self.recordButton.layoutIfNeeded()
         }
+
+        self.backButton.isHidden = false
 
         self.playbackPauseButton.isHidden = true
 

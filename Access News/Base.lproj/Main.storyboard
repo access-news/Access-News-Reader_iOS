@@ -303,6 +303,23 @@ Cgo
                                             <action selector="startoverTapped:" destination="Ha9-TU-hvE" eventType="touchUpInside" id="kQg-8o-bg6"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C9s-96-xgd">
+                                        <rect key="frame" x="39" y="42" width="268" height="70"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.031372549019607843" green="0.45098039215686275" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="45"/>
+                                        <state key="normal" title="Back">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="19"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="backTapped:" destination="Ha9-TU-hvE" eventType="touchUpInside" id="swo-Fw-gS8"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
@@ -323,6 +340,7 @@ Cgo
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="backButton" destination="C9s-96-xgd" id="Wz7-JH-1gU"/>
                         <outlet property="disabledNotice" destination="ZJn-YY-5KY" id="CJO-j0-nYa"/>
                         <outlet property="endsessionButton" destination="dPf-Rc-VPJ" id="yTc-dh-cBr"/>
                         <outlet property="playButton" destination="2Rb-XV-05C" id="Cdr-uw-1NI"/>
