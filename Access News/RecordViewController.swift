@@ -146,9 +146,11 @@ class RecordViewController: UIViewController {
             self.stopRecorder()
             self.stoppedUIState()
         } else {
-            self.stopPlayer()
-            // In this case, `restoreTimerLabel` would be more appropriate...
-            self.updateRecordTimerLabel()
+            /* Pausing instead of full stop (i.e., nil out `self.audioPlayer`),
+               because if user tries to seek after stopping, the app will crash
+               as there is no AVPlayer object (with the current asset) anymore.
+            */
+            self.pausePlayer()
             self.playagainUIState()
         }
     }
@@ -473,7 +475,7 @@ class RecordViewController: UIViewController {
 
     func tick(_ time: Double, compareWith: String) -> String? {
 
-        var returnLabel: String!
+        var returnLabelText: String!
 
         let elapsedSecond =
             String(String(time).prefix(while: { c in return c != "."}))
@@ -499,12 +501,12 @@ class RecordViewController: UIViewController {
                 results = [hour, min, sec]
             }
 
-            returnLabel = results.map { String(format: "%02u", $0)}.joined(separator: ":")
+            returnLabelText = results.map { String(format: "%02u", $0)}.joined(separator: ":")
         } else {
-            returnLabel = nil
+            returnLabelText = nil
         }
 
-        return returnLabel
+        return returnLabelText
     }
 
     func stopRecordTimer() {
@@ -837,6 +839,8 @@ class RecordViewController: UIViewController {
         self.startoverButton.isHidden = true
 
         self.playbackSlider.isHidden  = false
+        self.playbackSlider.value = self.playbackSlider.minimumValue
+
         self.endsessionButton.isHidden = true
     }
     /*
