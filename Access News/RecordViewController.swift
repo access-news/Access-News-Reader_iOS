@@ -254,8 +254,6 @@ class RecordViewController: UIViewController {
         self.stopRecordTimer()
     }
 
-    var timeObserverToken: Any?
-
     func initPlayer() {
         let assetKeys = ["playable"]
         let playerItem =
@@ -338,6 +336,8 @@ class RecordViewController: UIViewController {
     */
     var articleSoFarDuration: Double = 0.0
 
+    var reverseTimerLabel: Bool = false
+
     func startRecordTimer() {
 
         self.recordTimer =
@@ -361,44 +361,59 @@ class RecordViewController: UIViewController {
             + recorderTime
 
         self.timerLabel.text =
-            self.tick(elapsed, compareWith: "record and playback")
-            ?? self.timerLabel.text
+            self.tick(elapsed, compareWith: "record and playback", reversed: self.reverseTimerLabel)
     }
 
-    func tick(_ time: Double, compareWith: String) -> String? {
-
-        var returnLabelText: String!
+    func tick(_ time: Double, compareWith: String, reversed: Bool = false) -> String {
 
         let elapsedSecond =
             String(String(time).prefix(while: { c in return c != "."}))
 
         if self.seconds[compareWith] != elapsedSecond {
             self.seconds[compareWith] = elapsedSecond
-            let i = Int(elapsedSecond)!
-            var results = [Int]()
 
-            if i <= 3599 {
-                let sec = i % 60
-                let min = i / 60
+            return self.convertSecondStringToTimerLabel(elapsedSecond, reversed: reversed)
 
-                results = [0, min, sec]
-
-            } else if i <= 215999 {
-                let sec  = i % 60
-                let tempMin = i / 60
-
-                let min  = tempMin % 60
-                let hour = tempMin / 60
-
-                results = [hour, min, sec]
-            }
-
-            returnLabelText = results.map { String(format: "%02u", $0)}.joined(separator: ":")
         } else {
-            returnLabelText = nil
+            return self.timerLabel.text!
+        }
+    }
+
+    func convertSecondStringToTimerLabel(_ from: String, reversed: Bool = false) -> String {
+        var i = Int(from)!
+        var results = [Int]()
+
+        if reversed == true {
+            let playbackDurationInSeconds =
+                CMTimeGetSeconds(self.articleSoFar.duration)
+
+            i -= Int(playbackDurationInSeconds)
         }
 
-        return returnLabelText
+        if i <= 3599 {
+            let sec = i % 60
+            let min = i / 60
+
+            results = [0, min, sec]
+
+        } else if i <= 215999 {
+            let sec  = i % 60
+            let tempMin = i / 60
+
+            let min  = tempMin % 60
+            let hour = tempMin / 60
+
+            results = [hour, min, sec]
+        }
+
+        var newTimerLabel: String =
+            results.map { String(format: "%02u", $0)}.joined(separator: ":")
+
+        if reversed == true {
+            newTimerLabel.insert("-", at: newTimerLabel.startIndex)
+        }
+
+        return newTimerLabel
     }
 
     func stopRecordTimer() {
@@ -596,13 +611,9 @@ class RecordViewController: UIViewController {
             Timer.scheduledTimer(
                 timeInterval: 0.01,
                 target: self,
-                selector: #selector(updateSessionTimerLabel),
+                selector: #selector(self.updateSessionTimerLabel),
                 userInfo: nil,
                 repeats: true)
-    }
-
-    @objc func playbackTimerLabelTapped() {
-        print("yeah\n")
     }
 
     func recordUIState() {
@@ -817,7 +828,20 @@ class RecordViewController: UIViewController {
         self.endsessionButton.isHidden = true
     }
 
+    // MARK: `timerLabel` tap gesture callback
+
+    @objc func playbackTimerLabelTapped() {
+        self.reverseTimerLabel = !self.reverseTimerLabel
+
+    }
+
     // MARK: `playbackSlider` function for UIState methods
+
+    // TODO: I just realized that the observer is also responsible for
+    //       the `timerLabel` update... Leave it be for a while, and
+    //       refactor once testing begins.
+
+    var timeObserverToken: Any?
 
     func registerPeriodicTimeObserver() {
         self.timeObserverToken =
