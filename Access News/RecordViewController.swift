@@ -21,14 +21,14 @@ class RecordViewController: UIViewController {
     var insertAt: CMTimeRange!
     /* To store reference to partial recordings. Unsure whether adding an AVAsset
        to an AVComposition copies the data or references them, therefore keeping
-       their references here and remove the files when exporting. */
+       their references here and removing the files when exporting. */
     var leftoverChunks: [AVURLAsset]!
     // --------------------------------------------------------
 
     @IBOutlet weak var disabledNotice: UITextView!
 
     @IBOutlet weak var playbackSlider: UISlider!
-    @IBOutlet weak var timerLabel: UILabel!
+
 
     let disabledGrey      = UIColor(red: 0.910, green: 0.910, blue: 0.910, alpha: 1.0)
     let playGreen         = UIColor(red: 0.238, green: 0.753, blue: 0.323, alpha: 1.0)
@@ -47,11 +47,11 @@ class RecordViewController: UIViewController {
         }
     }
 
-    /* `self.timerLabel` only displays elapsed time down to seconds,
+    /* `self.timerLabel` only displays elapsed time, down to seconds,
      but `updateTimerLabel` (and therefore `self.tick()`) fires
      every 0.01 seconds. This global variable is used to check
      whether label update is necessary (i.e., did a full second
-     already elapsed).
+     already went by).
      */
     var seconds : [String: String] =
         [ "record and playback" : ""
@@ -61,20 +61,11 @@ class RecordViewController: UIViewController {
     var sessionTimer: Timer!
     var sessionDuration: Double!
 
+    @IBOutlet weak var timerLabel: UILabel!
     var recordTimer:  Timer!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        self.navigationItem.title = "00:00:00"
-        self.sessionDuration = 0.0
-        self.sessionTimer =
-            Timer.scheduledTimer(
-                timeInterval: 0.01,
-                target: self,
-                selector: #selector(updateSessionTimerLabel),
-                userInfo: nil,
-                repeats: true)
 
         /* Set default UI properties, assuming that permission to record is given. */
 
@@ -131,7 +122,7 @@ class RecordViewController: UIViewController {
 
     @IBOutlet weak var backButton: UIButton!
     @IBAction func backTapped(_ sender: Any) {
-        self.stopTapped(self)
+        self.stopPlayer()
         self.stoppedUIState()
     }
 
@@ -161,8 +152,20 @@ class RecordViewController: UIViewController {
         if self.playButton.titleLabel?.text == "Play Again" {
             self.stopPlayer()
         }
+
+        /* Set up AVPlayer, if it is not set up already. Without this check,
+           if "Play" is tapped from `playbackUIState`, it will reinit the
+           player (with its player item) ever single time) losing progress,
+           and sliding/seeking won't be possible.
+
+           If the `playbackUIState` is active, the player should only be started,
+           without any configuration.
+        */
+        if self.audioPlayer == nil {
+            self.initPlayer()
+        }
+        self.playbackUIState()
         self.startPlayer()
-        self.playUIState()
     }
 
     @IBOutlet weak var submitButton: UIButton!
@@ -253,112 +256,32 @@ class RecordViewController: UIViewController {
 
     var timeObserverToken: Any?
 
+    func initPlayer() {
+        let assetKeys = ["playable"]
+        let playerItem =
+            AVPlayerItem(
+                asset: self.articleSoFar,
+                automaticallyLoadedAssetKeys: assetKeys)
+
+        /* Change UI if recording finished playing.
+         (Removed in `self.stopPlayer()`)
+         */
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.itemDidFinishPlaying),
+            name:     .AVPlayerItemDidPlayToEndTime,
+            object:   playerItem)
+
+        self.audioPlayer = AVPlayer(playerItem: playerItem)
+    }
+
     func startPlayer() {
-
-        if self.audioPlayer == nil {
-
-            let assetKeys = ["playable"]
-            let playerItem =
-                AVPlayerItem(
-                    asset: self.articleSoFar,
-                    automaticallyLoadedAssetKeys: assetKeys)
-
-            /* Change UI if recording finished playing.
-               (Removed in `self.stopPlayer()`)
-            */
-            NotificationCenter.default.addObserver(
-                self,
-                selector: #selector(self.itemDidFinishPlaying),
-                name:     .AVPlayerItemDidPlayToEndTime,
-                object:   playerItem)
-
-            self.audioPlayer = AVPlayer(playerItem: playerItem)
-
-            /* ADD SLIDER
-
-               http://swiftdeveloperblog.com/code-examples/add-playback-slider-to-avplayer-example-in-swift/
-               Helpful to get the seeking with the slider set up, but does not say
-               anything on how to integrate with `addPeriodicTimeObserver`.
-            */
-
-            let duration : CMTime  = self.audioPlayer!.currentItem!.duration
-            let seconds  : Double = CMTimeGetSeconds(duration)
-
-            self.playbackSlider.minimumValue = 0
-            self.playbackSlider.maximumValue = Float(seconds)
-
-            self.playbackSlider.setValue(0.0, animated: false)
-            self.playbackSlider.isContinuous = true
-            /* React if slider is being interacted with.
-               (Not removed anywhere as invoking it multiple times shouldn't have
-                any effect. Shouldn't.)
-            */
-            self.playbackSlider.addTarget(
-                self,
-                action: #selector(self.touchdownSlider),
-                for: .touchDown)
-
-            self.playbackSlider.addTarget(
-                self,
-                action: #selector(self.isSliding),
-                for: .valueChanged)
-
-            self.playbackSlider.addTarget(
-                self,
-                action: #selector(self.touchupinsideSlider),
-                for: .touchUpInside)
-
-            self.registerPeriodicTimeObserver()
-        }
-
         self.audioPlayer?.play()
     }
 
     @objc func itemDidFinishPlaying() {
         self.playagainUIState()
         self.slidingOnPlayback = false
-    }
-
-
-    /* Track whether slider has been tapped during playback or not.
-       If yes, resume playback from the position the control has
-       been released (i.e., touchUpInside).
-
-       Initialized with `false` because playback only start on tapping
-       the Play button.
-     */
-    var slidingOnPlayback: Bool = false
-
-    @objc func touchdownSlider() {
-        if self.audioPlayer!.rate != 0 { // i.e. playing
-            self.pausePlayer()
-            self.slidingOnPlayback = true
-        }
-    }
-
-    @objc func isSliding() {
-
-        let targetTime =
-            CMTime(
-                seconds: Double(self.playbackSlider.value),
-                preferredTimescale: 100)
-
-        self.audioPlayer!.seek(to: targetTime)
-    }
-
-    @objc func touchupinsideSlider() {
-        /* When sliding all the way to the end, the label does not change
-           to "Play Again", but after pressing "Play", it turns to "Pause",
-           and switches to "Play Again".
-        */
-        if self.slidingOnPlayback {
-            self.startPlayer()
-            self.slidingOnPlayback = false
-        } else if self.playbackSlider.maximumValue != self.playbackSlider.value {
-            self.resumePlaybackUIState()
-        } else {
-            self.playagainUIState()
-        }
     }
 
     func stopPlayer() {
@@ -371,37 +294,6 @@ class RecordViewController: UIViewController {
         self.pausePlayer()
         self.removePeriodicTimeObserver()
         self.audioPlayer = nil
-
-    }
-
-    func registerPeriodicTimeObserver() {
-        self.timeObserverToken =
-            /* Register a method to fire every 0.01 second when playing audio.
-             (Removed in `self.stopPlayer()`)
-             */
-            self.audioPlayer?.addPeriodicTimeObserver(
-                forInterval: CMTime(seconds: 0.01, preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
-                queue: DispatchQueue.main) {
-                    [weak self] time in
-
-                    let t = CMTimeGetSeconds(time)
-                    self?.timerLabel.text =
-                        self?.tick(Double(t), compareWith: "record and playback")
-                        ?? self?.timerLabel.text
-
-                    let newSliderValue = Float(t)
-                    self?.playbackSlider.setValue(
-                        newSliderValue,
-                        animated: true)
-        }
-    }
-
-    func removePeriodicTimeObserver() {
-        // If a time observer exists, remove it
-        if let token = self.timeObserverToken {
-            self.audioPlayer!.removeTimeObserver(token)
-            self.timeObserverToken = nil
-        }
     }
 
     func pausePlayer() {
@@ -676,6 +568,41 @@ class RecordViewController: UIViewController {
         self.timerLabel.isHidden   = true
         self.playbackSlider.isHidden  = true
         self.endsessionButton.isHidden = true
+
+        /* --- */
+
+        /* PLAYBACK TIMER TAP GESTURE SETUP
+           (i.e., switch between up and down timer)
+
+         `timerLabel` is used for both playback and recording. It should
+         only respond to taps during playback, therefore user interaction
+         for `timerLabel` is enabled in `playbackUIState` and disabled in
+         ` recordUIState` below.
+         */
+        let playbackTimerLabelTapGesture =
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(playbackTimerLabelTapped))
+        playbackTimerLabelTapGesture.numberOfTapsRequired = 1
+
+        self.timerLabel.addGestureRecognizer(playbackTimerLabelTapGesture)
+        /* --- */
+
+        /* SESSION TIMER SETUP
+        */
+        self.navigationItem.title = "00:00:00"
+        self.sessionDuration = 0.0
+        self.sessionTimer =
+            Timer.scheduledTimer(
+                timeInterval: 0.01,
+                target: self,
+                selector: #selector(updateSessionTimerLabel),
+                userInfo: nil,
+                repeats: true)
+    }
+
+    @objc func playbackTimerLabelTapped() {
+        print("yeah\n")
     }
 
     func recordUIState() {
@@ -708,6 +635,11 @@ class RecordViewController: UIViewController {
 
         self.playbackSlider.isHidden  = true
         self.endsessionButton.isHidden = true
+
+        /* See "`timerLabel` TAP GESTURE SETUP" comment in
+           `startUIState`
+        */
+        self.timerLabel.isUserInteractionEnabled = false
     }
 
     func stoppedUIState() {
@@ -741,7 +673,7 @@ class RecordViewController: UIViewController {
         self.endsessionButton.isHidden = false
     }
 
-    func playUIState() {
+    func playbackUIState() {
         self.recordButton.isEnabled = false
         self.recordButton.backgroundColor = self.disabledGrey
         UIView.performWithoutAnimation {
@@ -770,6 +702,47 @@ class RecordViewController: UIViewController {
 
         self.playbackSlider.isHidden  = false
         self.endsessionButton.isHidden = true
+
+        /* UISlider SETUP */
+
+            let duration : CMTime  = self.articleSoFar.duration
+            let seconds  : Double = CMTimeGetSeconds(duration)
+
+            self.playbackSlider.minimumValue = 0
+            self.playbackSlider.maximumValue = Float(seconds)
+
+            self.playbackSlider.setValue(0.0, animated: false)
+            self.playbackSlider.isContinuous = true
+            // React if slider is being interacted with.
+            // (Not removed anywhere as invoking it multiple times shouldn't have
+            // any effect. Shouldn't.)
+            self.playbackSlider.addTarget(
+                self,
+                action: #selector(self.touchdownSlider),
+                for: .touchDown)
+
+            self.playbackSlider.addTarget(
+                self,
+                action: #selector(self.isSliding),
+                for: .valueChanged)
+
+            self.playbackSlider.addTarget(
+                self,
+                action: #selector(self.touchupinsideSlider),
+                for: .touchUpInside)
+
+            // Update slider periodically during playback.
+            // (Removed in `self.stopPlayer`)
+
+            // TODO: This is a bit messy, figure out a cleaner way.
+            self.registerPeriodicTimeObserver()
+        /* --- */
+
+
+        /* See "`timerLabel` TAP GESTURE SETUP" comment in
+         `startUIState`
+         */
+        self.timerLabel.isUserInteractionEnabled = true
     }
 
     func resumePlaybackUIState() {
@@ -843,6 +816,80 @@ class RecordViewController: UIViewController {
 
         self.endsessionButton.isHidden = true
     }
+
+    // MARK: `playbackSlider` function for UIState methods
+
+    func registerPeriodicTimeObserver() {
+        self.timeObserverToken =
+            /* Register a method to fire every 0.01 second when playing audio.
+             (Removed in `self.stopPlayer()`)
+             */
+            self.audioPlayer?.addPeriodicTimeObserver(
+                forInterval: CMTime(seconds: 0.01, preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
+                queue: DispatchQueue.main) {
+                    [weak self] time in
+
+                    let t = CMTimeGetSeconds(time)
+                    self?.timerLabel.text =
+                        self?.tick(Double(t), compareWith: "record and playback")
+                        ?? self?.timerLabel.text
+
+                    let newSliderValue = Float(t)
+                    self?.playbackSlider.setValue(
+                        newSliderValue,
+                        animated: true)
+        }
+    }
+
+    func removePeriodicTimeObserver() {
+        // If a time observer exists, remove it
+        if let token = self.timeObserverToken {
+            self.audioPlayer!.removeTimeObserver(token)
+            self.timeObserverToken = nil
+        }
+    }
+
+    /* Track whether slider has been tapped during playback or not.
+     If yes, resume playback from the position the control has
+     been released (i.e., touchUpInside).
+
+     Initialized with `false` because playback only start on tapping
+     the Play button.
+     */
+    var slidingOnPlayback: Bool = false
+
+    @objc func touchdownSlider() {
+        if self.audioPlayer!.rate != 0 { // i.e. playing
+            self.pausePlayer()
+            self.slidingOnPlayback = true
+        }
+    }
+
+    @objc func isSliding() {
+
+        let targetTime =
+            CMTime(
+                seconds: Double(self.playbackSlider.value),
+                preferredTimescale: 100)
+
+        self.audioPlayer!.seek(to: targetTime)
+    }
+
+    @objc func touchupinsideSlider() {
+        /* When sliding all the way to the end, the label does not change
+         to "Play Again", but after pressing "Play", it turns to "Pause",
+         and switches to "Play Again".
+         */
+        if self.slidingOnPlayback {
+            self.startPlayer()
+            self.slidingOnPlayback = false
+        } else if self.playbackSlider.maximumValue != self.playbackSlider.value {
+            self.resumePlaybackUIState()
+        } else {
+            self.playagainUIState()
+        }
+    }
+
     /*
     // MARK: - Navigation
 
