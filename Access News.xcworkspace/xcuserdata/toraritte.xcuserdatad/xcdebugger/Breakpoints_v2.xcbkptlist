@@ -43,28 +43,12 @@
             condition = "compareWith  == &quot;session&quot;"
             continueAfterRunningActions = "No"
             filePath = "Access News/RecordViewController.swift"
-            timestampString = "552607595.881591"
+            timestampString = "552610854.668393"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "375"
-            endingLineNumber = "375"
+            startingLineNumber = "390"
+            endingLineNumber = "390"
             landmarkName = "updateRecordTimerLabel()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Access News/RecordViewController.swift"
-            timestampString = "552607595.882867"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "436"
-            endingLineNumber = "436"
-            landmarkName = "convertTimerLabelToSecondString(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -85,11 +69,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Access News/RecordViewController.swift"
-            timestampString = "552607595.883376"
+            timestampString = "552610854.66976"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "896"
-            endingLineNumber = "896"
+            startingLineNumber = "917"
+            endingLineNumber = "917"
             landmarkName = "registerPeriodicTimeObserver()"
             landmarkType = "7">
             <Locations>
@@ -133,7 +117,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Access News/RecordViewController.swift"
-            timestampString = "552607595.883822"
+            timestampString = "552610854.670391"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "158"

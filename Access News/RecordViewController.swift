@@ -556,7 +556,7 @@ class RecordViewController: UIViewController {
          will choose a suitable location when writing temporary files."
          */
         // exportSession?.directoryForTemporaryFiles = ...
-        /* TODO?
+        /* TODO:
          Listing all cases for completeness sake, but may just use `.completed`
          and ignore the rest with a `default` clause.
          OR
@@ -865,11 +865,15 @@ class RecordViewController: UIViewController {
         // and the reversal should be done here and not `updatePlayerTimerLabel`
         // (otherwise it would check and do a reverse every centisecond and not
         // just once, in the moment of the tap)
-        self.timerLabel.text = self.reverseTimerLabel(self.timerLabel.text!)
+
+        let timerLabelSecondString =
+            self.convertTimerLabelToSecondString(self.timerLabel.text!)
+
+        self.timerLabel.text = self.reverseTimerLabel(secondString: timerLabelSecondString)
     }
 
-    // "timer label" is of the format "01:23:45" (or "-01:23:45")
-    func reverseTimerLabel(_ tl: String) -> String {
+    // accepts a "second string" (e.g., "27")
+    func reverseTimerLabel(secondString ss: String) -> String {
 
         let secondString = self.convertTimerLabelToSecondString(self.timerLabel.text!)
         let reversedSecond = Int(self.articleSoFarDuration) - Int(secondString)!
@@ -909,21 +913,20 @@ class RecordViewController: UIViewController {
 
                     if shouldTick == true {
 
-//                        let currentTimerLabesSecondString =
-//                            self?.convertTimerLabelToSecondString((self?.timerLabel.text!)!)
-//
-//                        var newSecond = Int(currentTimerLabesSecondString!)!
-//
-//                        if self?.timerLabelReversed == true {
-//                            newSecond = newSecond - 1
-//                        } else {
-//                            newSecond = newSecond + 1
-//                        }
+                        var newTimerLabel: String!
 
-                        let newTimerLabel =
-                            self?.convertSecondStringToTimerLabel(timeSecondString!)
-                        self?.timerLabel.text =
-                            newTimerLabel
+                        if self?.timerLabelReversed == true {
+                            let reverseSecond =
+                                Int((self?.articleSoFarDuration)!) - Int(timeSecondString!)!
+                            newTimerLabel =
+                                "-"
+                                + (self?.convertSecondStringToTimerLabel(String(reverseSecond)))!
+                        } else {
+                            newTimerLabel =
+                                self?.convertSecondStringToTimerLabel(timeSecondString!)
+                        }
+
+                        self?.timerLabel.text = newTimerLabel
                     }
 
                     let newSliderValue = Float(t)
