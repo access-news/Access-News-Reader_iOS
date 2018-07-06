@@ -94,6 +94,17 @@ class RecordViewController: UIViewController {
         } catch {
             print("Setting up audiosession failed somehow.")
         }
+
+        /* SESSION TIMER SETUP */
+        self.navigationItem.title = "00:00:00"
+        self.sessionDuration = 0.0
+        self.sessionTimer =
+            Timer.scheduledTimer(
+                timeInterval: 0.01,
+                target: self,
+                selector: #selector(self.updateSessionTimerLabel),
+                userInfo: nil,
+                repeats: true)
     }
 
     @objc func updateSessionTimerLabel(timer: Timer) {
@@ -204,7 +215,6 @@ class RecordViewController: UIViewController {
     @IBAction func playbackPauseTapped(_ sender: Any) {
 
         self.pausePlayer()
-
         self.resumePlaybackUIState()
     }
 
@@ -338,7 +348,7 @@ class RecordViewController: UIViewController {
     */
     var articleSoFarDuration: Double = 0.0
 
-    var reverseTimerLabel: Bool = false
+    var timerLabelReversed: Bool = false
 
     func startRecordTimer() {
 
@@ -603,18 +613,6 @@ class RecordViewController: UIViewController {
 
         self.timerLabel.addGestureRecognizer(playbackTimerLabelTapGesture)
         /* --- */
-
-        /* SESSION TIMER SETUP
-        */
-        self.navigationItem.title = "00:00:00"
-        self.sessionDuration = 0.0
-        self.sessionTimer =
-            Timer.scheduledTimer(
-                timeInterval: 0.01,
-                target: self,
-                selector: #selector(self.updateSessionTimerLabel),
-                userInfo: nil,
-                repeats: true)
     }
 
     func recordUIState() {
@@ -831,8 +829,7 @@ class RecordViewController: UIViewController {
     // MARK: `timerLabel` tap gesture callback
 
     @objc func playbackTimerLabelTapped() {
-        self.reverseTimerLabel = !self.reverseTimerLabel
-
+        self.timerLabelReversed = !self.timerLabelReversed
     }
 
     // MARK: `playbackSlider` function for UIState methods
@@ -850,12 +847,12 @@ class RecordViewController: UIViewController {
              */
             self.audioPlayer?.addPeriodicTimeObserver(
                 forInterval: CMTime(seconds: 0.01, preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
-                queue: DispatchQueue.main) {
+                queue:       DispatchQueue.main) {
                     [weak self] time in
 
                     let t = CMTimeGetSeconds(time)
                     self?.timerLabel.text =
-                        self?.tick(Double(t), compareWith: "record and playback")
+                        self?.tick(Double(t), compareWith: "record and playback", reversed: (self?.timerLabelReversed)!)
                         ?? self?.timerLabel.text
 
                     let newSliderValue = Float(t)
