@@ -112,9 +112,13 @@ class RecordViewController: UIViewController {
         let newTime = self.sessionDuration + timer.timeInterval
         self.sessionDuration = newTime
 
-        self.navigationItem.title =
-            self.tick(newTime, compareWith: "session")
-            ?? self.navigationItem.title!
+        let newTimeSecondString = self.timeToSecondString(newTime)
+
+        let shouldTick = self.tickOnceASec(secondString: newTimeSecondString, timer: "session")
+
+        if shouldTick == true {
+            self.navigationItem.title = self.convertSecondStringToTimerLabel(newTimeSecondString)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -154,6 +158,22 @@ class RecordViewController: UIViewController {
             */
             self.pausePlayer()
             self.playagainUIState()
+
+            // TODO: Hitting "Stop" during playback won't reset the slider.
+            /*
+
+             The slider reset is called in `playagainUIState` but it won't get
+             honored, because my guess is that AVPlayer.pause is async therefore
+             it still gets updated after the call. The second "Stop" press works,
+             because AVPlayer is already stopped.
+
+             The solution is to set up a KVO (not sure where yet) to check on
+             AVPlayer's rate, and reset the slider there.
+             https://stackoverflow.com/questions/7575494/avplayer-notification-for-play-pause-state
+             See AVPlayer documentation as well (mentions KVO with rate)
+
+             This is low priority and it only affects my OCD.
+            */
         }
     }
 
@@ -372,35 +392,37 @@ class RecordViewController: UIViewController {
               self.articleSoFarDuration
             + recorderTime
 
-        self.timerLabel.text =
-            self.tick(elapsed, compareWith: "record and playback")
-            ?? self.timerLabel.text!
+        let elapsedSecondString = self.timeToSecondString(elapsed)
+
+        let shouldTick = self.tickOnceASec(secondString: elapsedSecondString, timer: "record and playback")
+
+        if shouldTick == true {
+            self.timerLabel.text = self.convertSecondStringToTimerLabel(elapsedSecondString)
+        }
     }
 
-    func tick(_ time: Double, compareWith: String, reversed: Bool = false) -> String? {
+    // 2.73429 -> "2"
+    func timeToSecondString(_ time: Double) -> String {
+        return String(String(time).prefix(while: { c in return c != "."}))
+    }
 
-        let elapsedSecond =
-            String(String(time).prefix(while: { c in return c != "."}))
+    func tickOnceASec(secondString: String, timer: String) -> Bool {
 
-        if self.seconds[compareWith] != elapsedSecond {
-            self.seconds[compareWith] = elapsedSecond
+        if self.seconds[timer] != secondString {
+            self.seconds[timer] = secondString
 
-            return self.convertSecondStringToTimerLabel(elapsedSecond, reversed: reversed)
+            return true
 
         } else {
-            return nil
+            return false
         }
     }
 
-    func convertSecondStringToTimerLabel(_ from: String, reversed: Bool = false) -> String {
-        var i = Int(from)!
+    // `from` is a "second string", which is basically an Int with quotes:
+    // e.g., "27"
+    func convertSecondStringToTimerLabel(_ secondString: String) -> String {
+        let i = Int(secondString)!
         var results = [Int]()
-
-        if reversed == true {
-            let playbackDurationInSeconds = self.articleSoFarDuration
-
-            i -= Int(playbackDurationInSeconds)
-        }
 
         if i <= 3599 {
             let sec = i % 60
@@ -418,14 +440,20 @@ class RecordViewController: UIViewController {
             results = [hour, min, sec]
         }
 
-        var newTimerLabel: String =
-            results.map { String(format: "%02u", $0)}.joined(separator: ":")
+       return results.map { String(format: "%02u", $0)}.joined(separator: ":")
+    }
 
-        if reversed == true {
-            newTimerLabel.insert("-", at: newTimerLabel.startIndex)
-        }
+    // "timer label" is of the format "01:23:45" or "-01:23:45"
+    func convertTimerLabelToSecondString(_ from: String) -> String {
+        let timerLabelNoMinus = from.filter { $0 != "-" }
 
-        return newTimerLabel
+        let timerSections = timerLabelNoMinus.split(separator: ":")
+
+        let seconds =          Int(timerSections[2])!
+        let minutesToSeconds = Int(timerSections[1])! * 60
+        let hoursToSeconds =   Int(timerSections[0])! * 60 * 60
+
+        return String(seconds + minutesToSeconds + hoursToSeconds)
     }
 
     // Just an alias that corresponds to `startRecordTimer`
@@ -444,7 +472,6 @@ class RecordViewController: UIViewController {
      */
     func resetRecordTimer() {
         self.timerLabel.text = "00:00:00"
-        self.articleSoFarDuration = 0.0
     }
 
     /**
@@ -493,6 +520,7 @@ class RecordViewController: UIViewController {
 
     func zeroRecordArtifacts() {
         self.articleSoFar = AVMutableComposition()
+        self.articleSoFarDuration = 0.0
         self.latestChunk = nil
         self.insertAt = CMTimeRange(start: kCMTimeZero, end: kCMTimeZero)
         self.leftoverChunks = [AVURLAsset]()
@@ -684,6 +712,8 @@ class RecordViewController: UIViewController {
     }
 
     func playbackUIState() {
+        self.resetRecordTimer()
+
         self.recordButton.isEnabled = false
         self.recordButton.backgroundColor = self.disabledGrey
         UIView.performWithoutAnimation {
@@ -821,7 +851,7 @@ class RecordViewController: UIViewController {
         self.startoverButton.isHidden = true
 
         self.playbackSlider.isHidden  = false
-        self.playbackSlider.value = self.playbackSlider.minimumValue
+        self.playbackSlider.value = 0
 
         self.endsessionButton.isHidden = true
     }
@@ -830,6 +860,28 @@ class RecordViewController: UIViewController {
 
     @objc func playbackTimerLabelTapped() {
         self.timerLabelReversed = !self.timerLabelReversed
+
+        // Tap interaction with the `timerLabel` in only enable during playback,
+        // and the reversal should be done here and not `updatePlayerTimerLabel`
+        // (otherwise it would check and do a reverse every centisecond and not
+        // just once, in the moment of the tap)
+        self.timerLabel.text = self.reverseTimerLabel(self.timerLabel.text!)
+    }
+
+    // "timer label" is of the format "01:23:45" (or "-01:23:45")
+    func reverseTimerLabel(_ tl: String) -> String {
+
+        let secondString = self.convertTimerLabelToSecondString(self.timerLabel.text!)
+        let reversedSecond = Int(self.articleSoFarDuration) - Int(secondString)!
+        let reversedTimerLabel =
+            self.convertSecondStringToTimerLabel(
+                String(reversedSecond)
+            )
+        if self.timerLabelReversed == true {
+            return "-" + reversedTimerLabel
+        } else {
+            return reversedTimerLabel
+        }
     }
 
     // MARK: `playbackSlider` function for UIState methods
@@ -851,9 +903,28 @@ class RecordViewController: UIViewController {
                     [weak self] time in
 
                     let t = CMTimeGetSeconds(time)
-                    self?.timerLabel.text =
-                        self?.tick(Double(t), compareWith: "record and playback", reversed: (self?.timerLabelReversed)!)
-                        ?? self?.timerLabel.text
+                    let timeSecondString = self?.timeToSecondString(t)
+
+                    let shouldTick = self?.tickOnceASec(secondString: timeSecondString!, timer: "record and playback")
+
+                    if shouldTick == true {
+
+//                        let currentTimerLabesSecondString =
+//                            self?.convertTimerLabelToSecondString((self?.timerLabel.text!)!)
+//
+//                        var newSecond = Int(currentTimerLabesSecondString!)!
+//
+//                        if self?.timerLabelReversed == true {
+//                            newSecond = newSecond - 1
+//                        } else {
+//                            newSecond = newSecond + 1
+//                        }
+
+                        let newTimerLabel =
+                            self?.convertSecondStringToTimerLabel(timeSecondString!)
+                        self?.timerLabel.text =
+                            newTimerLabel
+                    }
 
                     let newSliderValue = Float(t)
                     self?.playbackSlider.setValue(
@@ -874,8 +945,8 @@ class RecordViewController: UIViewController {
      If yes, resume playback from the position the control has
      been released (i.e., touchUpInside).
 
-     Initialized with `false` because playback only start on tapping
-     the Play button.
+     Initialized with `false` because playback will only start on
+     tapping the Play button.
      */
     var slidingOnPlayback: Bool = false
 
