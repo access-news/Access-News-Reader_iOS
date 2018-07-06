@@ -39,14 +39,15 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             shouldBeEnabled = "No"
-            ignoreCount = "0"
+            ignoreCount = "97"
+            condition = "compareWith  == &quot;session&quot;"
             continueAfterRunningActions = "No"
             filePath = "Access News/RecordViewController.swift"
-            timestampString = "552527644.574193"
+            timestampString = "552590067.347927"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "376"
-            endingLineNumber = "376"
+            startingLineNumber = "371"
+            endingLineNumber = "371"
             landmarkName = "tick(_:compareWith:reversed:)"
             landmarkType = "7">
          </BreakpointContent>

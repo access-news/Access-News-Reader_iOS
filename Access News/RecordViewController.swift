@@ -102,8 +102,8 @@ class RecordViewController: UIViewController {
         self.sessionDuration = newTime
 
         self.navigationItem.title =
-            self.tick(newTime, compareWith: "record and playback")
-            ?? self.navigationItem.title
+            self.tick(newTime, compareWith: "session")
+            ?? self.navigationItem.title!
     }
 
     override func didReceiveMemoryWarning() {
@@ -252,6 +252,8 @@ class RecordViewController: UIViewController {
         self.appendChunk()
 
         self.stopRecordTimer()
+
+        self.articleSoFarDuration = CMTimeGetSeconds(self.articleSoFar.duration)
     }
 
     func initPlayer() {
@@ -361,10 +363,11 @@ class RecordViewController: UIViewController {
             + recorderTime
 
         self.timerLabel.text =
-            self.tick(elapsed, compareWith: "record and playback", reversed: self.reverseTimerLabel)
+            self.tick(elapsed, compareWith: "record and playback")
+            ?? self.timerLabel.text!
     }
 
-    func tick(_ time: Double, compareWith: String, reversed: Bool = false) -> String {
+    func tick(_ time: Double, compareWith: String, reversed: Bool = false) -> String? {
 
         let elapsedSecond =
             String(String(time).prefix(while: { c in return c != "."}))
@@ -375,7 +378,7 @@ class RecordViewController: UIViewController {
             return self.convertSecondStringToTimerLabel(elapsedSecond, reversed: reversed)
 
         } else {
-            return self.timerLabel.text!
+            return nil
         }
     }
 
@@ -384,8 +387,7 @@ class RecordViewController: UIViewController {
         var results = [Int]()
 
         if reversed == true {
-            let playbackDurationInSeconds =
-                CMTimeGetSeconds(self.articleSoFar.duration)
+            let playbackDurationInSeconds = self.articleSoFarDuration
 
             i -= Int(playbackDurationInSeconds)
         }
@@ -416,10 +418,9 @@ class RecordViewController: UIViewController {
         return newTimerLabel
     }
 
+    // Just an alias that corresponds to `startRecordTimer`
     func stopRecordTimer() {
         self.recordTimer.invalidate()
-
-        self.articleSoFarDuration = CMTimeGetSeconds(self.articleSoFar.duration)
     }
 
     /* NOTE: Name may be misleading, but wanted to keep it in sync with
@@ -716,8 +717,7 @@ class RecordViewController: UIViewController {
 
         /* UISlider SETUP */
 
-            let duration : CMTime  = self.articleSoFar.duration
-            let seconds  : Double = CMTimeGetSeconds(duration)
+            let seconds  : Double = self.articleSoFarDuration
 
             self.playbackSlider.minimumValue = 0
             self.playbackSlider.maximumValue = Float(seconds)
