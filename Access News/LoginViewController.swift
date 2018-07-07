@@ -14,16 +14,15 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var signInError: UILabel!
     @IBOutlet weak var username: UITextField!
     @IBOutlet weak var password: UITextField!
-    
+
     @IBOutlet weak var forgotPassword: UIButton!
     @IBAction func tapForgotPassword(_ sender: Any) {
         // See issue #2
     }
-    
-    
+
     @IBOutlet weak var signInButton: UIButton!
     @IBAction func tapSignInButton(_ sender: Any) {
-        
+
         if (self.username.text == "") {
             self.username.placeholder = "Username missing"
             self.username.becomeFirstResponder()
@@ -55,10 +54,10 @@ class LoginViewController: UIViewController {
             }
         }
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.password.delegate = self
         self.password.clearButtonMode = .always
         self.password.isSecureTextEntry = true
@@ -66,11 +65,11 @@ class LoginViewController: UIViewController {
         self.username.delegate = self
         self.username.clearButtonMode = .always
         self.username.keyboardType = .emailAddress
-        
+
         self.username.becomeFirstResponder()
-        
+
         self.signInError.textColor = .red
-        
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -80,15 +79,15 @@ class LoginViewController: UIViewController {
 }
 
 extension LoginViewController: UITextFieldDelegate {
-    
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
+
         textField.resignFirstResponder()
         return true
     }
-    
+
     func textFieldDidEndEditing(_ textField: UITextField) {
-        
+
         /* https://developer.apple.com/library/content/documentation/StringsTextFonts/Conceptual/TextAndWebiPhoneOS/ManageTextFieldTextViews/ManageTextFieldTextViews.html#//apple_ref/doc/uid/TP40009542-CH10-SW17
            Another solution could have been to create new separate classes as delegates,
            but this works.
