@@ -9,6 +9,7 @@ target 'Access News' do
   pod 'Firebase/Core'
   pod 'Firebase/Auth'
   pod 'Firebase/Storage'
+  pod 'Firebase/Database'
 
   target 'Access NewsTests' do
     inherit! :search_paths
