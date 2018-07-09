@@ -36,7 +36,29 @@ The main recording UI is already heavily packed and just adding an intermediate 
 
 <sup>**TODO**: _Add user statistics under the single button that currently occupies `SessionStartViewController`_.</sup>
 
-## 2.2 Imagined workflow
+## 2.2 Why not maintain a global timer initialized in `AppDelegate`?
+
+To maintain a global timer would increase the complexity of the app and place a lot of guesswork into the logic as well.
+
+  + Which state transitions would require pausing the timer?<sup>2a</sup>
+
+    
+
+  + 
+
+To make it it explicit delegating to user which is going to require discipline on the reader's part.
+
+<sup>
+<div>
+  <b>2a</b>) About iOS states and state transitions:
+  <ul>
+    <li> [Introduction to Backgrounding in iOS](https://docs.microsoft.com/en-us/xamarin/ios/app-fundamentals/backgrounding/introduction-to-backgrounding-in-ios)</li>
+    <li> [UIApplicationDelegate protocol documentation](https://developer.apple.com/documentation/uikit/uiapplicationdelegate)</li>
+  </ul>
+</div>
+
+</sup>
+## 2.3 Imagined workflow
 
 The reader signs it, taps "Start Session" button and the session timer starts in the middle of the navigation bar at the top. After recording and submitting (n <= 0) articles the reader can hit "End Session" if they feel that they are finished, automatically submitting and resetting the session timer.
 
