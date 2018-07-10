@@ -6,19 +6,72 @@ Firebase added via CocoaPods ([guide](https://firebase.google.com/docs/ios/setup
 
 Omitting `GoogleService-Info.plist` from the repo this time, but can be generated following the [Firebase iOS guide](https://firebase.google.com/docs/ios/setup) or downloaded from the Firebase console ([steps](https://support.google.com/firebase/answer/7015592)).
 
-# 1. Login and persisting the user
+# 1. User management
+
+## 1.0 Restrictions
+
+**User registration is disabled** because all volunteers are going through a centralized process (volunteer coordinator [intake] -> Access News staff [orientation]). Their profile will be filled out as part of the intake/orientation.
+
+<sup>**TODO**: _Enable updating personal information? Or not, and thus forcing them to go through the official channels? A compromise would be to allow changes, and save the changed information with timestamps for posterity. (Use observers to listen to changes or bake it in the update process?)_</sup>
+
+<sup>**TODO**: _Implement password reset (see #2)._</sup>
+
+<sup>**TODO**: _Add button to change username (i.e., currently email address only, because of Firebase)._</sup>
+
+## 1.1 Related Firebase database "schema" (JSON)
+
+Using Firebase Authentication UUID as "primary keys" for users. Username or email address would be another good candidate because they need to be unique.
+
+UUIDs are only present after successful registration, which seems like a contradiction, but becuase of the current centralized workflow, all users are created and their data entered manually.
+
+Should the service grow, the guidelines change etc., this wouldn't be a problem. The user sign up form could request any data, submit only the essentials needed for user creation. Send rest of the data on success, or update UI with errors.
+
+```json
+{
+  "users": {
+    "<uuid>": {
+      "name": "...",
+      "username": "...",
+      "email": "...",
+      "groups": {
+        "listeners": Bool
+        "readers": Bool
+      },
+      "timestamp": "..."
+    }
+  }
+
+  "phone": {
+    "<uuid>": {
+      "area-code": "...",
+      "rest": "..."
+    }
+  }
+
+  "address": {
+    "<uuid>": {
+      "street-address": "...",
+      "city": "...",
+      "zip": "...",
+      "state": "..."
+    }
+  }
+}
+```
+
+`"username"` and `"email"` are currently the same because the app uses Firebase's basic email & password authentication scheme.
+
+## 1.2 Login mechanism
 
 `LoginViewController` is set up as initial view controller in `Main.storyboard`, and if the user was able to sign in then they are redirected to the main navigation controller (also defined in the `Main.storyboard` only with ID "NVC").
 
-The `AppDelegate` checks Firebase's default auth object for a signed in user (`Auth.auth().currentUser`; `FIRAuth` in Objective-C), and loads the main navigation controller directly ("NVC"), bypassing `LoginViewController`.
-
-<sup>**TODO**: _Implement password reset (see #2)_</sup>
+The `AppDelegate` checks Firebase's default auth object for a signed in user (`Auth.auth().currentUser`; `FIRAuth` in Objective-C), and loads the main navigation controller directly ("NVC"), bypassing `LoginViewController` if one is found.
 
 # 2. `SessionStartViewController`
 
 "NVC"'s root view controller, shown right after login.
 
-## 2.1 Rationale
+## 2.0 Rationale
 
 Volunteer hours are required to be reported to our grantor, the California State Library, and important fact is that the length of a recording session is not the same as the sum of the lengths of submitted recordings. For example, one needs time to prepare, set up the recording environment, etc.
 
@@ -26,7 +79,7 @@ The main recording UI is already heavily packed and just adding an intermediate 
 
 <sup>**TODO**: _Add user statistics under the single button that currently occupies `SessionStartViewController`_.</sup>
 
-## 2.2 Why not use `AppDelegate` to set up a global timer to make session management implicit, without the need of user interaction?
+## 2.1 Why not use `AppDelegate` to set up a global timer to make session management implicit, without the need of user interaction?
 
 This would increase the complexity of the app and place a lot of guesswork into the logic as well:
 
@@ -34,10 +87,9 @@ This would increase the complexity of the app and place a lot of guesswork into 
 
   + When app is in the "inactive" state (i.e., foreground, but not receiving any events), should timer be paused? The reader could be rehearsing, for example.
 
-
 Making session management the users' responsibility avoids the above issues and puts more control into the hand of the volunteers<sup id="note-2-up"><a href="#user-content-note-2-bottom">[2]</a></sup>.
 
-## 2.3 Example workflow
+## 2.2 Example workflow
 
 The reader signs in, taps "Start Session" button, signaling that they are starting volunteering for Access news. The session timer, in the middle of the navigation bar at the top, starts ticking.
 
@@ -50,6 +102,12 @@ Once they are finished with an article, hitting the "Submit" button will upload 
 After recording and submitting (n <= 0) articles the reader can hit "End Session" if they feel that they are finished, automatically submitting the session timer.
 
 <sup>**TODO**: _Implement session timer submission. (On tapping "End Session"? Or after every article submission? Or periodically after every minute?)_</sup>
+
+## 2.3 Related Firebase database "schema" (JSON)
+
+```json
+
+```
 
 # 3. Recording UI (`RecordViewController`)
 

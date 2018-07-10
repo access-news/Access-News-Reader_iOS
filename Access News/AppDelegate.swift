@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         FirebaseApp.configure()
 
-        if Auth.auth().currentUser != nil {
+        if Auth.auth().currentUser  != nil {
             let storyboard = UIStoryboard(name: "Main", bundle: .main)
             let nvc = storyboard.instantiateViewController(withIdentifier: "NVC")
             self.window?.rootViewController = nvc

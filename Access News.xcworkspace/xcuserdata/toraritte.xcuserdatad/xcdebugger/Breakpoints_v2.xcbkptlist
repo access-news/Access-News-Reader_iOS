@@ -27,7 +27,7 @@
             condition = "compareWith  == &quot;session&quot;"
             continueAfterRunningActions = "No"
             filePath = "Access News/RecordViewController.swift"
-            timestampString = "552872999.487518"
+            timestampString = "552891536.942825"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "390"
@@ -53,7 +53,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Access News/RecordViewController.swift"
-            timestampString = "552872999.4879431"
+            timestampString = "552891536.943215"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "917"
@@ -101,12 +101,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Access News/RecordViewController.swift"
-            timestampString = "552872999.488219"
+            timestampString = "552891536.943467"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "158"
             endingLineNumber = "158"
             landmarkName = "stopTapped(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Access News/AppDelegate.swift"
+            timestampString = "552895729.387719"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "21"
+            endingLineNumber = "21"
+            landmarkName = "application(_:didFinishLaunchingWithOptions:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
