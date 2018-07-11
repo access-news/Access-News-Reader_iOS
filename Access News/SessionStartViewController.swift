@@ -7,13 +7,30 @@
 //
 
 import UIKit
+import Firebase
 
 class SessionStartViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        self.navigationItem.rightBarButtonItem =
+            UIBarButtonItem(title:  "Sign out",
+                            style:  .plain,
+                            target: self,
+                            action: #selector(signOutTapped))
+    }
+
+    @objc func signOutTapped() {
+        do {
+            try Auth.auth().signOut()
+
+            let storyboard = UIStoryboard(name: "Main", bundle: .main)
+            let login = storyboard.instantiateInitialViewController()!
+            self.present(login, animated: true, completion: nil)
+        } catch {
+            fatalError()
+        }
     }
 
     override func didReceiveMemoryWarning() {

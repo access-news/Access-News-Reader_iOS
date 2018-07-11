@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Firebase
 
 class ProfileTVC: UITableViewController {
 
@@ -17,23 +16,6 @@ class ProfileTVC: UITableViewController {
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
-        self.navigationItem.rightBarButtonItem =
-            UIBarButtonItem(title:  "Sign out",
-                            style:  .plain,
-                            target: self,
-                            action: #selector(signOutTapped))
-    }
-    
-    @objc func signOutTapped() {
-        do {
-            try Auth.auth().signOut()
-            
-            let storyboard = UIStoryboard(name: "Main", bundle: .main)
-            let login = storyboard.instantiateInitialViewController()!
-            self.present(login, animated: true, completion: nil)
-        } catch {
-            fatalError()
-        }
     }
     
     override func didReceiveMemoryWarning() {
