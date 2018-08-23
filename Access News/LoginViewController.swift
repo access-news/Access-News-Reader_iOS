@@ -65,6 +65,8 @@ class LoginViewController: UIViewController {
         self.username.delegate = self
         self.username.clearButtonMode = .always
         self.username.keyboardType = .emailAddress
+        self.username.autocorrectionType = .no
+        self.username.spellCheckingType = .no
 
         self.username.becomeFirstResponder()
 
