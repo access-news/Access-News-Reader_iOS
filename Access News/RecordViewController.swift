@@ -832,8 +832,8 @@ class RecordViewController: UIViewController {
         self.playbackPauseButton.isHidden = true
 
         self.stopButton.isHidden = false
-        self.stopButton.isEnabled = true
-        self.stopButton.backgroundColor = .black
+        self.stopButton.isEnabled = false
+        self.stopButton.backgroundColor = self.disabledGrey
         UIView.performWithoutAnimation {
             self.stopButton.setTitle("Stop", for: .normal)
             self.stopButton.layoutIfNeeded()
@@ -848,6 +848,8 @@ class RecordViewController: UIViewController {
         }
 
         self.timerLabel.isHidden   = false
+        self.resetRecordTimer();
+
         self.startoverButton.isHidden = true
 
         self.playbackSlider.isHidden  = false
