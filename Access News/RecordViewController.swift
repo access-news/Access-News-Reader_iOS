@@ -208,8 +208,10 @@ class RecordViewController: UIViewController {
         /* Does not need to invoke `self.zeroAudioArtifacts()` because
            `self.exportArticle()` calles it on successful completion.
         */
-        self.resetRecordTimer()
-        self.startUIState()
+
+        /* These should only be invoked on successful submission! */
+//        self.resetRecordTimer()
+//        self.startUIState()
     }
 
     @IBOutlet weak var startoverButton: UIButton!

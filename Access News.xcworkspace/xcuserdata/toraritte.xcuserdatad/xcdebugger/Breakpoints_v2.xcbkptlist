@@ -27,11 +27,11 @@
             condition = "compareWith  == &quot;session&quot;"
             continueAfterRunningActions = "No"
             filePath = "Access News/RecordViewController.swift"
-            timestampString = "556744081.7888499"
+            timestampString = "556759983.473683"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "390"
-            endingLineNumber = "390"
+            startingLineNumber = "392"
+            endingLineNumber = "392"
             landmarkName = "updateRecordTimerLabel()"
             landmarkType = "7">
          </BreakpointContent>
@@ -53,11 +53,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Access News/RecordViewController.swift"
-            timestampString = "556744081.789435"
+            timestampString = "556759983.4740911"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "919"
-            endingLineNumber = "919"
+            startingLineNumber = "921"
+            endingLineNumber = "921"
             landmarkName = "registerPeriodicTimeObserver()"
             landmarkType = "7">
             <Locations>
@@ -101,7 +101,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Access News/RecordViewController.swift"
-            timestampString = "556744081.789898"
+            timestampString = "556759983.4743659"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "158"
