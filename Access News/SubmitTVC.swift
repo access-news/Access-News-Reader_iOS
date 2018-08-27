@@ -28,6 +28,9 @@ class SubmitTVC: UITableViewController {
         self.articleTitle.clearButtonMode = .always
         self.articleTitle.spellCheckingType = .yes
 
+        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: nil, action: nil)
+        self.navigationItem.rightBarButtonItem = doneButton
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
