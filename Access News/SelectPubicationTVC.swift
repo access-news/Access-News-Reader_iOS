@@ -1,32 +1,31 @@
 //
-//  SubmitTVC.swift
+//  SelectPubicationTVC.swift
 //  Access News
 //
-//  Created by Attila Gulyas on 7/13/18.
+//  Created by Attila Gulyas on 8/27/18.
 //  Copyright © 2018 Society for the Blind. All rights reserved.
 //
 
 import UIKit
 
-class SubmitTVC: UITableViewController {
+class SelectPubicationTVC: UITableViewController {
 
-    @IBOutlet weak var selectedPublication: UILabel!
-    @IBOutlet weak var articleTitle: UITextField!
+    let publications =
+        [ "Crosswords"
+        , "Eureka Times Standard"
+        , "Ferndale Enterprise"
+        , "Raley's"
+        , "Sacramento News and Review"
+        , "Sacramento Bee"
+        , "Safeway"
+        , "Santa Rosa Press Democrat"
+        , "Savemart"
+        , "Sprouts"
+        , "Trivia"
+        ]
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        /* Making the text always fit the label
-           https://stackoverflow.com/questions/4865458/dynamically-changing-font-size-of-uilabel
-        */
-        self.selectedPublication.numberOfLines = 1
-        self.selectedPublication.adjustsFontSizeToFitWidth = true
-        // This is the default, but making it explicit
-        self.selectedPublication.minimumScaleFactor = 0
-
-        self.articleTitle.delegate = self
-        self.articleTitle.clearButtonMode = .always
-        self.articleTitle.spellCheckingType = .yes
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -42,25 +41,38 @@ class SubmitTVC: UITableViewController {
 
     // MARK: - Table view data source
 
-//    override func numberOfSections(in tableView: UITableView) -> Int {
-//        // #warning Incomplete implementation, return the number of sections
-//        return 0
-//    }
-
-//    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        // #warning Incomplete implementation, return the number of rows
-//        return 0
-//    }
-
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        // #warning Incomplete implementation, return the number of sections
+        return 1
     }
-    */
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // #warning Incomplete implementation, return the number of rows
+        return self.publications.count
+    }
+
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+    // https://stackoverflow.com/questions/34730848/xcode-error-unable-to-dequeue-a-cell-with-identifier-mealtableviewcell
+     let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+
+     // Configure the cell...
+     cell.textLabel?.text = self.publications[indexPath.row]
+
+     return cell
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        let submitTVC =
+            self.navigationController?.viewControllers[2]
+                as! SubmitTVC
+
+        submitTVC.selectedPublication.text = self.publications[indexPath.row]
+        submitTVC.articleTitle.becomeFirstResponder()
+
+        self.navigationController?.popViewController(animated: true)
+    }
 
     /*
     // Override to support conditional editing of the table view.
@@ -107,22 +119,4 @@ class SubmitTVC: UITableViewController {
     }
     */
 
-}
-
-extension SubmitTVC: UITextFieldDelegate {
-
-    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-
-        return true
-    }
-
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-
-        textField.resignFirstResponder()
-        return true
-    }
-
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        print(textField.text!)
-    }
 }

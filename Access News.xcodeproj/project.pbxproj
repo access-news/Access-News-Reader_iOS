@@ -18,6 +18,7 @@
 		CF87D17F20C1BA4600AF1AE0 /* RecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF87D17E20C1BA4600AF1AE0 /* RecordViewController.swift */; };
 		CF87D18120C1BE5600AF1AE0 /* ProfileTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF87D18020C1BE5600AF1AE0 /* ProfileTVC.swift */; };
 		CF87D18320C1BE6800AF1AE0 /* SettingsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF87D18220C1BE6800AF1AE0 /* SettingsTVC.swift */; };
+		CFB9ACE521349862007DBEFE /* SelectPubicationTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB9ACE421349862007DBEFE /* SelectPubicationTVC.swift */; };
 		CFF5BA2920BF5B460033D180 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF5BA2820BF5B460033D180 /* AppDelegate.swift */; };
 		CFF5BA2B20BF5B460033D180 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF5BA2A20BF5B460033D180 /* LoginViewController.swift */; };
 		CFF5BA2E20BF5B460033D180 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CFF5BA2C20BF5B460033D180 /* Main.storyboard */; };
@@ -57,6 +58,7 @@
 		CF87D17E20C1BA4600AF1AE0 /* RecordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
 		CF87D18020C1BE5600AF1AE0 /* ProfileTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTVC.swift; sourceTree = "<group>"; };
 		CF87D18220C1BE6800AF1AE0 /* SettingsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTVC.swift; sourceTree = "<group>"; };
+		CFB9ACE421349862007DBEFE /* SelectPubicationTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPubicationTVC.swift; sourceTree = "<group>"; };
 		CFF5BA2520BF5B460033D180 /* Access News.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Access News.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFF5BA2820BF5B460033D180 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CFF5BA2A20BF5B460033D180 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 				CF87D17E20C1BA4600AF1AE0 /* RecordViewController.swift */,
 				CF87D18020C1BE5600AF1AE0 /* ProfileTVC.swift */,
 				CF87D18220C1BE6800AF1AE0 /* SettingsTVC.swift */,
+				CFB9ACE421349862007DBEFE /* SelectPubicationTVC.swift */,
 			);
 			path = "Access News";
 			sourceTree = "<group>";
@@ -416,6 +419,7 @@
 				CFF5BA2B20BF5B460033D180 /* LoginViewController.swift in Sources */,
 				CF87D18320C1BE6800AF1AE0 /* SettingsTVC.swift in Sources */,
 				CFF5BA2920BF5B460033D180 /* AppDelegate.swift in Sources */,
+				CFB9ACE521349862007DBEFE /* SelectPubicationTVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
