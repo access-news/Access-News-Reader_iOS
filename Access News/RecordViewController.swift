@@ -37,6 +37,8 @@ class RecordViewController: UIViewController {
     let pausePlaybackGrey = UIColor(red: 0.475, green: 0.494, blue: 0.500, alpha: 1.0)
     let startoverGold     = UIColor(red: 1.000, green: 0.694, blue: 0.0,   alpha: 1.0)
 
+    @IBOutlet weak var sessionTimerLabel: UIBarButtonItem!
+
     var documentDir: URL {
         get {
             let documentURLs = FileManager.default.urls(
@@ -67,6 +69,7 @@ class RecordViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.sessionTimerLabel.tintColor = pausePlaybackGrey
         /* Set default UI properties, assuming that permission to record is given. */
 
         self.disabledNotice.isHidden = true
@@ -96,7 +99,7 @@ class RecordViewController: UIViewController {
         }
 
         /* SESSION TIMER SETUP */
-        self.navigationItem.title = "00:00:00"
+        self.sessionTimerLabel.title = "00:00:00"
         self.sessionDuration = 0.0
         self.sessionTimer =
             Timer.scheduledTimer(
@@ -117,7 +120,7 @@ class RecordViewController: UIViewController {
         let shouldTick = self.tickOnceASec(secondString: newTimeSecondString, timer: "session")
 
         if shouldTick == true {
-            self.navigationItem.title = self.convertSecondStringToTimerLabel(newTimeSecondString)
+            self.sessionTimerLabel.title = self.convertSecondStringToTimerLabel(newTimeSecondString)
         }
     }
 
