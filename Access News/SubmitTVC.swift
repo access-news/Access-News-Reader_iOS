@@ -7,15 +7,23 @@
 //
 
 import UIKit
+import Firebase
 
 class SubmitTVC: UITableViewController {
 
     @IBOutlet weak var selectedPublication: UILabel!
     @IBOutlet weak var articleTitle: UITextField!
 
+    let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+
+    let storage = Storage.storage()
+
+    var recordVC: RecordViewController!
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.recordVC =  self.navigationController?.viewControllers[1] as! RecordViewController
         /* Making the text always fit the label
            https://stackoverflow.com/questions/4865458/dynamically-changing-font-size-of-uilabel
         */
@@ -28,14 +36,65 @@ class SubmitTVC: UITableViewController {
         self.articleTitle.clearButtonMode = .always
         self.articleTitle.spellCheckingType = .yes
 
-        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(self.uploadRecording))
         self.navigationItem.rightBarButtonItem = doneButton
-        
+
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
+    }
+
+    @objc func uploadRecording() {
+
+        let recordingName =
+            self.recordVC.articleURLToSubmit.pathComponents.last!
+
+        let path =
+            "recordings/\(self.selectedPublication.text!)/\(recordingName)"
+
+        let recordingRef =
+            self.storage.reference().child(path)
+
+        let metadata = StorageMetadata()
+        metadata.customMetadata =
+            [ "publication":   "\(self.selectedPublication.text!)"
+            , "article_title": "\(self.articleTitle.text!)"
+            , "reader":        "\(Auth.auth().currentUser!.uid)"
+            ]
+
+        self.recordVC.exportCheck.notify(queue: .main) {
+            recordingRef.putFile(
+                from: self.recordVC.articleURLToSubmit,
+                metadata: metadata) {
+
+                    (completionMetadata, error) in
+
+                    guard let completionMetadata = completionMetadata else {
+                        print(error)
+                        return
+                    }
+
+                    print("\nBUCKET: \(completionMetadata.bucket)")
+
+                    recordingRef.downloadURL {
+                        (url, error) in
+
+                        guard let downloadURL = url else {
+                            print(error)
+                            return
+                        }
+                        print("\n\n\(downloadURL)\n\n")
+
+                        try! FileManager.default.removeItem(
+                            at: self.recordVC.articleURLToSubmit
+                        )
+                    }
+            }
+        }
+
+        self.navigationController?.popViewController(animated: true)
     }
 
     override func didReceiveMemoryWarning() {

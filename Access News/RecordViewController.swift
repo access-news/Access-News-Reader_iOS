@@ -15,6 +15,7 @@ class RecordViewController: UIViewController {
     var audioRecorder:    AVAudioRecorder?
     var audioPlayer:      AVPlayer?
 
+    var articleURLToSubmit: URL!
     // Initialized in `viewDidLoad` via `zeroAudioArtifacts()`
     var articleSoFar: AVMutableComposition!
     var latestChunk: AVURLAsset?
@@ -209,8 +210,9 @@ class RecordViewController: UIViewController {
 
 
         /* Does not need to invoke `self.zeroAudioArtifacts()` because
-           `self.exportArticle()` calles it on successful completion.
+           `self.exportArticle()` calls it on successful completion.
         */
+        self.exportArticle()
 
         /* These should only be invoked on successful submission! */
 //        self.resetRecordTimer()
@@ -531,7 +533,12 @@ class RecordViewController: UIViewController {
         self.leftoverChunks = [AVURLAsset]()
     }
 
+    // https://stackoverflow.com/questions/35906568/wait-until-swift-for-loop-with-asynchronous-network-requests-finishes-executing
+    let exportCheck = DispatchGroup()
+
     func exportArticle() {
+
+        self.exportCheck.enter()
 
         /* Making sure that `self.articleSoFar` (AVMutableComposition) already contains
            the very last `self.articleChunk` (AVURLAsset).
@@ -550,6 +557,10 @@ class RecordViewController: UIViewController {
            later in filename from Submit form.
          */
         exportSession?.outputURL = self.createNewRecordingURL()
+        self.articleURLToSubmit = exportSession?.outputURL
+
+        print(exportSession!.outputURL!.absoluteURL)
+        print(exportSession!.outputURL!.absoluteString)
 
         // Leaving here for debugging purposes.
         // exportSession?.outputURL = self.createNewRecordingURL("exported-")
@@ -575,6 +586,9 @@ class RecordViewController: UIViewController {
             case .exporting?: break
 
             case .completed?:
+
+                self.exportCheck.leave()
+
                 /* Cleaning up partial recordings
                  */
                 for asset in self.leftoverChunks {
