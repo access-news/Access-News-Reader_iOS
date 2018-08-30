@@ -238,6 +238,7 @@ class RecordViewController: UIViewController {
 
         Commands.updateSession(seconds: Int(self.sessionDuration), done: true)
 
+        self.zeroRecordArtifacts()
         self.sessionTimer.invalidate()
         self.navigationController?.popViewController(animated: true)
     }
