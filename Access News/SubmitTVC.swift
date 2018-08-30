@@ -72,7 +72,6 @@ class SubmitTVC: UITableViewController {
                     (completionMetadata, error) in
 
                     guard let completionMetadata = completionMetadata else {
-                        print(error)
                         return
                     }
 
@@ -82,7 +81,6 @@ class SubmitTVC: UITableViewController {
                         (url, error) in
 
                         guard let downloadURL = url else {
-                            print(error)
                             return
                         }
                         print("\n\n\(downloadURL)\n\n")
@@ -93,6 +91,10 @@ class SubmitTVC: UITableViewController {
 
                         Commands.updateSession(
                             seconds: Int(self.recordVC.sessionDuration))
+
+                        Commands.addRecording(
+                            publication: self.selectedPublication.text!,
+                            title: self.articleTitle.text!)
                     }
             }
         }

@@ -36,13 +36,8 @@ struct Commands {
 
             // https://stackoverflow.com/questions/39623524/swift-firebase-access-child-snapshot-data
             let childSnapshot = snapshot.childSnapshot(forPath: "seq")
-
             self.seq = childSnapshot.value! as! Int
-            print("\n\n\n")
-            print(self.seq)
-            print("\n\n\n")
             commandsGroup.leave()
-
         }
     }
 
@@ -61,8 +56,7 @@ struct Commands {
 
     static func updateSession(seconds: Int, done: Bool = false) {
         
-        _ =
-            self.dispatchEvent(
+        _ = self.dispatchEvent(
                 aggregate:  "people",
                 event_name: "session_started",
                 payload:
@@ -75,6 +69,20 @@ struct Commands {
         if  done == true {
             self.session_id = ""
         }
+    }
+
+    static func addRecording(publication: String, title: String) {
+
+        _ =
+            self.dispatchEvent(
+                aggregate: "people",
+                event_name: "recording_added",
+                payload:
+                    [ "publication": publication
+                    , "title": title
+                    ],
+                stream_id: self.user_id
+        )
     }
 
     static func dispatchEvent(
