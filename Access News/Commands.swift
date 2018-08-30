@@ -11,7 +11,8 @@ import Firebase
 
 struct Commands {
 
-    static let db = Database.database()
+//    static let db = Database.database()
+    static let dbref = Database.database().reference()
     static let auth = Auth.auth()
     static let user_id = Auth.auth().currentUser!.uid
 
@@ -24,25 +25,80 @@ struct Commands {
     */
     static func seqUpdater() {
 
-        commandsGroup.enter()
-
         let stateStoreRef =
-            self.db.reference().child("/state_store/\(self.user_id)")
+            self.dbref.child("/state_store/\(self.user_id)")
 
-        stateStoreRef.observeSingleEvent(of: .value, with: {
+        stateStoreRef.observe(.value) {
 
             snapshot in
 
+            commandsGroup.enter()
+
             // https://stackoverflow.com/questions/39623524/swift-firebase-access-child-snapshot-data
-            if let childSnapshot = snapshot.childSnapshot(forPath: "seq") as? DataSnapshot {
-                self.seq = childSnapshot.value! as! Int
-                commandsGroup.leave()
-            }
-        })
+            let childSnapshot = snapshot.childSnapshot(forPath: "seq")
+
+            self.seq = childSnapshot.value! as! Int
+            print("\n\n\n")
+            print(self.seq)
+            print("\n\n\n")
+            commandsGroup.leave()
+
+        }
     }
 
-    func startSession() {
+    static var session_id = ""
 
+    static func startSession() {
+
+        self.session_id =
+            self.dispatchEvent(
+            aggregate:  "people",
+            event_name: "session_started",
+            payload:    ["seconds": 0],
+            stream_id:  self.user_id
+        )
+    }
+
+    static func updateSession(seconds: Int, done: Bool = false) {
         
+        _ =
+            self.dispatchEvent(
+                aggregate:  "people",
+                event_name: "session_started",
+                payload:
+                    [ "seconds":  seconds
+                    , "event_id": self.session_id
+                    ],
+                stream_id:  self.user_id
+        )
+
+        if  done == true {
+            self.session_id = ""
+        }
+    }
+
+    static func dispatchEvent(
+        aggregate:  String,
+        event_name: String,
+        payload:    [String: Any],
+        stream_id:  String
+    ) -> String {
+        let event: [String: Any] =
+            [ "aggregate":  aggregate
+            , "event_name": event_name
+            , "fields":     payload
+            , "seq":        self.seq + 1
+            , "stream_id":  stream_id
+            , "version":    0
+            , "timestamp":  ServerValue.timestamp()
+            ]
+
+        let pushRef = self.dbref.child("/event_store").childByAutoId()
+
+        commandsGroup.notify(queue: .main) {
+            pushRef.setValue(event)
+        }
+
+        return pushRef.key
     }
 }

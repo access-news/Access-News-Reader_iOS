@@ -109,6 +109,10 @@ class RecordViewController: UIViewController {
                 selector: #selector(self.updateSessionTimerLabel),
                 userInfo: nil,
                 repeats: true)
+
+        if Commands.session_id == "" {
+            Commands.startSession()
+        }
     }
 
     @objc func updateSessionTimerLabel(timer: Timer) {
@@ -232,7 +236,7 @@ class RecordViewController: UIViewController {
     @IBOutlet weak var endsessionButton: UIButton!
     @IBAction func endsessionTapped(_ sender: Any) {
 
-        // TODO: submit session timer value to Firebase
+        Commands.updateSession(seconds: Int(self.sessionDuration), done: true)
 
         self.sessionTimer.invalidate()
         self.navigationController?.popViewController(animated: true)
@@ -559,9 +563,6 @@ class RecordViewController: UIViewController {
         exportSession?.outputURL = self.createNewRecordingURL()
         self.articleURLToSubmit = exportSession?.outputURL
 
-        print(exportSession!.outputURL!.absoluteURL)
-        print(exportSession!.outputURL!.absoluteString)
-
         // Leaving here for debugging purposes.
         // exportSession?.outputURL = self.createNewRecordingURL("exported-")
         // TODO: #36
@@ -660,6 +661,12 @@ class RecordViewController: UIViewController {
 
         self.timerLabel.addGestureRecognizer(playbackTimerLabelTapGesture)
         /* --- */
+    }
+
+    func restartUIState() {
+        self.startUIState()
+        self.endsessionButton.isEnabled = true
+        self.endsessionButton.isHidden  = false
     }
 
     func recordUIState() {

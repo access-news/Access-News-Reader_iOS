@@ -90,10 +90,15 @@ class SubmitTVC: UITableViewController {
                         try! FileManager.default.removeItem(
                             at: self.recordVC.articleURLToSubmit
                         )
+
+                        Commands.updateSession(
+                            seconds: Int(self.recordVC.sessionDuration))
                     }
             }
         }
 
+        self.recordVC.resetRecordTimer()
+        self.recordVC.restartUIState()
         self.navigationController?.popViewController(animated: true)
     }
 

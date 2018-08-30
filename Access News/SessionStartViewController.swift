@@ -14,6 +14,9 @@ class SessionStartViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        /* Adding listener to update `seq` because user is signed in for sure
+           at this point.
+        */
         Commands.seqUpdater()
 
         self.navigationItem.rightBarButtonItem =
