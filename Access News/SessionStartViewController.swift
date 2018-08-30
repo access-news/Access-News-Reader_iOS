@@ -14,6 +14,8 @@ class SessionStartViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        Commands.seqUpdater()
+
         self.navigationItem.rightBarButtonItem =
             UIBarButtonItem(title:  "Sign out",
                             style:  .plain,
