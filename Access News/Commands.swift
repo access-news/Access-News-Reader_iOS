@@ -55,10 +55,12 @@ struct Commands {
     }
 
     static func updateSession(seconds: Int, done: Bool = false) {
-        
+
+        let event_name =
+            done ? "session_ended" : "session_time_updated"
         _ = self.dispatchEvent(
                 aggregate:  "people",
-                event_name: "session_started",
+                event_name: event_name,
                 payload:
                     [ "seconds":  seconds
                     , "event_id": self.session_id
@@ -73,8 +75,7 @@ struct Commands {
 
     static func addRecording(publication: String, title: String) {
 
-        _ =
-            self.dispatchEvent(
+        _ = self.dispatchEvent(
                 aggregate: "people",
                 event_name: "recording_added",
                 payload:
