@@ -10,18 +10,12 @@ import UIKit
 
 class SelectPubicationTVC: UITableViewController {
 
-    let publications =
-        [ "Crosswords"
-        , "Eureka Times Standard"
-        , "Ferndale Enterprise"
-        , "Raley's"
-        , "Sacramento News and Review"
-        , "Sacramento Bee"
-        , "Safeway"
-        , "Santa Rosa Press Democrat"
-        , "Savemart"
-        , "Sprouts"
-        , "Trivia"
+    var publications: [String] =
+        [ "If you see this,"
+        , "please add the "
+        , "publication name "
+        , "to the article title."
+        , "Thank you!"
         ]
 
     override func viewDidLoad() {
@@ -32,6 +26,8 @@ class SelectPubicationTVC: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
+
+        self.publications = (UIApplication.shared.delegate as! AppDelegate).publications
     }
 
     override func didReceiveMemoryWarning() {

@@ -14,11 +14,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    var publications: [String]!
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
 
         FirebaseApp.configure()
 
+        self.publications = []
+
+        Commands.dbref.child("publications").observeSingleEvent(of: .value, with: {
+            snapshot in
+
+            let v = snapshot.value
+            self.publications = Array((v as! Dictionary<String,Any>).keys)
+
+        })
+        
         if Auth.auth().currentUser  != nil {
             let storyboard = UIStoryboard(name: "Main", bundle: .main)
             let nvc = storyboard.instantiateViewController(withIdentifier: "NVC")
