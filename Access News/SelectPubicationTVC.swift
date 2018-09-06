@@ -65,7 +65,6 @@ class SelectPubicationTVC: UITableViewController {
                 as! SubmitTVC
 
         submitTVC.selectedPublication.text = self.publications[indexPath.row]
-        submitTVC.articleTitle.becomeFirstResponder()
 
         self.navigationController?.popViewController(animated: true)
     }

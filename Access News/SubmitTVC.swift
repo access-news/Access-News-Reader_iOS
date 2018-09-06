@@ -12,7 +12,6 @@ import Firebase
 class SubmitTVC: UITableViewController {
 
     @IBOutlet weak var selectedPublication: UILabel!
-    @IBOutlet weak var articleTitle: UITextField!
 
     let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
 
@@ -31,10 +30,6 @@ class SubmitTVC: UITableViewController {
         self.selectedPublication.adjustsFontSizeToFitWidth = true
         // This is the default, but making it explicit
         self.selectedPublication.minimumScaleFactor = 0
-
-        self.articleTitle.delegate = self
-        self.articleTitle.clearButtonMode = .always
-        self.articleTitle.spellCheckingType = .yes
 
         let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(self.uploadRecording))
         self.navigationItem.rightBarButtonItem = doneButton
@@ -60,7 +55,6 @@ class SubmitTVC: UITableViewController {
         let metadata = StorageMetadata()
         metadata.customMetadata =
             [ "publication":   "\(self.selectedPublication.text!)"
-            , "article_title": "\(self.articleTitle.text!)"
             , "reader":        "\(Auth.auth().currentUser!.uid)"
             ]
 
@@ -93,8 +87,7 @@ class SubmitTVC: UITableViewController {
                             seconds: Int(self.recordVC.sessionDuration))
 
                         Commands.addRecording(
-                            publication: self.selectedPublication.text!,
-                            title: self.articleTitle.text!)
+                            publication: self.selectedPublication.text!)
                     }
             }
         }

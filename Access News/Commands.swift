@@ -105,7 +105,7 @@ struct Commands {
         }
     }
 
-    static func addRecording(publication: String, title: String) {
+    static func addRecording(publication: String) {
 
         self.dispatchEvent(
             aggregate: Aggregates.recording.rawValue,
