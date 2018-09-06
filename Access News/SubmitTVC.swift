@@ -48,15 +48,18 @@ class SubmitTVC: UITableViewController {
 
         let path =
             "recordings/\(self.selectedPublication.text!)/\(recordingName)"
-
         let recordingRef =
             self.storage.reference().child(path)
 
         let metadata = StorageMetadata()
         metadata.customMetadata =
-            [ "publication":   "\(self.selectedPublication.text!)"
-            , "reader":        "\(Auth.auth().currentUser!.uid)"
+            [ "publication": "\(self.selectedPublication.text!)"
+            , "reader":      "\(Auth.auth().currentUser!.uid)"
+            , "duration":    "\(self.recordVC.articleDuration)"
             ]
+
+        Commands.updateSession(
+            seconds: Int(self.recordVC.sessionDuration))
 
         self.recordVC.exportCheck.notify(queue: .main) {
             recordingRef.putFile(
@@ -83,12 +86,10 @@ class SubmitTVC: UITableViewController {
                             at: self.recordVC.articleURLToSubmit
                         )
 
-                        Commands.updateSession(
-                            seconds: Int(self.recordVC.sessionDuration))
-
                         Commands.addRecording(
                             publication: self.selectedPublication.text!,
-                            recordingName: recordingName)
+                            recordingName: recordingName,
+                            duration: self.recordVC.articleDuration)
                     }
             }
         }

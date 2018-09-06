@@ -537,6 +537,7 @@ class RecordViewController: UIViewController {
 
     // https://stackoverflow.com/questions/35906568/wait-until-swift-for-loop-with-asynchronous-network-requests-finishes-executing
     let exportCheck = DispatchGroup()
+    var articleDuration: Float64 = 0.0
 
     func exportArticle() {
 
@@ -560,6 +561,7 @@ class RecordViewController: UIViewController {
          */
         exportSession?.outputURL = self.createNewRecordingURL()
         self.articleURLToSubmit = exportSession?.outputURL
+        self.articleDuration = CMTimeGetSeconds(self.articleSoFar.duration)
 
         // Leaving here for debugging purposes.
         // exportSession?.outputURL = self.createNewRecordingURL("exported-")
