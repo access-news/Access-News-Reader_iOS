@@ -87,7 +87,8 @@ class SubmitTVC: UITableViewController {
                             seconds: Int(self.recordVC.sessionDuration))
 
                         Commands.addRecording(
-                            publication: self.selectedPublication.text!)
+                            publication: self.selectedPublication.text!,
+                            recordingName: recordingName)
                     }
             }
         }
