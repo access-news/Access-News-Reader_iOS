@@ -13,6 +13,7 @@
 		CF1EB7A920C079D500D36E36 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CF1EB7A720C079D400D36E36 /* GoogleService-Info.plist */; };
 		CF1EB7AA20C079D500D36E36 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CF1EB7A720C079D400D36E36 /* GoogleService-Info.plist */; };
 		CF342A9C20F9763400DD1BF7 /* SubmitTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF342A9B20F9763400DD1BF7 /* SubmitTVC.swift */; };
+		CF3A496121419DBF007B6FC8 /* Aggregates.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3A496021419DBF007B6FC8 /* Aggregates.swift */; };
 		CF63AB1920EBE2F10069E05B /* SessionStartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF63AB1820EBE2F10069E05B /* SessionStartViewController.swift */; };
 		CF783B3D83CA6601AEBFFE66 /* Pods_Access_NewsUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F3C40D9DD2299E2C5C72541 /* Pods_Access_NewsUITests.framework */; };
 		CF87D17F20C1BA4600AF1AE0 /* RecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF87D17E20C1BA4600AF1AE0 /* RecordViewController.swift */; };
@@ -55,6 +56,7 @@
 		8DF637CD1CE903146043D448 /* Pods_Access_NewsTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Access_NewsTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF1EB7A720C079D400D36E36 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CF342A9B20F9763400DD1BF7 /* SubmitTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitTVC.swift; sourceTree = "<group>"; };
+		CF3A496021419DBF007B6FC8 /* Aggregates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aggregates.swift; sourceTree = "<group>"; };
 		CF63AB1820EBE2F10069E05B /* SessionStartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStartViewController.swift; sourceTree = "<group>"; };
 		CF87D17E20C1BA4600AF1AE0 /* RecordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
 		CF87D18020C1BE5600AF1AE0 /* ProfileTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTVC.swift; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 				CF87D18220C1BE6800AF1AE0 /* SettingsTVC.swift */,
 				CFB9ACE421349862007DBEFE /* SelectPubicationTVC.swift */,
 				CF9C587E213753EA00458D8C /* Commands.swift */,
+				CF3A496021419DBF007B6FC8 /* Aggregates.swift */,
 			);
 			path = "Access News";
 			sourceTree = "<group>";
@@ -424,6 +427,7 @@
 				CF87D18320C1BE6800AF1AE0 /* SettingsTVC.swift in Sources */,
 				CFF5BA2920BF5B460033D180 /* AppDelegate.swift in Sources */,
 				CFB9ACE521349862007DBEFE /* SelectPubicationTVC.swift in Sources */,
+				CF3A496121419DBF007B6FC8 /* Aggregates.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

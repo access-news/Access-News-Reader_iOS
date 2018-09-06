@@ -110,7 +110,7 @@ class RecordViewController: UIViewController {
                 userInfo: nil,
                 repeats: true)
 
-        if Commands.session_id == "" {
+        if Commands.sessionID == "" {
             Commands.startSession()
         }
     }
@@ -138,8 +138,9 @@ class RecordViewController: UIViewController {
     @IBOutlet weak var recordButton: UIButton!
     @IBAction func recordTapped(_ sender: Any) {
 
-        self.startRecorder()
+        Commands.seqs[Aggregates.recording.rawValue] = 1
 
+        self.startRecorder()
         self.recordUIState()
     }
 

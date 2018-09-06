@@ -17,7 +17,9 @@ class SessionStartViewController: UIViewController {
         /* Adding listener to update `seq` because user is signed in for sure
            at this point.
         */
-        Commands.seqUpdater()
+        // Commands.seqUpdater()
+        /* See comments in Commands */
+        Commands.seqs[Aggregates.session.rawValue] = 1
 
         self.navigationItem.rightBarButtonItem =
             UIBarButtonItem(title:  "Sign out",
