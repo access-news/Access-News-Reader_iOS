@@ -33,7 +33,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <segue destination="Ha9-TU-hvE" kind="show" id="AH2-rG-Syx"/>
+                                    <action selector="startSessionTapped:" destination="7G3-FM-EZs" eventType="touchUpInside" id="aTf-bN-vuf"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -41,6 +41,9 @@
                         <viewLayoutGuide key="safeArea" id="oj6-6k-mrY"/>
                     </view>
                     <navigationItem key="navigationItem" id="e2F-CM-TfV"/>
+                    <connections>
+                        <outlet property="startSessionButton" destination="tKW-Yd-LX6" id="34D-EY-9Kl"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5rm-c9-Y1w" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

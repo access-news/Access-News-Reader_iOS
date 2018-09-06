@@ -19,15 +19,15 @@ struct Commands {
     /* No pun intended (but I would definitely do something like this
        on purpose).
 
-       `seq` for sessions are set in SessionStartViewController, for
+       `seq` for sessions are reset in SessionStartViewController, for
        recordings, it is set when starting a new recording
        (i.e., in `RecordViewController.recordTapped`).
 
        Updated in `dispatchEvent` when storing an event in Firebase DB.
     */
     static var seqs: [String: Int] =
-        [ Aggregates.recording.rawValue: 0
-        , Aggregates.session.rawValue:   0
+        [ Aggregates.recording.rawValue: 1
+        , Aggregates.session.rawValue:   1
         ]
 
     static let commandsGroup = DispatchGroup()
@@ -103,6 +103,11 @@ struct Commands {
         if  done == true {
             self.sessionID = ""
         }
+        /* Not a problem if app terminates abnormally and sessionID
+           won't get cleared, because `startSession` will assign a
+           brand new sessionID once the app is restarted and "Start
+           Session" is tapped.
+        */
     }
 
     static func addRecording(publication: String, recordingName: String) {

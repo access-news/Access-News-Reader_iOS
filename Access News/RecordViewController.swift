@@ -109,10 +109,6 @@ class RecordViewController: UIViewController {
                 selector: #selector(self.updateSessionTimerLabel),
                 userInfo: nil,
                 repeats: true)
-
-        if Commands.sessionID == "" {
-            Commands.startSession()
-        }
     }
 
     @objc func updateSessionTimerLabel(timer: Timer) {

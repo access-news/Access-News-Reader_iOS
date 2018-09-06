@@ -11,11 +11,11 @@
             condition = "compareWith  == &quot;session&quot;"
             continueAfterRunningActions = "No"
             filePath = "Access News/RecordViewController.swift"
-            timestampString = "557959961.9728529"
+            timestampString = "557963066.0946029"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "403"
-            endingLineNumber = "403"
+            startingLineNumber = "399"
+            endingLineNumber = "399"
             landmarkName = "updateRecordTimerLabel()"
             landmarkType = "7">
          </BreakpointContent>
@@ -37,11 +37,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Access News/RecordViewController.swift"
-            timestampString = "557959961.972946"
+            timestampString = "557963066.094667"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "947"
-            endingLineNumber = "947"
+            startingLineNumber = "943"
+            endingLineNumber = "943"
             landmarkName = "registerPeriodicTimeObserver()"
             landmarkType = "7">
             <Locations>
@@ -85,11 +85,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Access News/RecordViewController.swift"
-            timestampString = "557959961.97299"
+            timestampString = "557963066.094715"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "167"
-            endingLineNumber = "167"
+            startingLineNumber = "163"
+            endingLineNumber = "163"
             landmarkName = "stopTapped(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -101,7 +101,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Access News/RecordViewController.swift"
-            timestampString = "557959961.97304"
+            timestampString = "557963066.094761"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "71"
@@ -117,12 +117,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Access News/SubmitTVC.swift"
-            timestampString = "557959961.973122"
+            timestampString = "557963066.094808"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "94"
             endingLineNumber = "94"
             landmarkName = "uploadRecording()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Access News/SessionStartViewController.swift"
+            timestampString = "557963066.094855"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "16"
+            endingLineNumber = "16"
+            landmarkName = "startSessionTapped(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -11,6 +11,18 @@ import Firebase
 
 class SessionStartViewController: UIViewController {
 
+    @IBOutlet weak var startSessionButton: UIButton!
+    @IBAction func startSessionTapped(_ sender: Any) {
+
+        Commands.seqs[Aggregates.session.rawValue] = 1
+        Commands.startSession()
+
+        let storyboard = UIStoryboard(name: "Main", bundle: .main)
+        let recordVC = storyboard.instantiateViewController(withIdentifier: "RecordViewController")
+
+        self.navigationController?.pushViewController(recordVC, animated: true)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -18,8 +30,7 @@ class SessionStartViewController: UIViewController {
            at this point.
         */
         // Commands.seqUpdater()
-        /* See comments in Commands */
-        Commands.seqs[Aggregates.session.rawValue] = 1
+        /* See comments in Commands why this is commented out. */
 
         self.navigationItem.rightBarButtonItem =
             UIBarButtonItem(title:  "Sign out",
