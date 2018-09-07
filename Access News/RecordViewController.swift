@@ -16,20 +16,20 @@ class RecordViewController: UIViewController {
     var audioPlayer:      AVPlayer?
 
     var articleURLToSubmit: URL!
-    // Initialized in `viewDidLoad` via `zeroAudioArtifacts()`
     var articleSoFar: AVMutableComposition!
     var latestChunk: AVURLAsset?
     var insertAt: CMTimeRange!
-    /* To store reference to partial recordings. Unsure whether adding an AVAsset
-       to an AVComposition copies the data or references them, therefore keeping
-       their references here and removing the files when exporting. */
-    var leftoverChunks: [AVURLAsset]!
+
+    /* To store reference to partial recordings. Unsure whether
+       adding an AVAsset to an AVComposition copies the data or
+       references them, therefore keeping their references here
+       and removing the files when exporting.
+    */
+    var leftoverChunks = [AVURLAsset]()
     // --------------------------------------------------------
 
     @IBOutlet weak var disabledNotice: UITextView!
-
     @IBOutlet weak var playbackSlider: UISlider!
-
 
     let disabledGrey      = UIColor(red: 0.910, green: 0.910, blue: 0.910, alpha: 1.0)
     let playGreen         = UIColor(red: 0.238, green: 0.753, blue: 0.323, alpha: 1.0)
@@ -215,9 +215,12 @@ class RecordViewController: UIViewController {
         */
         self.exportArticle()
 
-        /* These should only be invoked on successful submission! */
-//        self.resetRecordTimer()
-//        self.startUIState()
+        /* self.resetRecordTimer()
+           self.startUIState()
+
+           These should only be invoked on successful submission,
+           thus they can be found in SubmitTVC.
+        */
     }
 
     @IBOutlet weak var startoverButton: UIButton!
@@ -532,6 +535,12 @@ class RecordViewController: UIViewController {
         self.articleSoFarDuration = 0.0
         self.latestChunk = nil
         self.insertAt = CMTimeRange(start: kCMTimeZero, end: kCMTimeZero)
+
+        /* Cleaning up partial recordings
+         */
+        for asset in self.leftoverChunks {
+            try! FileManager.default.removeItem(at: asset.url)
+        }
         self.leftoverChunks = [AVURLAsset]()
     }
 
@@ -589,12 +598,6 @@ class RecordViewController: UIViewController {
             case .completed?:
 
                 self.exportCheck.leave()
-
-                /* Cleaning up partial recordings
-                 */
-                for asset in self.leftoverChunks {
-                    try! FileManager.default.removeItem(at: asset.url)
-                }
 
                 /* Resetting `articleChunks` here, because this function is
                  called asynchronously and calling it from `queueTapped` or
