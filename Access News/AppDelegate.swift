@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             snapshot in
 
             let v = snapshot.value
-            self.publications = Array((v as! Dictionary<String,Any>).keys)
+            self.publications = Array((v as! Dictionary<String,Any>).keys).sorted()
 
         })
         

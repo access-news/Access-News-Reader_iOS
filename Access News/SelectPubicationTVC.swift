@@ -11,11 +11,7 @@ import UIKit
 class SelectPubicationTVC: UITableViewController {
 
     var publications: [String] =
-        [ "If you see this,"
-        , "please add the "
-        , "publication name "
-        , "to the article title."
-        , "Thank you!"
+        [ "Something went wrong. Just click on this:)"
         ]
 
     override func viewDidLoad() {
