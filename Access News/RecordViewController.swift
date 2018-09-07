@@ -641,7 +641,7 @@ class RecordViewController: UIViewController {
 
         self.timerLabel.isHidden   = true
         self.playbackSlider.isHidden  = true
-        self.endsessionButton.isHidden = true
+        self.endsessionButton.isHidden = false
 
         /* --- */
 
