@@ -207,15 +207,11 @@ class RecordViewController: UIViewController {
     @IBOutlet weak var submitButton: UIButton!
     @IBAction func submitTapped(_ sender: Any) {
 
-        // TODO: Insert SubmitViewController
+        self.articleURLToSubmit = self.createNewRecordingURL()
+        self.articleDuration = CMTimeGetSeconds(self.articleSoFar.duration)
 
-
-        /* Does not need to invoke `self.zeroAudioArtifacts()` because
-           `self.exportArticle()` calls it on successful completion.
-        */
-        self.exportArticle()
-
-        /* self.resetRecordTimer()
+        /* self.exportArticle()
+           self.resetRecordTimer()
            self.startUIState()
 
            These should only be invoked on successful submission,
@@ -551,7 +547,7 @@ class RecordViewController: UIViewController {
     func exportArticle() {
 
         self.exportCheck.enter()
-
+        
         /* Making sure that `self.articleSoFar` (AVMutableComposition) already contains
            the very last `self.articleChunk` (AVURLAsset).
          */
@@ -568,9 +564,7 @@ class RecordViewController: UIViewController {
         /* TODO: Either set up metadata info or provide publication info
            later in filename from Submit form.
          */
-        exportSession?.outputURL = self.createNewRecordingURL()
-        self.articleURLToSubmit = exportSession?.outputURL
-        self.articleDuration = CMTimeGetSeconds(self.articleSoFar.duration)
+        exportSession?.outputURL = self.articleURLToSubmit
 
         // Leaving here for debugging purposes.
         // exportSession?.outputURL = self.createNewRecordingURL("exported-")
@@ -598,12 +592,6 @@ class RecordViewController: UIViewController {
             case .completed?:
 
                 self.exportCheck.leave()
-
-                /* Resetting `articleChunks` here, because this function is
-                 called asynchronously and calling it from `queueTapped` or
-                 `submitTapped` may delete the files prematurely.
-                 */
-                self.zeroRecordArtifacts()
 
             case .failed?: break
             case .cancelled?: break

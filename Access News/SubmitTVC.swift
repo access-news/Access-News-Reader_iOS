@@ -52,16 +52,22 @@ class SubmitTVC: UITableViewController {
             self.storage.reference().child(path)
 
         let metadata = StorageMetadata()
-        metadata.customMetadata =
-            [ "publication": "\(self.selectedPublication.text!)"
-            , "reader":      "\(Auth.auth().currentUser!.uid)"
-            , "duration":    "\(self.recordVC.articleDuration)"
-            ]
+            metadata.customMetadata =
+                [ "publication": "\(self.selectedPublication.text!)"
+                , "reader":      "\(Auth.auth().currentUser!.uid)"
+                , "duration":    "\(self.recordVC.articleDuration)"
+                ]
 
         Commands.updateSession(
             seconds: Int(self.recordVC.sessionDuration))
 
+        /* Does not need to invoke `self.zeroAudioArtifacts()` because
+           `self.exportArticle()` calls it on successful completion.
+        */
+        self.recordVC.exportArticle()
+
         self.recordVC.exportCheck.notify(queue: .main) {
+
             recordingRef.putFile(
                 from: self.recordVC.articleURLToSubmit,
                 metadata: metadata) {
@@ -92,11 +98,21 @@ class SubmitTVC: UITableViewController {
                             duration: self.recordVC.articleDuration)
                     }
             }
-        }
 
-        self.recordVC.resetRecordTimer()
-        self.recordVC.restartUIState()
-        self.navigationController?.popViewController(animated: true)
+            self.recordVC.zeroRecordArtifacts()
+
+            /* There may be a lag returning to RecordViewController,
+             (because waiting for the article export being finished)
+             but trying to avoid a massive rewrite for now
+
+             TODO: Make this less obtrusive. For example, return but
+             only make the record button active when a `leave`
+             (from DispatchGroup) returns from here. Or something.
+             */
+            self.recordVC.resetRecordTimer()
+            self.recordVC.restartUIState()
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 
     override func didReceiveMemoryWarning() {
