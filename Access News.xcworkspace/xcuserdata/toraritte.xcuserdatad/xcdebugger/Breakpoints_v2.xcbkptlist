@@ -101,7 +101,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Access News/SessionStartViewController.swift"
-            timestampString = "558035417.4857579"
+            timestampString = "558401938.959998"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "16"
@@ -123,6 +123,22 @@
             startingLineNumber = "530"
             endingLineNumber = "530"
             landmarkName = "zeroRecordArtifacts()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Access News/ResetPasswordViewController.swift"
+            timestampString = "558401938.960072"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "73"
+            endingLineNumber = "73"
+            landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

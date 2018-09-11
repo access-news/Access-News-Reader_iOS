@@ -16,6 +16,7 @@
 		CF3A496121419DBF007B6FC8 /* Aggregates.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3A496021419DBF007B6FC8 /* Aggregates.swift */; };
 		CF63AB1920EBE2F10069E05B /* SessionStartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF63AB1820EBE2F10069E05B /* SessionStartViewController.swift */; };
 		CF783B3D83CA6601AEBFFE66 /* Pods_Access_NewsUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F3C40D9DD2299E2C5C72541 /* Pods_Access_NewsUITests.framework */; };
+		CF804301214875530080687B /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF804300214875530080687B /* ResetPasswordViewController.swift */; };
 		CF87D17F20C1BA4600AF1AE0 /* RecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF87D17E20C1BA4600AF1AE0 /* RecordViewController.swift */; };
 		CF87D18120C1BE5600AF1AE0 /* ProfileTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF87D18020C1BE5600AF1AE0 /* ProfileTVC.swift */; };
 		CF87D18320C1BE6800AF1AE0 /* SettingsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF87D18220C1BE6800AF1AE0 /* SettingsTVC.swift */; };
@@ -58,6 +59,8 @@
 		CF342A9B20F9763400DD1BF7 /* SubmitTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitTVC.swift; sourceTree = "<group>"; };
 		CF3A496021419DBF007B6FC8 /* Aggregates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aggregates.swift; sourceTree = "<group>"; };
 		CF63AB1820EBE2F10069E05B /* SessionStartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStartViewController.swift; sourceTree = "<group>"; };
+		CF8042FF214864200080687B /* Access News.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Access News.entitlements"; sourceTree = "<group>"; };
+		CF804300214875530080687B /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
 		CF87D17E20C1BA4600AF1AE0 /* RecordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
 		CF87D18020C1BE5600AF1AE0 /* ProfileTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTVC.swift; sourceTree = "<group>"; };
 		CF87D18220C1BE6800AF1AE0 /* SettingsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTVC.swift; sourceTree = "<group>"; };
@@ -158,6 +161,8 @@
 		CFF5BA2720BF5B460033D180 /* Access News */ = {
 			isa = PBXGroup;
 			children = (
+				CF804300214875530080687B /* ResetPasswordViewController.swift */,
+				CF8042FF214864200080687B /* Access News.entitlements */,
 				CFF5BA2820BF5B460033D180 /* AppDelegate.swift */,
 				CF63AB1820EBE2F10069E05B /* SessionStartViewController.swift */,
 				CFF5BA2A20BF5B460033D180 /* LoginViewController.swift */,
@@ -268,6 +273,9 @@
 						CreatedOnToolsVersion = 9.4;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
 								enabled = 1;
 							};
 						};
@@ -421,6 +429,7 @@
 				CF63AB1920EBE2F10069E05B /* SessionStartViewController.swift in Sources */,
 				CF9C587F213753EA00458D8C /* Commands.swift in Sources */,
 				CF87D17F20C1BA4600AF1AE0 /* RecordViewController.swift in Sources */,
+				CF804301214875530080687B /* ResetPasswordViewController.swift in Sources */,
 				CF87D18120C1BE5600AF1AE0 /* ProfileTVC.swift in Sources */,
 				CF342A9C20F9763400DD1BF7 /* SubmitTVC.swift in Sources */,
 				CFF5BA2B20BF5B460033D180 /* LoginViewController.swift in Sources */,
@@ -601,6 +610,7 @@
 			baseConfigurationReference = 1AD751AE5E0235EC177C2D85 /* Pods-Access News.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Access News/Access News.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = K6BD7WSV5V;
 				INFOPLIST_FILE = "Access News/Info.plist";
@@ -621,6 +631,7 @@
 			baseConfigurationReference = 25C001BC31280401C9640469 /* Pods-Access News.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Access News/Access News.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = K6BD7WSV5V;
 				INFOPLIST_FILE = "Access News/Info.plist";

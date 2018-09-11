@@ -16,9 +16,6 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var password: UITextField!
 
     @IBOutlet weak var forgotPassword: UIButton!
-    @IBAction func tapForgotPassword(_ sender: Any) {
-        // See issue #2
-    }
 
     @IBOutlet weak var signInButton: UIButton!
     @IBAction func tapSignInButton(_ sender: Any) {
