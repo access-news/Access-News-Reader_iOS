@@ -11,7 +11,6 @@ import AVFoundation
 
 class RecordViewController: UIViewController {
 
-    @IBOutlet weak var disabledNotice: UITextView!
     @IBOutlet weak var playbackSlider: UISlider!
     @IBOutlet weak var sessionTimerLabel: UIBarButtonItem!
     @IBOutlet weak var timerLabel: UILabel!
@@ -41,36 +40,6 @@ class RecordViewController: UIViewController {
         self.startUIState()
 
         self.zeroRecordArtifacts()
-
-        /* Set up audio session for recording and ask permission
-           https://www.hackingwithswift.com/example-code/media/how-to-record-audio-using-avaudiorecorder
-
-           The article above retains the AVAudioSession, but the official documentation
-           shows different. There are many opinions that would need more time to mull over
-           but just following the official way for now. (Look up "singleton" on the page,
-           the first result shows the code.)
-           https://developer.apple.com/documentation/avfoundation/avaudiosession
-         */
-        let recordingSession = AVAudioSession.sharedInstance()
-        do {
-
-            try recordingSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
-            try recordingSession.setActive(true)
-
-            recordingSession.requestRecordPermission() { [unowned self] allowed in
-                DispatchQueue.main.async {
-
-                    if allowed != true {
-                        self.disabledNotice.isHidden = false
-                        self.recordButton.superview?.isHidden = true
-                    } else {
-                        self.disabledNotice.isHidden = true
-                    }
-                }
-            }
-        } catch {
-            print("Setting up audiosession failed somehow.")
-        }
 
         /* SESSION TIMER SETUP */
         self.sessionTimerLabel.title = "00:00:00"

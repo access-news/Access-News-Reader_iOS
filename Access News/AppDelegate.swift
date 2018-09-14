@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 import Firebase
 
 @UIApplicationMain
@@ -17,7 +18,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var publications: [String] = []
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        
         // Override point for customization after application launch.
+
+        /* Set up audio session for recording and ask permission
+         https://www.hackingwithswift.com/example-code/media/how-to-record-audio-using-avaudiorecorder
+
+         The article above retains the AVAudioSession, but the official documentation
+         shows different. There are many opinions that would need more time to mull over
+         but just following the official way for now. (Look up "singleton" on the page,
+         the first result shows the code.)
+         https://developer.apple.com/documentation/avfoundation/avaudiosession
+         */
+        let recordingSession = AVAudioSession.sharedInstance()
+        do {
+
+            try recordingSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
+            try recordingSession.setActive(true)
+
+            recordingSession.requestRecordPermission() { [unowned self] allowed in
+                DispatchQueue.main.async {
+
+                    if allowed != true {
+                        // TODO: See issue #15
+                    }
+                }
+            }
+        } catch {
+            print("Setting up audiosession failed somehow.")
+        }
 
         FirebaseApp.configure()
 

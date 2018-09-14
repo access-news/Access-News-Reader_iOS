@@ -11,11 +11,11 @@
             condition = "compareWith  == &quot;session&quot;"
             continueAfterRunningActions = "No"
             filePath = "Access News/RecordViewController.swift"
-            timestampString = "558576784.059759"
+            timestampString = "558639705.84479"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "398"
-            endingLineNumber = "398"
+            startingLineNumber = "380"
+            endingLineNumber = "380"
             landmarkName = "convertSecondStringToTimerLabel(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -37,12 +37,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Access News/RecordViewController.swift"
-            timestampString = "558576784.059885"
+            timestampString = "558639705.845207"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "164"
-            endingLineNumber = "164"
-            landmarkName = "playTapped(_:)"
+            startingLineNumber = "146"
+            endingLineNumber = "146"
+            landmarkName = "stopTapped(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -69,7 +69,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Access News/ResetPasswordViewController.swift"
-            timestampString = "558576784.0599639"
+            timestampString = "558639705.845529"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "73"
