@@ -11,34 +11,10 @@ import AVFoundation
 
 class RecordViewController: UIViewController {
 
-    var recordingSession: AVAudioSession!
-    var audioRecorder:    AVAudioRecorder?
-    var audioPlayer:      AVPlayer?
-
-    var articleURLToSubmit: URL!
-    var articleSoFar: AVMutableComposition!
-    var latestChunk: AVURLAsset?
-    var insertAt: CMTimeRange!
-
-    /* To store reference to partial recordings. Unsure whether
-       adding an AVAsset to an AVComposition copies the data or
-       references them, therefore keeping their references here
-       and removing the files when exporting.
-    */
-    var leftoverChunks = [AVURLAsset]()
-    // --------------------------------------------------------
-
     @IBOutlet weak var disabledNotice: UITextView!
     @IBOutlet weak var playbackSlider: UISlider!
-
-    let disabledGrey      = UIColor(red: 0.910, green: 0.910, blue: 0.910, alpha: 1.0)
-    let playGreen         = UIColor(red: 0.238, green: 0.753, blue: 0.323, alpha: 1.0)
-    let recordRed         = UIColor(red: 1.0,   green: 0.2,   blue: 0.169, alpha: 1.0)
-    let endsessionPurple  = UIColor(red: 0.633, green: 0.276, blue: 0.425, alpha: 1.0)
-    let pausePlaybackGrey = UIColor(red: 0.475, green: 0.494, blue: 0.500, alpha: 1.0)
-    let startoverGold     = UIColor(red: 1.000, green: 0.694, blue: 0.0,   alpha: 1.0)
-
     @IBOutlet weak var sessionTimerLabel: UIBarButtonItem!
+    @IBOutlet weak var timerLabel: UILabel!
 
     var documentDir: URL {
         get {
@@ -50,48 +26,45 @@ class RecordViewController: UIViewController {
         }
     }
 
-    /* `self.timerLabel` only displays elapsed time, down to seconds,
-     but `updateTimerLabel` (and therefore `self.tick()`) fires
-     every 0.01 seconds. This global variable is used to check
-     whether label update is necessary (i.e., did a full second
-     already went by).
-     */
-    var seconds : [String: String] =
-        [ "record and playback" : ""
-        , "session"  : ""
-        ]
+    let disabledGrey      = UIColor(red: 0.910, green: 0.910, blue: 0.910, alpha: 1.0)
+    let playGreen         = UIColor(red: 0.238, green: 0.753, blue: 0.323, alpha: 1.0)
+    let recordRed         = UIColor(red: 1.0,   green: 0.2,   blue: 0.169, alpha: 1.0)
+    let endsessionPurple  = UIColor(red: 0.633, green: 0.276, blue: 0.425, alpha: 1.0)
+    let pausePlaybackGrey = UIColor(red: 0.475, green: 0.494, blue: 0.500, alpha: 1.0)
+    let startoverGold     = UIColor(red: 1.000, green: 0.694, blue: 0.0,   alpha: 1.0)
 
-    var sessionTimer: Timer!
-    var sessionDuration: Double!
-
-    @IBOutlet weak var timerLabel: UILabel!
-    var recordTimer:  Timer!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.sessionTimerLabel.tintColor = pausePlaybackGrey
         /* Set default UI properties, assuming that permission to record is given. */
-
-        self.disabledNotice.isHidden = true
-        self.zeroRecordArtifacts()
         self.startUIState()
+
+        self.zeroRecordArtifacts()
 
         /* Set up audio session for recording and ask permission
            https://www.hackingwithswift.com/example-code/media/how-to-record-audio-using-avaudiorecorder
+
+           The article above retains the AVAudioSession, but the official documentation
+           shows different. There are many opinions that would need more time to mull over
+           but just following the official way for now. (Look up "singleton" on the page,
+           the first result shows the code.)
+           https://developer.apple.com/documentation/avfoundation/avaudiosession
          */
-        self.recordingSession = AVAudioSession.sharedInstance()
+        let recordingSession = AVAudioSession.sharedInstance()
         do {
 
-            try self.recordingSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
-            try self.recordingSession.setActive(true)
+            try recordingSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
+            try recordingSession.setActive(true)
 
-            self.recordingSession.requestRecordPermission() { [unowned self] allowed in
+            recordingSession.requestRecordPermission() { [unowned self] allowed in
                 DispatchQueue.main.async {
 
                     if allowed != true {
                         self.disabledNotice.isHidden = false
                         self.recordButton.superview?.isHidden = true
+                    } else {
+                        self.disabledNotice.isHidden = true
                     }
                 }
             }
@@ -353,27 +326,6 @@ class RecordViewController: UIViewController {
         return self.documentDir.appendingPathComponent(fileURL)
     }
 
-    /* Because paused AVAudioRecorder recording cannot be played
-       back, it needs to be stopped (zeroing out its `currentTime`
-       property as well), but the user should be able to resume
-       recording from this point, seeing the timer updated from there.
-       Hence this global variable.
-
-       Updated from `stopRecordTimer` because once recording is
-       stopped, if
-
-       * "Continue" (recording) button is pressed, this would init,
-         `updateTimerLabel`, called periodically from the timer below.
-
-       * "Play" is tapped, it would be used to restore the timer
-         label once returned from the playback UI. (Plus recording
-         could be resumed, as described in the previous item.)
-
-    */
-    var articleSoFarDuration: Double = 0.0
-
-    var timerLabelReversed: Bool = false
-
     func startRecordTimer() {
 
         self.recordTimer =
@@ -536,10 +488,6 @@ class RecordViewController: UIViewController {
         self.leftoverChunks = [AVURLAsset]()
     }
 
-    // https://stackoverflow.com/questions/35906568/wait-until-swift-for-loop-with-asynchronous-network-requests-finishes-executing
-    let submitGroup = DispatchGroup()
-    var articleDuration: Float64 = 0.0
-
     func exportArticle() {
 
         self.submitGroup.enter()
@@ -604,6 +552,7 @@ class RecordViewController: UIViewController {
     // MARK: - UI states
 
     func startUIState() {
+        self.sessionTimerLabel.tintColor = pausePlaybackGrey
         self.recordButton.isEnabled = true
         self.recordButton.backgroundColor = self.recordRed
         // https://stackoverflow.com/questions/18946490/how-to-stop-unwanted-uibutton-animation-on-title-change
@@ -963,15 +912,6 @@ class RecordViewController: UIViewController {
             self.timeObserverToken = nil
         }
     }
-
-    /* Track whether slider has been tapped during playback or not.
-     If yes, resume playback from the position the control has
-     been released (i.e., touchUpInside).
-
-     Initialized with `false` because playback will only start on
-     tapping the Play button.
-     */
-    var slidingOnPlayback: Bool = false
 
     @objc func touchdownSlider() {
         if self.audioPlayer!.rate != 0 { // i.e. playing

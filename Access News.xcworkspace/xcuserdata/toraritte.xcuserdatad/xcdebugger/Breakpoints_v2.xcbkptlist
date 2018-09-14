@@ -16,7 +16,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "398"
             endingLineNumber = "398"
-            landmarkName = "updateRecordTimerLabel()"
+            landmarkName = "convertSecondStringToTimerLabel(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -37,60 +37,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Access News/RecordViewController.swift"
-            timestampString = "558576784.059831"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "993"
-            endingLineNumber = "993"
-            landmarkName = "RecordViewController"
-            landmarkType = "3">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (__C.CMTime) -&gt; () in Access_News.RecordViewController.registerPeriodicTimeObserver() -&gt; ()"
-                  moduleName = "Access News"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/toraritte/Desktop/Access%20News/Access%20News/RecordViewController.swift"
-                  timestampString = "552605791.247382"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "897"
-                  endingLineNumber = "897"
-                  offsetFromSymbolStart = "1188">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (__C.CMTime) -&gt; () in Access_News.RecordViewController.registerPeriodicTimeObserver() -&gt; ()"
-                  moduleName = "Access News"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/toraritte/Desktop/Access%20News/Access%20News/RecordViewController.swift"
-                  timestampString = "552605791.249524"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "897"
-                  endingLineNumber = "897"
-                  offsetFromSymbolStart = "5308">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Access News/RecordViewController.swift"
             timestampString = "558576784.059885"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "164"
             endingLineNumber = "164"
-            landmarkName = "stopTapped(_:)"
+            landmarkName = "playTapped(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
