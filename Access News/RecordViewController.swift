@@ -206,10 +206,6 @@ class RecordViewController: UIViewController {
 
     @IBOutlet weak var submitButton: UIButton!
     @IBAction func submitTapped(_ sender: Any) {
-
-        self.articleURLToSubmit = self.createNewRecordingURL()
-        self.articleDuration = CMTimeGetSeconds(self.articleSoFar.duration)
-
         /* self.exportArticle()
            self.resetRecordTimer()
            self.startUIState()
@@ -264,7 +260,6 @@ class RecordViewController: UIViewController {
             self.audioRecorder =
                 try AVAudioRecorder.init(url: url, settings: settings)
             self.audioRecorder?.record()
-
             self.startRecordTimer()
 
             // TODO: add audio recorder delegate? Interruptions (e.g., calls)
@@ -340,20 +335,21 @@ class RecordViewController: UIViewController {
 
     // MARK: Audio command helpers
 
-    func dateString(_ date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMddHHmmss"
-
-        return dateFormatter.string(from: date)
-    }
-
-    func nowString() -> String {
-        return self.dateString(Date())
-    }
-
     func createNewRecordingURL() -> URL {
-        let fileURL = self.nowString() + ".m4a"
 
+        func nowString() -> String {
+
+            func dateString(_ date: Date) -> String {
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyyMMddHHmmss"
+
+                return dateFormatter.string(from: date)
+            }
+
+            return dateString(Date())
+        }
+
+        let fileURL = nowString() + ".m4a"
         return self.documentDir.appendingPathComponent(fileURL)
     }
 
@@ -541,12 +537,12 @@ class RecordViewController: UIViewController {
     }
 
     // https://stackoverflow.com/questions/35906568/wait-until-swift-for-loop-with-asynchronous-network-requests-finishes-executing
-    let exportCheck = DispatchGroup()
+    let submitGroup = DispatchGroup()
     var articleDuration: Float64 = 0.0
 
     func exportArticle() {
 
-        self.exportCheck.enter()
+        self.submitGroup.enter()
         
         /* Making sure that `self.articleSoFar` (AVMutableComposition) already contains
            the very last `self.articleChunk` (AVURLAsset).
@@ -561,9 +557,12 @@ class RecordViewController: UIViewController {
                 presetName: AVAssetExportPresetAppleM4A)
 
         exportSession?.outputFileType = AVFileType.m4a
-        /* TODO: Either set up metadata info or provide publication info
-           later in filename from Submit form.
-         */
+
+        self.articleDuration = CMTimeGetSeconds(self.articleSoFar.duration)
+        /* The class property articleURLToSubmit is also used to name the
+           file to be uploaded in SubmitTVC.
+        */
+        self.articleURLToSubmit = self.createNewRecordingURL()
         exportSession?.outputURL = self.articleURLToSubmit
 
         // Leaving here for debugging purposes.
@@ -582,6 +581,8 @@ class RecordViewController: UIViewController {
          OR
          because the completion handler is run async, KVO would be more appropriate
          */
+
+        self.zeroRecordArtifacts()
         exportSession?.exportAsynchronously {
 
             switch exportSession?.status {
@@ -590,8 +591,8 @@ class RecordViewController: UIViewController {
             case .exporting?: break
 
             case .completed?:
-
-                self.exportCheck.leave()
+                
+                self.submitGroup.leave()
 
             case .failed?: break
             case .cancelled?: break

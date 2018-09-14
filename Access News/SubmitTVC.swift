@@ -14,9 +14,7 @@ class SubmitTVC: UITableViewController {
     @IBOutlet weak var selectedPublication: UILabel!
 
     let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-
     let storage = Storage.storage()
-
     var recordVC: RecordViewController!
 
     override func viewDidLoad() {
@@ -43,76 +41,81 @@ class SubmitTVC: UITableViewController {
 
     @objc func uploadRecording() {
 
-        let recordingName =
-            self.recordVC.articleURLToSubmit.pathComponents.last!
-
-        let path =
-            "recordings/\(self.selectedPublication.text!)/\(recordingName)"
-        let recordingRef =
-            self.storage.reference().child(path)
-
-        let metadata = StorageMetadata()
-            metadata.customMetadata =
-                [ "publication": "\(self.selectedPublication.text!)"
-                , "reader":      "\(Auth.auth().currentUser!.uid)"
-                , "duration":    "\(self.recordVC.articleDuration)"
-                ]
-
         Commands.updateSession(
             seconds: Int(self.recordVC.sessionDuration))
 
-        /* Does not need to invoke `self.zeroAudioArtifacts()` because
-           `self.exportArticle()` calls it on successful completion.
-        */
-        self.recordVC.exportArticle()
+        self.recordVC.submitGroup.wait()
+        self.recordVC.submitGroup.enter()
 
-        self.recordVC.exportCheck.notify(queue: .main) {
+        // https://stackoverflow.com/questions/45682622/swift-execute-asynchronous-tasks-in-order
+        // http://iosbrain.com/blog/2018/03/07/concurrency-in-ios-serial-and-concurrent-queues-in-grand-central-dispatch-gcd-with-swift-4/
+        let submitQueue = DispatchQueue(label: "submitQueue")
 
-            recordingRef.putFile(
-                from: self.recordVC.articleURLToSubmit,
-                metadata: metadata) {
+        submitQueue.async {
+            self.recordVC.exportArticle()
+        }
 
-                    (completionMetadata, error) in
+        submitQueue.async {
+            /* Calling Firebase.StorageReference.putFile from the main queue,
+               as it won't run from the background. It is async and therefore
+               won't block, but this just a way how it needs to be done.
+               (Otherwise the app will crash.)
+            */
+            DispatchQueue.main.async {
 
-                    guard let completionMetadata = completionMetadata else {
-                        return
-                    }
+                let recordingName =
+                    self.recordVC.articleURLToSubmit.pathComponents.last!
 
-                    print("\nBUCKET: \(completionMetadata.bucket)")
+                let path =
+                "recordings/\(self.selectedPublication.text!)/\(recordingName)"
+                let recordingRef =
+                    self.storage.reference().child(path)
 
-                    recordingRef.downloadURL {
-                        (url, error) in
+                let metadata = StorageMetadata()
+                metadata.customMetadata =
+                    [ "publication": "\(self.selectedPublication.text!)"
+                    , "reader":      "\(Auth.auth().currentUser!.uid)"
+                    , "duration":    "\(self.recordVC.articleDuration)"
+                    ]
+                
+                recordingRef.putFile(
+                    from: self.recordVC.articleURLToSubmit,
+                    metadata: metadata) {
 
-                        guard let downloadURL = url else {
+                        (completionMetadata, error) in
+
+                        self.recordVC.submitGroup.leave()
+
+                        guard let completionMetadata = completionMetadata else {
                             return
                         }
-                        print("\n\n\(downloadURL)\n\n")
 
-                        try! FileManager.default.removeItem(
-                            at: self.recordVC.articleURLToSubmit
-                        )
+                        print("\nBUCKET: \(completionMetadata.bucket)")
 
-                        Commands.addRecording(
-                            publication: self.selectedPublication.text!,
-                            recordingName: recordingName,
-                            duration: self.recordVC.articleDuration)
-                    }
+                        recordingRef.downloadURL {
+                            (url, error) in
+
+                            guard let downloadURL = url else {
+                                return
+                            }
+                            print("\n\n\(downloadURL)\n\n")
+
+                            try! FileManager.default.removeItem(
+                                at: self.recordVC.articleURLToSubmit
+                            )
+
+                            Commands.addRecording(
+                                publication: self.selectedPublication.text!,
+                                recordingName: recordingName,
+                                duration: self.recordVC.articleDuration)
+                        }
+                }
             }
-
-            self.recordVC.zeroRecordArtifacts()
-
-            /* There may be a lag returning to RecordViewController,
-             (because waiting for the article export being finished)
-             but trying to avoid a massive rewrite for now
-
-             TODO: Make this less obtrusive. For example, return but
-             only make the record button active when a `leave`
-             (from DispatchGroup) returns from here. Or something.
-             */
-            self.recordVC.resetRecordTimer()
-            self.recordVC.restartUIState()
-            self.navigationController?.popViewController(animated: true)
         }
+
+        self.recordVC.resetRecordTimer()
+        self.recordVC.restartUIState()
+        self.navigationController?.popViewController(animated: true)
     }
 
     override func didReceiveMemoryWarning() {
