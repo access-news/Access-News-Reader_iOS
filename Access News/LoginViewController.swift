@@ -34,14 +34,12 @@ class LoginViewController: UIViewController {
 
                     // https://stackoverflow.com/questions/37449919/reading-firebase-auth-error-thrown-firebase-3-x-and-swift
                     switch errorCode {
-                        case .invalidEmail:
+                        case .userNotFound:
                             self.signInError.text = "Incorrect email or password."
                         case .wrongPassword:
                             self.signInError.text = "Incorrect email or password."
-                        case .userDisabled:
-                            self.signInError.text = error?.localizedDescription
                         default:
-                            break
+                            self.signInError.text = error?.localizedDescription
                     }
                 } else {
                     let storyboard = UIStoryboard(name: "Main", bundle: .main)
