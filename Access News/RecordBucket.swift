@@ -11,14 +11,10 @@ import AVFoundation
 
 struct RecordBucket {
 
-    var articleURLToSubmit: URL!
-
-    var audioRecorder:    AVAudioRecorder?
-    var audioPlayer:      AVPlayer?
+    var audioRecorder: AVAudioRecorder?
+    var audioPlayer: AVPlayer?
 
     var recordTimer:  Timer!
-    var sessionTimer: Timer!
-    var sessionDuration: Double!
 
     /* `self.timerLabel` only displays elapsed time, down to seconds,
      but `updateTimerLabel` (and therefore `self.tick()`) fires
@@ -28,12 +24,12 @@ struct RecordBucket {
      */
     var seconds : [String: String] =
         [ "record and playback" : ""
-            , "session"  : ""
-    ]
+        , "session"  : ""
+        ]
 
-    var articleSoFar: AVMutableComposition!
-    var latestChunk: AVURLAsset?
-    var insertAt: CMTimeRange!
+    var articleSoFar: AVMutableComposition! = AVMutableComposition()
+    var latestChunk: AVURLAsset? = nil
+    var insertAt: CMTimeRange! = CMTimeRange(start: kCMTimeZero, end: kCMTimeZero)
 
     /* To store reference to partial recordings. Unsure whether
      adding an AVAsset to an AVComposition copies the data or
@@ -65,7 +61,6 @@ struct RecordBucket {
 
     // https://stackoverflow.com/questions/35906568/wait-until-swift-for-loop-with-asynchronous-network-requests-finishes-executing
     let submitGroup = DispatchGroup()
-    var articleDuration: Float64 = 0.0
 
     /* Track whether slider has been tapped during playback or not.
      If yes, resume playback from the position the control has

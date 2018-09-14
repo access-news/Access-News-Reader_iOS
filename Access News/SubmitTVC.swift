@@ -8,10 +8,13 @@
 
 import UIKit
 import Firebase
+import AVFoundation
 
 class SubmitTVC: UITableViewController {
 
     @IBOutlet weak var selectedPublication: UILabel!
+
+    var finishingRecordBucket: RecordBucket!
 
     let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     let storage = Storage.storage()
@@ -21,9 +24,7 @@ class SubmitTVC: UITableViewController {
         super.viewDidLoad()
 
         self.recordVC =  self.navigationController?.viewControllers[1] as! RecordViewController
-        /* Making the text always fit the label
-           https://stackoverflow.com/questions/4865458/dynamically-changing-font-size-of-uilabel
-        */
+
         self.selectedPublication.numberOfLines = 1
         self.selectedPublication.adjustsFontSizeToFitWidth = true
         // This is the default, but making it explicit
@@ -41,21 +42,37 @@ class SubmitTVC: UITableViewController {
 
     @objc func uploadRecording() {
 
+        /* Making the text always fit the label
+         https://stackoverflow.com/questions/4865458/dynamically-changing-font-size-of-uilabel
+         */
+        self.finishingRecordBucket = self.recordVC.recordBucket
+        self.recordVC.recordBucket = RecordBucket()
+
         Commands.updateSession(
             seconds: Int(self.recordVC.sessionDuration))
 
-        self.recordVC.submitGroup.wait()
-        self.recordVC.submitGroup.enter()
+        let articleURLToSubmit =
+            self.recordVC.createNewRecordingURL()
+        let articleDuration: Float64 =
+            CMTimeGetSeconds(self.finishingRecordBucket.articleSoFar.duration)
 
         // https://stackoverflow.com/questions/45682622/swift-execute-asynchronous-tasks-in-order
         // http://iosbrain.com/blog/2018/03/07/concurrency-in-ios-serial-and-concurrent-queues-in-grand-central-dispatch-gcd-with-swift-4/
         let submitQueue = DispatchQueue(label: "submitQueue")
 
         submitQueue.async {
-            self.recordVC.exportArticle()
+            self.recordVC.exportArticle(
+                bucket:  self.finishingRecordBucket,
+                fileURL: articleURLToSubmit)
         }
 
         submitQueue.async {
+
+            self.finishingRecordBucket.submitGroup.wait()
+            self.finishingRecordBucket.submitGroup.enter()
+            
+            self.recordVC.deleteLeftoverChunks(bucket: self.finishingRecordBucket)
+
             /* Calling Firebase.StorageReference.putFile from the main queue,
                as it won't run from the background. It is async and therefore
                won't block, but this just a way how it needs to be done.
@@ -64,7 +81,7 @@ class SubmitTVC: UITableViewController {
             DispatchQueue.main.async {
 
                 let recordingName =
-                    self.recordVC.articleURLToSubmit.pathComponents.last!
+                    articleURLToSubmit.pathComponents.last!
 
                 let path =
                 "recordings/\(self.selectedPublication.text!)/\(recordingName)"
@@ -75,16 +92,16 @@ class SubmitTVC: UITableViewController {
                 metadata.customMetadata =
                     [ "publication": "\(self.selectedPublication.text!)"
                     , "reader":      "\(Auth.auth().currentUser!.uid)"
-                    , "duration":    "\(self.recordVC.articleDuration)"
+                    , "duration":    "\(articleDuration)"
                     ]
                 
                 recordingRef.putFile(
-                    from: self.recordVC.articleURLToSubmit,
+                    from: articleURLToSubmit,
                     metadata: metadata) {
 
                         (completionMetadata, error) in
 
-                        self.recordVC.submitGroup.leave()
+                        self.finishingRecordBucket.submitGroup.leave()
 
                         guard let completionMetadata = completionMetadata else {
                             return
@@ -101,13 +118,13 @@ class SubmitTVC: UITableViewController {
                             print("\n\n\(downloadURL)\n\n")
 
                             try! FileManager.default.removeItem(
-                                at: self.recordVC.articleURLToSubmit
+                                at: articleURLToSubmit
                             )
 
                             Commands.addRecording(
                                 publication: self.selectedPublication.text!,
                                 recordingName: recordingName,
-                                duration: self.recordVC.articleDuration)
+                                duration: articleDuration)
                         }
                 }
             }

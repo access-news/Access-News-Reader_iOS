@@ -32,6 +32,10 @@ class RecordViewController: UIViewController {
     let pausePlaybackGrey = UIColor(red: 0.475, green: 0.494, blue: 0.500, alpha: 1.0)
     let startoverGold     = UIColor(red: 1.000, green: 0.694, blue: 0.0,   alpha: 1.0)
 
+    var sessionTimer: Timer!
+    var sessionDuration: Double = 0.0
+
+    var recordBucket = RecordBucket()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,7 +47,6 @@ class RecordViewController: UIViewController {
 
         /* SESSION TIMER SETUP */
         self.sessionTimerLabel.title = "00:00:00"
-        self.sessionDuration = 0.0
         self.sessionTimer =
             Timer.scheduledTimer(
                 timeInterval: 0.01,
@@ -95,7 +98,7 @@ class RecordViewController: UIViewController {
            recording is in progress, otherwise it must be called
            when playing back audio.
         */
-        if self.audioRecorder != nil {
+        if self.recordBucket.audioRecorder != nil {
             self.stopRecorder()
             self.stoppedUIState()
         } else {
@@ -139,7 +142,7 @@ class RecordViewController: UIViewController {
            If the `playbackUIState` is active, the player should only be started,
            without any configuration.
         */
-        if self.audioPlayer == nil {
+        if self.recordBucket.audioPlayer == nil {
             self.initPlayer()
         }
         self.playbackUIState()
@@ -199,9 +202,9 @@ class RecordViewController: UIViewController {
 
         do {
 
-            self.audioRecorder =
+            self.recordBucket.audioRecorder =
                 try AVAudioRecorder.init(url: url, settings: settings)
-            self.audioRecorder?.record()
+            self.recordBucket.audioRecorder?.record()
             self.startRecordTimer()
 
             // TODO: add audio recorder delegate? Interruptions (e.g., calls)
@@ -213,9 +216,9 @@ class RecordViewController: UIViewController {
     }
 
     func stopRecorder() {
-        self.audioRecorder?.stop()
-        let assetURL = self.audioRecorder!.url
-        self.audioRecorder = nil
+        self.recordBucket.audioRecorder?.stop()
+        let assetURL = self.recordBucket.audioRecorder!.url
+        self.recordBucket.audioRecorder = nil
 
         /* https://developer.apple.com/documentation/avfoundation/avurlassetpreferprecisedurationandtimingkey
          "If you intend to insert the asset into an AVMutableComposition
@@ -223,19 +226,19 @@ class RecordViewController: UIViewController {
          value of true is recommended."
          */
         let assetOpts = [AVURLAssetPreferPreciseDurationAndTimingKey: true]
-        self.latestChunk = AVURLAsset(url: assetURL, options: assetOpts)
+        self.recordBucket.latestChunk = AVURLAsset(url: assetURL, options: assetOpts)
         self.appendChunk()
 
         self.stopRecordTimer()
 
-        self.articleSoFarDuration = CMTimeGetSeconds(self.articleSoFar.duration)
+        self.recordBucket.articleSoFarDuration = CMTimeGetSeconds(self.recordBucket.articleSoFar.duration)
     }
 
     func initPlayer() {
         let assetKeys = ["playable"]
         let playerItem =
             AVPlayerItem(
-                asset: self.articleSoFar,
+                asset: self.recordBucket.articleSoFar,
                 automaticallyLoadedAssetKeys: assetKeys)
 
         /* Change UI if recording finished playing.
@@ -247,16 +250,16 @@ class RecordViewController: UIViewController {
             name:     .AVPlayerItemDidPlayToEndTime,
             object:   playerItem)
 
-        self.audioPlayer = AVPlayer(playerItem: playerItem)
+        self.recordBucket.audioPlayer = AVPlayer(playerItem: playerItem)
     }
 
     func startPlayer() {
-        self.audioPlayer?.play()
+        self.recordBucket.audioPlayer?.play()
     }
 
     @objc func itemDidFinishPlaying() {
         self.playagainUIState()
-        self.slidingOnPlayback = false
+        self.recordBucket.slidingOnPlayback = false
     }
 
     func stopPlayer() {
@@ -264,15 +267,15 @@ class RecordViewController: UIViewController {
         NotificationCenter.default.removeObserver(
             self,
             name:   .AVPlayerItemDidPlayToEndTime,
-            object: self.audioPlayer?.currentItem)
+            object: self.recordBucket.audioPlayer?.currentItem)
 
         self.pausePlayer()
         self.removePeriodicTimeObserver()
-        self.audioPlayer = nil
+        self.recordBucket.audioPlayer = nil
     }
 
     func pausePlayer() {
-        self.audioPlayer?.pause()
+        self.recordBucket.audioPlayer?.pause()
     }
 
     // MARK: Audio command helpers
@@ -297,7 +300,7 @@ class RecordViewController: UIViewController {
 
     func startRecordTimer() {
 
-        self.recordTimer =
+        self.recordBucket.recordTimer =
             Timer.scheduledTimer(
                 timeInterval: 0.01,
                 target: self,
@@ -309,12 +312,12 @@ class RecordViewController: UIViewController {
     @objc func updateRecordTimerLabel() {
 
         let recorderTime =
-            self.audioRecorder != nil
-            ? self.audioRecorder!.currentTime
+            self.recordBucket.audioRecorder != nil
+            ? self.recordBucket.audioRecorder!.currentTime
             : 0.0
 
         let elapsed =
-              self.articleSoFarDuration
+              self.recordBucket.articleSoFarDuration
             + recorderTime
 
         let elapsedSecondString = self.timeToSecondString(elapsed)
@@ -333,8 +336,8 @@ class RecordViewController: UIViewController {
 
     func tickOnceASec(secondString: String, timer: String) -> Bool {
 
-        if self.seconds[timer] != secondString {
-            self.seconds[timer] = secondString
+        if self.recordBucket.seconds[timer] != secondString {
+            self.recordBucket.seconds[timer] = secondString
 
             return true
 
@@ -383,7 +386,7 @@ class RecordViewController: UIViewController {
 
     // Just an alias that corresponds to `startRecordTimer`
     func stopRecordTimer() {
-        self.recordTimer.invalidate()
+        self.recordBucket.recordTimer.invalidate()
     }
 
     /* NOTE: Name may be misleading, but wanted to keep it in sync with
@@ -420,67 +423,70 @@ class RecordViewController: UIViewController {
 
         let chunkTimeRange = CMTimeRange(
             start: kCMTimeZero,
-            end:   self.latestChunk!.duration)
+            end:   self.recordBucket.latestChunk!.duration)
 
         do {
-            try self.articleSoFar.insertTimeRange(
+            try self.recordBucket.articleSoFar.insertTimeRange(
                 chunkTimeRange,
-                of: self.latestChunk!,
-                at: self.insertAt.end)
+                of: self.recordBucket.latestChunk!,
+                at: self.recordBucket.insertAt.end)
         } catch {
             NSLog("Unable to compose asset track.")
         }
 
-        let nextDuration = self.insertAt.duration + chunkTimeRange.duration
-        self.insertAt = CMTimeRange(
+        let nextDuration = self.recordBucket.insertAt.duration + chunkTimeRange.duration
+        self.recordBucket.insertAt = CMTimeRange(
             start:    kCMTimeZero,
             duration: nextDuration)
 
 
-        self.leftoverChunks.append(self.latestChunk!)
+        self.recordBucket.leftoverChunks.append(self.recordBucket.latestChunk!)
 
         // Making sure that this chunk is not lying around to mess things up later.
-        self.latestChunk = nil
+        self.recordBucket.latestChunk = nil
+    }
+
+    func deleteLeftoverChunks(bucket: RecordBucket) {
+        /* Cleaning up partial recordings
+         */
+        for asset in bucket.leftoverChunks {
+            try! FileManager.default.removeItem(at: asset.url)
+        }
     }
 
     func zeroRecordArtifacts() {
-        self.articleSoFar = AVMutableComposition()
-        self.articleSoFarDuration = 0.0
-        self.latestChunk = nil
-        self.insertAt = CMTimeRange(start: kCMTimeZero, end: kCMTimeZero)
+        self.recordBucket.articleSoFar = AVMutableComposition()
+        self.recordBucket.articleSoFarDuration = 0.0
+        self.recordBucket.latestChunk = nil
+        self.recordBucket.insertAt = CMTimeRange(start: kCMTimeZero, end: kCMTimeZero)
 
-        /* Cleaning up partial recordings
-         */
-        for asset in self.leftoverChunks {
-            try! FileManager.default.removeItem(at: asset.url)
-        }
-        self.leftoverChunks = [AVURLAsset]()
+        self.deleteLeftoverChunks(bucket: self.recordBucket)
+        self.recordBucket.leftoverChunks = [AVURLAsset]()
     }
 
-    func exportArticle() {
+    func exportArticle(bucket: RecordBucket, fileURL: URL) {
 
-        self.submitGroup.enter()
+        bucket.submitGroup.enter()
         
-        /* Making sure that `self.articleSoFar` (AVMutableComposition) already contains
-           the very last `self.articleChunk` (AVURLAsset).
+        /* Redundant (when recording is stopped, `stopRecorder`
+           call this already)
          */
-        if self.latestChunk != nil {
-            self.appendChunk()
-        }
+        // if self.recordBucket.latestChunk != nil {
+        //    self.appendChunk()
+        // }
 
         let exportSession =
             AVAssetExportSession(
-                asset:      self.articleSoFar,
+                asset:      bucket.articleSoFar,
                 presetName: AVAssetExportPresetAppleM4A)
 
         exportSession?.outputFileType = AVFileType.m4a
 
-        self.articleDuration = CMTimeGetSeconds(self.articleSoFar.duration)
         /* The class property articleURLToSubmit is also used to name the
            file to be uploaded in SubmitTVC.
         */
-        self.articleURLToSubmit = self.createNewRecordingURL()
-        exportSession?.outputURL = self.articleURLToSubmit
+
+        exportSession?.outputURL = fileURL
 
         // Leaving here for debugging purposes.
         // exportSession?.outputURL = self.createNewRecordingURL("exported-")
@@ -499,7 +505,6 @@ class RecordViewController: UIViewController {
          because the completion handler is run async, KVO would be more appropriate
          */
 
-        self.zeroRecordArtifacts()
         exportSession?.exportAsynchronously {
 
             switch exportSession?.status {
@@ -508,8 +513,8 @@ class RecordViewController: UIViewController {
             case .exporting?: break
 
             case .completed?:
-                
-                self.submitGroup.leave()
+
+                bucket.submitGroup.leave()
 
             case .failed?: break
             case .cancelled?: break
@@ -681,7 +686,7 @@ class RecordViewController: UIViewController {
 
         /* UISlider SETUP */
 
-            let seconds  : Double = self.articleSoFarDuration
+            let seconds  : Double = self.recordBucket.articleSoFarDuration
 
             self.playbackSlider.minimumValue = 0
             self.playbackSlider.maximumValue = Float(seconds)
@@ -797,7 +802,7 @@ class RecordViewController: UIViewController {
     // MARK: `timerLabel` tap gesture callback
 
     @objc func playbackTimerLabelTapped() {
-        self.timerLabelReversed = !self.timerLabelReversed
+        self.recordBucket.timerLabelReversed = !self.recordBucket.timerLabelReversed
 
         // Tap interaction with the `timerLabel` in only enable during playback,
         // and the reversal should be done here and not `updatePlayerTimerLabel`
@@ -814,12 +819,12 @@ class RecordViewController: UIViewController {
     func reverseTimerLabel(secondString ss: String) -> String {
 
         let secondString = self.convertTimerLabelToSecondString(self.timerLabel.text!)
-        let reversedSecond = Int(self.articleSoFarDuration) - Int(secondString)!
+        let reversedSecond = Int(self.recordBucket.articleSoFarDuration) - Int(secondString)!
         let reversedTimerLabel =
             self.convertSecondStringToTimerLabel(
                 String(reversedSecond)
             )
-        if self.timerLabelReversed == true {
+        if self.recordBucket.timerLabelReversed == true {
             return "-" + reversedTimerLabel
         } else {
             return reversedTimerLabel
@@ -839,7 +844,7 @@ class RecordViewController: UIViewController {
             /* Register a method to fire every 0.01 second when playing audio.
              (Removed in `self.stopPlayer()`)
              */
-            self.audioPlayer?.addPeriodicTimeObserver(
+            self.recordBucket.audioPlayer?.addPeriodicTimeObserver(
                 forInterval: CMTime(seconds: 0.01, preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
                 queue:       DispatchQueue.main) {
                     [weak self] time in
@@ -853,9 +858,9 @@ class RecordViewController: UIViewController {
 
                         var newTimerLabel: String!
 
-                        if self?.timerLabelReversed == true {
+                        if self?.recordBucket.timerLabelReversed == true {
                             let reverseSecond =
-                                Int((self?.articleSoFarDuration)!) - Int(timeSecondString!)!
+                                Int((self?.recordBucket.articleSoFarDuration)!) - Int(timeSecondString!)!
                             newTimerLabel =
                                 "-"
                                 + (self?.convertSecondStringToTimerLabel(String(reverseSecond)))!
@@ -877,15 +882,15 @@ class RecordViewController: UIViewController {
     func removePeriodicTimeObserver() {
         // If a time observer exists, remove it
         if let token = self.timeObserverToken {
-            self.audioPlayer!.removeTimeObserver(token)
+            self.recordBucket.audioPlayer!.removeTimeObserver(token)
             self.timeObserverToken = nil
         }
     }
 
     @objc func touchdownSlider() {
-        if self.audioPlayer!.rate != 0 { // i.e. playing
+        if self.recordBucket.audioPlayer!.rate != 0 { // i.e. playing
             self.pausePlayer()
-            self.slidingOnPlayback = true
+            self.recordBucket.slidingOnPlayback = true
         }
     }
 
@@ -896,7 +901,7 @@ class RecordViewController: UIViewController {
                 seconds: Double(self.playbackSlider.value),
                 preferredTimescale: 100)
 
-        self.audioPlayer!.seek(to: targetTime)
+        self.recordBucket.audioPlayer!.seek(to: targetTime)
     }
 
     @objc func touchupinsideSlider() {
@@ -904,9 +909,9 @@ class RecordViewController: UIViewController {
          to "Play Again", but after pressing "Play", it turns to "Pause",
          and switches to "Play Again".
          */
-        if self.slidingOnPlayback {
+        if self.recordBucket.slidingOnPlayback {
             self.startPlayer()
-            self.slidingOnPlayback = false
+            self.recordBucket.slidingOnPlayback = false
         } else if self.playbackSlider.maximumValue != self.playbackSlider.value {
             self.resumePlaybackUIState()
         } else {
@@ -923,5 +928,4 @@ class RecordViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
 }
