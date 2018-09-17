@@ -8,19 +8,39 @@
 
 import UIKit
 import Firebase
+import AVFoundation
 
 class SessionStartViewController: UIViewController {
 
     @IBOutlet weak var startSessionButton: UIButton!
     @IBAction func startSessionTapped(_ sender: Any) {
 
-        Commands.seqs[Aggregates.session.rawValue] = 1
-        Commands.startSession()
+        // https://stackoverflow.com/questions/24981333/ios-check-if-application-has-access-to-microphone
+        if AVAudioSession.sharedInstance().recordPermission() == .granted {
 
-        let storyboard = UIStoryboard(name: "Main", bundle: .main)
-        let recordVC = storyboard.instantiateViewController(withIdentifier: "RecordViewController")
+            Commands.seqs[Aggregates.session.rawValue] = 1
+            Commands.startSession()
 
-        self.navigationController?.pushViewController(recordVC, animated: true)
+            let storyboard = UIStoryboard(name: "Main", bundle: .main)
+            let recordVC = storyboard.instantiateViewController(withIdentifier: "RecordViewController")
+
+            self.navigationController?.pushViewController(recordVC, animated: true)
+        } else {
+            // https://stackoverflow.com/questions/28152526/how-do-i-open-phone-settings-when-a-button-is-clicked
+            let alert = UIAlertController(
+                title: "Recording not allowed",
+                message: "Please provide permission to use\nthe microphone in this app in\nSettings > Privacy > Microphone",
+                preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            alert.addAction(UIAlertAction(title: "Go to Settings", style: .default, handler: {
+                success in
+                let settingsURL = URL(string: UIApplicationOpenSettingsURLString)
+                if UIApplication.shared.canOpenURL(settingsURL!) {
+                    UIApplication.shared.open(settingsURL!, options: [:], completionHandler: nil)
+                }
+            }))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     override func viewDidLoad() {
