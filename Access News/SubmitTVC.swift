@@ -42,6 +42,12 @@ class SubmitTVC: UITableViewController {
 
     @objc func uploadRecording() {
 
+        let exportAlert = UIAlertController(
+            title: "Exporting...",
+            message: "Getting ready to\nupload your recording.",
+            preferredStyle: .alert)
+        self.present(exportAlert, animated: true, completion: nil)
+
         /* Making the text always fit the label
          https://stackoverflow.com/questions/4865458/dynamically-changing-font-size-of-uilabel
          */
@@ -134,9 +140,11 @@ class SubmitTVC: UITableViewController {
             }
         }
 
-        self.recordVC.resetRecordTimer()
-        self.recordVC.restartUIState()
-        self.navigationController?.popViewController(animated: true)
+        exportAlert.dismiss(animated: true, completion: {
+            self.recordVC.resetRecordTimer()
+            self.recordVC.restartUIState()
+            self.navigationController?.popViewController(animated: true)
+        })
     }
 
     override func didReceiveMemoryWarning() {
