@@ -15,8 +15,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    var publications: [String] = []
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         // Override point for customization after application launch.
@@ -36,11 +34,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             try recordingSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
             try recordingSession.setActive(true)
 
-            recordingSession.requestRecordPermission() { [unowned self] allowed in
+            recordingSession.requestRecordPermission() { allowed in
                 DispatchQueue.main.async {
 
                     if allowed != true {
-                        // TODO: See issue #15
+                        // Tried to move this block to LoginViewController, but
+                        // it was a disaster. Basically counters wouldn't work
+                        // at all...
                     }
                 }
             }
@@ -50,14 +50,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         FirebaseApp.configure()
 
-        Commands.dbref.child("publications").observeSingleEvent(of: .value, with: {
-
-            snapshot in
-
-            let v = snapshot.value
-            self.publications = Array((v as! Dictionary<String,Any>).keys).sorted()
-        })
-        
         if Auth.auth().currentUser  != nil {
             let storyboard = UIStoryboard(name: "Main", bundle: .main)
             let nvc = storyboard.instantiateViewController(withIdentifier: "NVC")

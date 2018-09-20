@@ -10,9 +10,74 @@ import UIKit
 
 class SelectPubicationTVC: UITableViewController {
 
-    var publications: [String] =
-        [ "Something went wrong. Just click on this:)"
+    var publications : [String] =
+        [ "Auburn Journal"
+        , "Braille Monitor"
+        , "CVS"
+        , "Capital Public Radio"
+        , "Client Assistance Program"
+        , "Comstocks"
+        , "Cooking Light"
+        , "Crosswords"
+        , "Davis Enterprise"
+        , "Earle Baum Center newsletter"
+        , "East Bay Times"
+        , "El Dorado County Mountain Democrat"
+        , "Entertainment Weekly"
+        , "Entrepreneur"
+        , "Eureka Times Standard"
+        , "Farm show"
+        , "Ferndale Enterprise"
+        , "Foods Co"
+        , "Forbes"
+        , "Fort Bragg Advocate News"
+        , "Fortune"
+        , "Grass Valley-Nevada City Union"
+        , "KQED Bay Area Bites"
+        , "La Superior Grocery Store Ads"
+        , "Lucky Supermarkets"
+        , "Mad River Union"
+        , "Meeting minutes of the California Council of the Blind"
+        , "Mental Floss"
+        , "Modesto Bee"
+        , "Money"
+        , "National Geographic"
+        , "Newsweek"
+        , "North Coast Journal"
+        , "People"
+        , "Raleys Bel Air"
+        , "Real Simple"
+        , "Rite Aid"
+        , "Roseville Press Tribune"
+        , "SF Gate"
+        , "SF Weekly"
+        , "SacTown"
+        , "Sacramento Business Journal"
+        , "Sacramento Magazine"
+        , "Sacramento News & Review"
+        , "Sacramento Press"
+        , "Safeway"
+        , "Santa Rosa Press Democrat"
+        , "Save Mart"
+        , "Senior News"
+        , "Sierra Services for the Blind newsletter"
+        , "Sprouts"
+        , "Stockton Record"
+        , "Sunset"
+        , "Target"
+        , "The Atlantic"
+        , "The Economist"
+        , "The Mendocino Beacon"
+        , "The Oprah Magazine"
+        , "Trader Joe's"
+        , "Trivia"
+        , "WalMart"
+        , "Walgreen's"
+        , "Wild West"
+        , "Woodland Daily Democrat"
+        , "Yuba-Sutter Meals on Wheels"
         ]
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,8 +87,6 @@ class SelectPubicationTVC: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
-
-        self.publications = (UIApplication.shared.delegate as! AppDelegate).publications
     }
 
     override func didReceiveMemoryWarning() {
