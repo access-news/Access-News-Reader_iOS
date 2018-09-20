@@ -30,8 +30,6 @@ struct Commands {
         , Aggregates.session.rawValue:   1
         ]
 
-    static let commandsGroup = DispatchGroup()
-
     /*  NOTE FOR FUTURE SELF
 
         `seqUpdater` was used to get the current `seq`uental number
@@ -149,9 +147,12 @@ struct Commands {
 
         let pushRef = self.dbref.child("/event_store").childByAutoId()
 
+        /* UPDATE: 18/9/20
+           Removed commandsGroup DispatchGroup, because I couldn't find
+           its original purpose and nothing was entering it, so there was
+           no point in waiting for anything. Fingers crossed.
+        */
         // TODO: Why does this has to be in a dispatchGroup again?
-        commandsGroup.notify(queue: .main) {
-            pushRef.setValue(event)
-        }
+        pushRef.setValue(event)
     }
 }
