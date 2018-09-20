@@ -42,6 +42,17 @@ class SubmitTVC: UITableViewController {
 
     @objc func uploadRecording() {
 
+        /* Event -LMrdLN2qYagVhfOBYYG is for a recording, but has "seq = 2", which is only
+           possible if the "Done" button is hit multiple times. This could happen for longer
+           recordings, when exporting needs some time to complete.
+
+           Fixing it by (1) disabling the "Done" button once pressed and (2) showing an alert
+           until the we are ready to go back to recording.
+
+           TODO: This doesn't explain the missing 12th recording though...
+                 See issue #17.
+        */
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
         let exportAlert = UIAlertController(
             title: "Exporting...",
             message: "Getting ready to\nupload your recording.",
@@ -141,6 +152,7 @@ class SubmitTVC: UITableViewController {
         }
 
         exportAlert.dismiss(animated: true, completion: {
+            self.navigationItem.rightBarButtonItem?.isEnabled = true
             self.recordVC.resetRecordTimer()
             self.recordVC.restartUIState()
             self.navigationController?.popViewController(animated: true)
