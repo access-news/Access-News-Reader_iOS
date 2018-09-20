@@ -108,7 +108,7 @@ struct Commands {
         */
     }
 
-    static func addRecording(publication: String, recordingName: String, duration: Float64) {
+    static func addRecording(streamID: String, publication: String, recordingName: String, duration: Float64) {
 
         self.dispatchEvent(
             aggregate: Aggregates.recording.rawValue,
@@ -118,7 +118,7 @@ struct Commands {
                 , "filename":    recordingName
                 , "duration":    String(Int(duration))
                 ],
-            streamID:  self.createNewStreamID()
+            streamID:  streamID
         )
     }
 

@@ -88,11 +88,14 @@ class SubmitTVC: UITableViewController {
                 let recordingRef =
                     self.storage.reference().child(path)
 
+                let streamID = Commands.createNewStreamID();
+
                 let metadata = StorageMetadata()
                 metadata.customMetadata =
                     [ "publication": "\(self.selectedPublication.text!)"
                     , "reader":      "\(Auth.auth().currentUser!.uid)"
                     , "duration":    "\(articleDuration)"
+                    , "stream_id":   streamID
                     ]
                 
                 recordingRef.putFile(
@@ -122,6 +125,7 @@ class SubmitTVC: UITableViewController {
                             )
 
                             Commands.addRecording(
+                                streamID: streamID,
                                 publication: self.selectedPublication.text!,
                                 recordingName: recordingName,
                                 duration: articleDuration)
