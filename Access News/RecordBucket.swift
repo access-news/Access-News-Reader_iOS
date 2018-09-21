@@ -22,10 +22,11 @@ struct RecordBucket {
      whether label update is necessary (i.e., did a full second
      already went by).
      */
-    var seconds : [String: String] =
-        [ "record and playback" : ""
-        , "session"  : ""
-        ]
+//    var seconds : [String: String] =
+//        [ "record and playback" : ""
+//        , "session"  : ""
+//        ]
+    var seconds: String = ""
 
     var articleSoFar: AVMutableComposition! = AVMutableComposition()
     var latestChunk: AVURLAsset? = nil
@@ -60,7 +61,13 @@ struct RecordBucket {
     var timerLabelReversed: Bool = false
 
     // https://stackoverflow.com/questions/35906568/wait-until-swift-for-loop-with-asynchronous-network-requests-finishes-executing
-    let submitGroup = DispatchGroup()
+    let dispatchGroup = DispatchGroup()
+    // https://stackoverflow.com/questions/45682622/swift-execute-asynchronous-tasks-in-order
+    // http://iosbrain.com/blog/2018/03/07/concurrency-in-ios-serial-and-concurrent-queues-in-grand-central-dispatch-gcd-with-swift-4/
+    var dispatchQueue: DispatchQueue = DispatchQueue(label: "bucket")
+//    init(label: String) {
+//        self.bucketQueue = DispatchQueue(label: label)
+//    }
 
     /* Track whether slider has been tapped during playback or not.
      If yes, resume playback from the position the control has

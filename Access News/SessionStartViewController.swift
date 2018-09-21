@@ -12,6 +12,8 @@ import AVFoundation
 
 class SessionStartViewController: UIViewController {
 
+    var seconds: String = ""
+
     @IBOutlet weak var startSessionButton: UIButton!
     @IBAction func startSessionTapped(_ sender: Any) {
 

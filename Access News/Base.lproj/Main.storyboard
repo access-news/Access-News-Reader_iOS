@@ -14,7 +14,7 @@
         <!--Session Start View Controller-->
         <scene sceneID="5YS-jm-hec">
             <objects>
-                <viewController id="7G3-FM-EZs" customClass="SessionStartViewController" customModule="Access_News" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SessionStartViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7G3-FM-EZs" customClass="SessionStartViewController" customModule="Access_News" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9fK-pe-71O">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -277,7 +277,7 @@
         <!--SubmitTVC-->
         <scene sceneID="u9N-uT-UBW">
             <objects>
-                <tableViewController id="3Tw-Wm-zLK" customClass="SubmitTVC" customModule="Access_News" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="SubmitTVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="3Tw-Wm-zLK" customClass="SubmitTVC" customModule="Access_News" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="acp-Oe-dDY">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

@@ -14,8 +14,6 @@ class SubmitTVC: UITableViewController {
 
     @IBOutlet weak var selectedPublication: UILabel!
 
-    var finishingRecordBucket: RecordBucket!
-
     let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     let storage = Storage.storage()
     var recordVC: RecordViewController!
@@ -62,8 +60,7 @@ class SubmitTVC: UITableViewController {
         /* Making the text always fit the label
          https://stackoverflow.com/questions/4865458/dynamically-changing-font-size-of-uilabel
          */
-        self.finishingRecordBucket = self.recordVC.recordBucket
-        self.recordVC.recordBucket = RecordBucket()
+        let bucket = self.recordVC.recordBucket!
 
         Commands.updateSession(
             seconds: Int(self.recordVC.sessionDuration))
@@ -71,24 +68,20 @@ class SubmitTVC: UITableViewController {
         let articleURLToSubmit =
             self.recordVC.createNewRecordingURL()
         let articleDuration: Float64 =
-            CMTimeGetSeconds(self.finishingRecordBucket.articleSoFar.duration)
+            CMTimeGetSeconds(bucket.articleSoFar.duration)
 
-        // https://stackoverflow.com/questions/45682622/swift-execute-asynchronous-tasks-in-order
-        // http://iosbrain.com/blog/2018/03/07/concurrency-in-ios-serial-and-concurrent-queues-in-grand-central-dispatch-gcd-with-swift-4/
-        let submitQueue = DispatchQueue(label: "submitQueue")
+        let submitQueue = bucket.dispatchQueue
 
         submitQueue.async {
             self.recordVC.exportArticle(
-                bucket:  self.finishingRecordBucket,
+                bucket:  bucket,
                 fileURL: articleURLToSubmit)
         }
 
         submitQueue.async {
 
-            self.finishingRecordBucket.submitGroup.wait()
-            self.finishingRecordBucket.submitGroup.enter()
-            
-            self.recordVC.deleteLeftoverChunks(bucket: self.finishingRecordBucket)
+            bucket.dispatchGroup.wait()
+            bucket.dispatchGroup.enter()
 
             /* Calling Firebase.StorageReference.putFile from the main queue,
                as it won't run from the background. It is async and therefore
@@ -121,7 +114,7 @@ class SubmitTVC: UITableViewController {
 
                         (completionMetadata, error) in
 
-                        self.finishingRecordBucket.submitGroup.leave()
+                        bucket.dispatchGroup.leave()
 
                         guard let completionMetadata = completionMetadata else {
                             return
@@ -151,11 +144,29 @@ class SubmitTVC: UITableViewController {
             }
         }
 
+        let doneSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        doneSheet.addAction(UIAlertAction(
+            title: "End Session",
+            style: .default,
+            handler: { _action in
+
+                /* Left over chunks deleted on successful export in `exportArticle` */
+                self.recordVC.endsessionTapped(self.recordVC)
+        }))
+        doneSheet.addAction(
+            UIAlertAction(
+                title: "Start New Recording",
+                style: .default,
+                handler: { _action in
+
+                    /* Left over chunks deleted on successful export in `exportArticle` */
+                    self.recordVC.startoverTapped(self.recordVC)
+                    self.navigationController?.popViewController(animated: true)
+            }))
+
         exportAlert.dismiss(animated: true, completion: {
             self.navigationItem.rightBarButtonItem?.isEnabled = true
-            self.recordVC.resetRecordTimer()
-            self.recordVC.restartUIState()
-            self.navigationController?.popViewController(animated: true)
+            self.present(doneSheet, animated: true, completion: nil)
         })
     }
 

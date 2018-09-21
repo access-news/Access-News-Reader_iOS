@@ -25,6 +25,12 @@ class RecordViewController: UIViewController {
         }
     }
 
+    var sessionStartVC: SessionStartViewController {
+        get {
+            return self.navigationController?.viewControllers[0] as! SessionStartViewController
+        }
+    }
+
     let disabledGrey      = UIColor(red: 0.910, green: 0.910, blue: 0.910, alpha: 1.0)
     let playGreen         = UIColor(red: 0.238, green: 0.753, blue: 0.323, alpha: 1.0)
     let recordRed         = UIColor(red: 1.0,   green: 0.2,   blue: 0.169, alpha: 1.0)
@@ -35,15 +41,13 @@ class RecordViewController: UIViewController {
     var sessionTimer: Timer!
     var sessionDuration: Double = 0.0
 
-    var recordBucket = RecordBucket()
+    var recordBucket: RecordBucket!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         /* Set default UI properties, assuming that permission to record is given. */
         self.startUIState()
-
-        self.zeroRecordArtifacts()
 
         /* SESSION TIMER SETUP */
         self.sessionTimerLabel.title = "00:00:00"
@@ -63,7 +67,7 @@ class RecordViewController: UIViewController {
 
         let newTimeSecondString = self.timeToSecondString(newTime)
 
-        let shouldTick = self.tickOnceASec(secondString: newTimeSecondString, timer: "session")
+        let shouldTick = self.tickOnceASec(secondString: newTimeSecondString, forTimer: "session")
 
         if shouldTick == true {
             self.sessionTimerLabel.title = self.convertSecondStringToTimerLabel(newTimeSecondString)
@@ -79,6 +83,10 @@ class RecordViewController: UIViewController {
     @IBOutlet weak var recordButton: UIButton!
     @IBAction func recordTapped(_ sender: Any) {
 
+        if recordButton.titleLabel?.text == "Record" {
+            self.recordBucket = RecordBucket()
+        }
+        
         Commands.seqs[Aggregates.recording.rawValue] = 1
 
         self.startRecorder()
@@ -160,20 +168,60 @@ class RecordViewController: UIViewController {
         */
 
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        actionSheet.addAction(UIAlertAction(title: "Submit and End Session", style: .default, handler: nil))
-        actionSheet.addAction(UIAlertAction(title: "Submit and Start New", style: .default, handler: nil))
-        actionSheet.addAction(UIAlertAction(title: "End Session", style: .default, handler: nil))
-        actionSheet.addAction(UIAlertAction(title: "Start New", style: .default, handler: nil))
+        actionSheet.addAction(
+            UIAlertAction(
+                title: "Submit",
+                style: .default,
+                handler: { _action in
+                    let storyboard = UIStoryboard(name: "Main", bundle: .main)
+                    let submitTVC = storyboard.instantiateViewController(withIdentifier: "SubmitTVC")
+                    self.navigationController?.pushViewController(submitTVC, animated: true)
+            }))
+        actionSheet.addAction(
+            UIAlertAction(
+                title: "End Session",
+                style: .default,
+                handler: { _action in
+
+                    Commands.updateSession(seconds: Int(self.sessionDuration), done: true)
+
+                    /* User explicitly states with this action that they don't
+                       intend to upload recording at this time, therefore only
+                       exporting it. That can be done in the background as we
+                       are not waiting for starting upload on the main thread.
+                    */
+                    /*
+                     ! Timers need to be invalidated manually as they are
+                     ! not part of RecordBucket.
+                    */
+                    self.recordBucket.dispatchQueue.async {
+                        self.exportArticle(
+                            bucket: self.recordBucket,
+                            fileURL: self.createNewRecordingURL())
+                    }
+                    self.endsessionTapped(self)
+            }))
+        actionSheet.addAction(
+            UIAlertAction(
+                title: "Start New Recording",
+                style: .default,
+                handler: { _action in
+
+                    self.recordBucket.dispatchQueue.async {
+                        self.exportArticle(
+                            bucket: self.recordBucket,
+                            fileURL: self.createNewRecordingURL())
+                    }
+                    self.startoverTapped(self)
+            }))
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+
         self.present(actionSheet, animated: true, completion: nil)
     }
 
     @IBOutlet weak var startoverButton: UIButton!
     @IBAction func startoverTapped(_ sender: Any) {
-        /* Zeroing out whatever has been recorded up to
-         this point.
-         */
-        self.zeroRecordArtifacts()
+
         self.resetRecordTimer()
         self.startUIState()
     }
@@ -183,9 +231,8 @@ class RecordViewController: UIViewController {
 
         Commands.updateSession(seconds: Int(self.sessionDuration), done: true)
 
-        self.zeroRecordArtifacts()
         self.sessionTimer.invalidate()
-        self.navigationController?.popViewController(animated: true)
+        self.navigationController?.popToViewController(self.sessionStartVC as UIViewController, animated: true)
     }
 
     @IBOutlet weak var playbackPauseButton: UIButton!
@@ -330,7 +377,7 @@ class RecordViewController: UIViewController {
 
         let elapsedSecondString = self.timeToSecondString(elapsed)
 
-        let shouldTick = self.tickOnceASec(secondString: elapsedSecondString, timer: "record and playback")
+        let shouldTick = self.tickOnceASec(secondString: elapsedSecondString, forTimer: "record and playback")
 
         if shouldTick == true {
             self.timerLabel.text = self.convertSecondStringToTimerLabel(elapsedSecondString)
@@ -342,13 +389,22 @@ class RecordViewController: UIViewController {
         return String(String(time).prefix(while: { c in return c != "."}))
     }
 
-    func tickOnceASec(secondString: String, timer: String) -> Bool {
+    func tickOnceASec(secondString: String, forTimer: String) -> Bool {
 
-        if self.recordBucket.seconds[timer] != secondString {
-            self.recordBucket.seconds[timer] = secondString
+        var seconds: String!
+        if forTimer == "session" {
+            seconds = self.sessionStartVC.seconds
+        } else {
+            seconds = self.recordBucket.seconds
+        }
 
+        if seconds != secondString {
+            if forTimer == "session" {
+                self.sessionStartVC.seconds = secondString
+            } else {
+                self.recordBucket.seconds = secondString
+            }
             return true
-
         } else {
             return false
         }
@@ -462,19 +518,9 @@ class RecordViewController: UIViewController {
         }
     }
 
-    func zeroRecordArtifacts() {
-        self.recordBucket.articleSoFar = AVMutableComposition()
-        self.recordBucket.articleSoFarDuration = 0.0
-        self.recordBucket.latestChunk = nil
-        self.recordBucket.insertAt = CMTimeRange(start: kCMTimeZero, end: kCMTimeZero)
-
-        self.deleteLeftoverChunks(bucket: self.recordBucket)
-        self.recordBucket.leftoverChunks = [AVURLAsset]()
-    }
-
     func exportArticle(bucket: RecordBucket, fileURL: URL) {
 
-        bucket.submitGroup.enter()
+        bucket.dispatchGroup.enter()
         
         /* Redundant (when recording is stopped, `stopRecorder`
            call this already)
@@ -521,8 +567,15 @@ class RecordViewController: UIViewController {
             case .exporting?: break
 
             case .completed?:
+                /* Not calling `zeroRecordArtifacts` as a new RecordBucket is instantiated
+                 on submit (i.e., hitting "Done") therefore only the leftover chunks
+                 need to be cleaned up.
 
-                bucket.submitGroup.leave()
+                 ! Timers need to be invalidated manually as they are not part of
+                 ! RecordBucket.
+                 */
+                self.deleteLeftoverChunks(bucket: bucket)
+                bucket.dispatchGroup.leave()
 
             case .failed?: break
             case .cancelled?: break
@@ -564,6 +617,7 @@ class RecordViewController: UIViewController {
 
         self.timerLabel.isHidden   = true
         self.playbackSlider.isHidden  = true
+        self.endsessionButton.isEnabled = true
         self.endsessionButton.isHidden = false
 
         /* --- */
@@ -584,12 +638,6 @@ class RecordViewController: UIViewController {
 
         self.timerLabel.addGestureRecognizer(playbackTimerLabelTapGesture)
         /* --- */
-    }
-
-    func restartUIState() {
-        self.startUIState()
-        self.endsessionButton.isEnabled = true
-        self.endsessionButton.isHidden  = false
     }
 
     func recordUIState() {
@@ -860,7 +908,7 @@ class RecordViewController: UIViewController {
                     let t = CMTimeGetSeconds(time)
                     let timeSecondString = self?.timeToSecondString(t)
 
-                    let shouldTick = self?.tickOnceASec(secondString: timeSecondString!, timer: "record and playback")
+                    let shouldTick = self?.tickOnceASec(secondString: timeSecondString!, forTimer: "record and playback")
 
                     if shouldTick == true {
 
