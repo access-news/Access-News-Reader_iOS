@@ -95,12 +95,12 @@
                                             <action selector="tapSignInButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gcw-FI-aNm"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M6T-0H-nR5">
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Rb-XV-05C">
                                         <rect key="frame" x="37" y="143" width="268" height="70"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.25098039215686274" green="0.5607843137254902" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" red="0.23799999999999999" green="0.75318683010769072" blue="0.32338311833721545" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="45"/>
-                                        <state key="normal" title="Submit">
+                                        <state key="normal" title="Play">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <userDefinedRuntimeAttributes>
@@ -109,8 +109,8 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="submitTapped:" destination="Ha9-TU-hvE" eventType="touchUpInside" id="jwX-4Z-D5c"/>
-                                            <action selector="tapSignInButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="NB2-lG-2iH"/>
+                                            <action selector="playTapped:" destination="Ha9-TU-hvE" eventType="touchUpInside" id="E90-bl-O1O"/>
+                                            <action selector="tapSignInButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Kc9-W6-rTc"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z6G-lE-URb">
@@ -148,43 +148,8 @@
                                         <rect key="frame" x="-2" y="465" width="347" height="30"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                     </slider>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Rb-XV-05C">
-                                        <rect key="frame" x="37" y="246" width="268" height="70"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.23799999999999999" green="0.75318683010769072" blue="0.32338311833721545" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="45"/>
-                                        <state key="normal" title="Play">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="19"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="playTapped:" destination="Ha9-TU-hvE" eventType="touchUpInside" id="E90-bl-O1O"/>
-                                            <action selector="tapSignInButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Kc9-W6-rTc"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dPf-Rc-VPJ">
-                                        <rect key="frame" x="37" y="452" width="268" height="70"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.63346016839378239" green="0.27579406461804185" blue="0.42462661558993364" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="39"/>
-                                        <state key="normal" title="End Session">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="19"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="endsessionTapped:" destination="Ha9-TU-hvE" eventType="touchUpInside" id="Hxe-pG-fLe"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RQt-Kf-9dy">
-                                        <rect key="frame" x="37" y="246" width="268" height="70"/>
+                                        <rect key="frame" x="39" y="246" width="268" height="70"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="0.47545770460941866" green="0.49425863944393383" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="45"/>
@@ -198,23 +163,6 @@
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="playbackPauseTapped:" destination="Ha9-TU-hvE" eventType="touchUpInside" id="rUN-CX-YAU"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OcO-2k-kKU">
-                                        <rect key="frame" x="37" y="349" width="268" height="70"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="1" green="0.69389232227616993" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="45"/>
-                                        <state key="normal" title="Start Over">
-                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="19"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="startoverTapped:" destination="Ha9-TU-hvE" eventType="touchUpInside" id="kQg-8o-bg6"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C9s-96-xgd">
@@ -232,6 +180,41 @@
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="backTapped:" destination="Ha9-TU-hvE" eventType="touchUpInside" id="swo-Fw-gS8"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M6T-0H-nR5">
+                                        <rect key="frame" x="39" y="444" width="268" height="70"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.63300000000000001" green="0.27600000000000002" blue="0.42499999999999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="45"/>
+                                        <state key="normal" title="Finish">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="19"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="submitTapped:" destination="Ha9-TU-hvE" eventType="touchUpInside" id="jwX-4Z-D5c"/>
+                                            <action selector="tapSignInButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="NB2-lG-2iH"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OcO-2k-kKU">
+                                        <rect key="frame" x="39" y="246" width="268" height="70"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="0.69389232227616993" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="45"/>
+                                        <state key="normal" title="Start Over">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="19"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="startoverTapped:" destination="Ha9-TU-hvE" eventType="touchUpInside" id="kQg-8o-bg6"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -258,7 +241,6 @@
                     </navigationItem>
                     <connections>
                         <outlet property="backButton" destination="C9s-96-xgd" id="Wz7-JH-1gU"/>
-                        <outlet property="endsessionButton" destination="dPf-Rc-VPJ" id="yTc-dh-cBr"/>
                         <outlet property="playButton" destination="2Rb-XV-05C" id="Cdr-uw-1NI"/>
                         <outlet property="playbackPauseButton" destination="RQt-Kf-9dy" id="0Ir-2j-Qxe"/>
                         <outlet property="playbackSlider" destination="AMh-74-mM9" id="iK4-I7-Z4L"/>

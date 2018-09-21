@@ -199,7 +199,7 @@ class RecordViewController: UIViewController {
                             bucket: self.recordBucket,
                             fileURL: self.createNewRecordingURL())
                     }
-                    self.endsessionTapped(self)
+                    self.endSession()
             }))
         actionSheet.addAction(
             UIAlertAction(
@@ -212,7 +212,7 @@ class RecordViewController: UIViewController {
                             bucket: self.recordBucket,
                             fileURL: self.createNewRecordingURL())
                     }
-                    self.startoverTapped(self)
+                    self.newRecording()
             }))
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 
@@ -222,12 +222,16 @@ class RecordViewController: UIViewController {
     @IBOutlet weak var startoverButton: UIButton!
     @IBAction func startoverTapped(_ sender: Any) {
 
+        self.deleteLeftoverChunks(bucket: self.recordBucket)
+        self.newRecording()
+    }
+
+    func newRecording() {
         self.resetRecordTimer()
         self.startUIState()
     }
 
-    @IBOutlet weak var endsessionButton: UIButton!
-    @IBAction func endsessionTapped(_ sender: Any) {
+    func endSession() {
 
         Commands.updateSession(seconds: Int(self.sessionDuration), done: true)
 
@@ -608,7 +612,7 @@ class RecordViewController: UIViewController {
             self.stopButton.layoutIfNeeded()
         }
 
-        self.submitButton.isHidden = true
+        self.submitButton.isHidden = false
 
         self.playButton.isEnabled = false
         self.playButton.backgroundColor = self.disabledGrey
@@ -617,8 +621,6 @@ class RecordViewController: UIViewController {
 
         self.timerLabel.isHidden   = true
         self.playbackSlider.isHidden  = true
-        self.endsessionButton.isEnabled = true
-        self.endsessionButton.isHidden = false
 
         /* --- */
 
@@ -669,7 +671,6 @@ class RecordViewController: UIViewController {
         self.startoverButton.isHidden = true
 
         self.playbackSlider.isHidden  = true
-        self.endsessionButton.isHidden = true
 
         /* See "`timerLabel` TAP GESTURE SETUP" comment in
            `startUIState`
@@ -705,7 +706,6 @@ class RecordViewController: UIViewController {
         self.startoverButton.isHidden = false
 
         self.playbackSlider.isHidden  = true
-        self.endsessionButton.isHidden = false
     }
 
     func playbackUIState() {
@@ -738,7 +738,6 @@ class RecordViewController: UIViewController {
         self.startoverButton.isHidden = true
 
         self.playbackSlider.isHidden  = false
-        self.endsessionButton.isHidden = true
 
         /* UISlider SETUP */
 
@@ -813,7 +812,6 @@ class RecordViewController: UIViewController {
         self.startoverButton.isHidden = true
 
         self.playbackSlider.isHidden  = false
-        self.endsessionButton.isHidden = true
     }
 
     func playagainUIState() {
@@ -851,8 +849,6 @@ class RecordViewController: UIViewController {
 
         self.playbackSlider.isHidden  = false
         self.playbackSlider.value = 0
-
-        self.endsessionButton.isHidden = true
     }
 
     // MARK: `timerLabel` tap gesture callback

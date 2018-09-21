@@ -151,7 +151,7 @@ class SubmitTVC: UITableViewController {
             handler: { _action in
 
                 /* Left over chunks deleted on successful export in `exportArticle` */
-                self.recordVC.endsessionTapped(self.recordVC)
+                self.recordVC.endSession()
         }))
         doneSheet.addAction(
             UIAlertAction(
@@ -160,7 +160,7 @@ class SubmitTVC: UITableViewController {
                 handler: { _action in
 
                     /* Left over chunks deleted on successful export in `exportArticle` */
-                    self.recordVC.startoverTapped(self.recordVC)
+                    self.recordVC.newRecording()
                     self.navigationController?.popViewController(animated: true)
             }))
 
