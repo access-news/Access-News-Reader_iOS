@@ -231,9 +231,9 @@
                             </connections>
                         </barButtonItem>
                         <rightBarButtonItems>
-                            <barButtonItem title="Settings" id="Alu-Wt-Z4o">
+                            <barButtonItem title="Recordings" id="Alu-Wt-Z4o" userLabel="Recordings">
                                 <connections>
-                                    <segue destination="Qhe-8k-WtN" kind="show" id="Vht-D5-RaE"/>
+                                    <segue destination="n5C-T7-W9u" kind="show" id="OQ3-Sl-ylP"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem title="SessionTimerLabel" id="fPD-a8-ysf"/>
@@ -433,6 +433,34 @@
             </objects>
             <point key="canvasLocation" x="1314" y="497"/>
         </scene>
+        <!--List RecordingsTVC-->
+        <scene sceneID="WV0-Py-lib">
+            <objects>
+                <tableViewController storyboardIdentifier="ListRecordingsTVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="n5C-T7-W9u" customClass="ListRecordingsTVC" customModule="Access_News" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="PRC-mg-fpw">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="recording" id="H8x-lL-90o">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="H8x-lL-90o" id="Jqq-zd-YCp">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="n5C-T7-W9u" id="wfQ-fi-Ghc"/>
+                            <outlet property="delegate" destination="n5C-T7-W9u" id="Dft-qg-5e3"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2GW-GL-z4h" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2264.8000000000002" y="-281.10944527736132"/>
+        </scene>
         <!--SettingsTVC-->
         <scene sceneID="OV0-Qz-blM">
             <objects>
@@ -459,7 +487,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jAD-o1-vRC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2330" y="-281"/>
+            <point key="canvasLocation" x="3004" y="-1051"/>
         </scene>
         <!--ProfileTVC-->
         <scene sceneID="aLa-Bj-ncY">
