@@ -158,6 +158,14 @@ class RecordViewController: UIViewController {
            These should only be invoked on successful submission,
            thus they can be found in SubmitTVC.
         */
+
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        actionSheet.addAction(UIAlertAction(title: "Submit and End Session", style: .default, handler: nil))
+        actionSheet.addAction(UIAlertAction(title: "Submit and Start New", style: .default, handler: nil))
+        actionSheet.addAction(UIAlertAction(title: "End Session", style: .default, handler: nil))
+        actionSheet.addAction(UIAlertAction(title: "Start New", style: .default, handler: nil))
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(actionSheet, animated: true, completion: nil)
     }
 
     @IBOutlet weak var startoverButton: UIButton!

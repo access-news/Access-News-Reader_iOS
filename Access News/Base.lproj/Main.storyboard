@@ -111,7 +111,6 @@
                                         <connections>
                                             <action selector="submitTapped:" destination="Ha9-TU-hvE" eventType="touchUpInside" id="jwX-4Z-D5c"/>
                                             <action selector="tapSignInButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="NB2-lG-2iH"/>
-                                            <segue destination="3Tw-Wm-zLK" kind="show" id="UfS-lD-dUe"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z6G-lE-URb">
