@@ -22,6 +22,9 @@
 		CF87D18120C1BE5600AF1AE0 /* ProfileTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF87D18020C1BE5600AF1AE0 /* ProfileTVC.swift */; };
 		CF87D18320C1BE6800AF1AE0 /* SettingsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF87D18220C1BE6800AF1AE0 /* SettingsTVC.swift */; };
 		CF9C587F213753EA00458D8C /* Commands.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9C587E213753EA00458D8C /* Commands.swift */; };
+		CFB14202217A590F00F22CC1 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB14201217A590F00F22CC1 /* ShareViewController.swift */; };
+		CFB14205217A590F00F22CC1 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CFB14203217A590F00F22CC1 /* MainInterface.storyboard */; };
+		CFB14209217A590F00F22CC1 /* Access-News-Uploader.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = CFB141FF217A590E00F22CC1 /* Access-News-Uploader.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CFB9ACE521349862007DBEFE /* SelectPubicationTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB9ACE421349862007DBEFE /* SelectPubicationTVC.swift */; };
 		CFEDE2D82155B1FF002A4FA7 /* ListRecordingsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEDE2D72155B1FF002A4FA7 /* ListRecordingsTVC.swift */; };
 		CFF5BA2920BF5B460033D180 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF5BA2820BF5B460033D180 /* AppDelegate.swift */; };
@@ -34,6 +37,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		CFB14207217A590F00F22CC1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CFF5BA1D20BF5B460033D180 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CFB141FE217A590E00F22CC1;
+			remoteInfo = "Access-News-Uploader";
+		};
 		CFF5BA3A20BF5B480033D180 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CFF5BA1D20BF5B460033D180 /* Project object */;
@@ -49,6 +59,20 @@
 			remoteInfo = "Access News";
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		CFB1420D217A590F00F22CC1 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				CFB14209217A590F00F22CC1 /* Access-News-Uploader.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0B129966D3C726BBD5992528 /* Pods-Access NewsUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Access NewsUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Access NewsUITests/Pods-Access NewsUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -68,6 +92,10 @@
 		CF87D18020C1BE5600AF1AE0 /* ProfileTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTVC.swift; sourceTree = "<group>"; };
 		CF87D18220C1BE6800AF1AE0 /* SettingsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTVC.swift; sourceTree = "<group>"; };
 		CF9C587E213753EA00458D8C /* Commands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Commands.swift; sourceTree = "<group>"; };
+		CFB141FF217A590E00F22CC1 /* Access-News-Uploader.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Access-News-Uploader.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CFB14201217A590F00F22CC1 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		CFB14204217A590F00F22CC1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		CFB14206217A590F00F22CC1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CFB9ACE421349862007DBEFE /* SelectPubicationTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPubicationTVC.swift; sourceTree = "<group>"; };
 		CFEDE2D72155B1FF002A4FA7 /* ListRecordingsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListRecordingsTVC.swift; sourceTree = "<group>"; };
 		CFF5BA2520BF5B460033D180 /* Access News.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Access News.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -89,6 +117,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		CFB141FC217A590E00F22CC1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CFF5BA2220BF5B460033D180 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -139,6 +174,16 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		CFB14200217A590F00F22CC1 /* Access-News-Uploader */ = {
+			isa = PBXGroup;
+			children = (
+				CFB14201217A590F00F22CC1 /* ShareViewController.swift */,
+				CFB14203217A590F00F22CC1 /* MainInterface.storyboard */,
+				CFB14206217A590F00F22CC1 /* Info.plist */,
+			);
+			path = "Access-News-Uploader";
+			sourceTree = "<group>";
+		};
 		CFF5BA1C20BF5B460033D180 = {
 			isa = PBXGroup;
 			children = (
@@ -146,6 +191,7 @@
 				CFF5BA2720BF5B460033D180 /* Access News */,
 				CFF5BA3C20BF5B480033D180 /* Access NewsTests */,
 				CFF5BA4720BF5B480033D180 /* Access NewsUITests */,
+				CFB14200217A590F00F22CC1 /* Access-News-Uploader */,
 				CFF5BA2620BF5B460033D180 /* Products */,
 				C2751AED1AF9DCBB8453450E /* Pods */,
 				86DA93679FD9FB921EFBA6B0 /* Frameworks */,
@@ -158,6 +204,7 @@
 				CFF5BA2520BF5B460033D180 /* Access News.app */,
 				CFF5BA3920BF5B480033D180 /* Access NewsTests.xctest */,
 				CFF5BA4420BF5B480033D180 /* Access NewsUITests.xctest */,
+				CFB141FF217A590E00F22CC1 /* Access-News-Uploader.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -208,6 +255,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		CFB141FE217A590E00F22CC1 /* Access-News-Uploader */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CFB1420C217A590F00F22CC1 /* Build configuration list for PBXNativeTarget "Access-News-Uploader" */;
+			buildPhases = (
+				CFB141FB217A590E00F22CC1 /* Sources */,
+				CFB141FC217A590E00F22CC1 /* Frameworks */,
+				CFB141FD217A590E00F22CC1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Access-News-Uploader";
+			productName = "Access-News-Uploader";
+			productReference = CFB141FF217A590E00F22CC1 /* Access-News-Uploader.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		CFF5BA2420BF5B460033D180 /* Access News */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CFF5BA4D20BF5B480033D180 /* Build configuration list for PBXNativeTarget "Access News" */;
@@ -217,10 +281,12 @@
 				CFF5BA2220BF5B460033D180 /* Frameworks */,
 				CFF5BA2320BF5B460033D180 /* Resources */,
 				8C117F726F033B527A59BA1E /* [CP] Embed Pods Frameworks */,
+				CFB1420D217A590F00F22CC1 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				CFB14208217A590F00F22CC1 /* PBXTargetDependency */,
 			);
 			name = "Access News";
 			productName = "Access News";
@@ -275,6 +341,9 @@
 				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = "Society for the Blind";
 				TargetAttributes = {
+					CFB141FE217A590E00F22CC1 = {
+						CreatedOnToolsVersion = 9.4.1;
+					};
 					CFF5BA2420BF5B460033D180 = {
 						CreatedOnToolsVersion = 9.4;
 						SystemCapabilities = {
@@ -312,11 +381,20 @@
 				CFF5BA2420BF5B460033D180 /* Access News */,
 				CFF5BA3820BF5B480033D180 /* Access NewsTests */,
 				CFF5BA4320BF5B480033D180 /* Access NewsUITests */,
+				CFB141FE217A590E00F22CC1 /* Access-News-Uploader */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		CFB141FD217A590E00F22CC1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CFB14205217A590F00F22CC1 /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CFF5BA2320BF5B460033D180 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -428,6 +506,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		CFB141FB217A590E00F22CC1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CFB14202217A590F00F22CC1 /* ShareViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CFF5BA2120BF5B460033D180 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -467,6 +553,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		CFB14208217A590F00F22CC1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CFB141FE217A590E00F22CC1 /* Access-News-Uploader */;
+			targetProxy = CFB14207217A590F00F22CC1 /* PBXContainerItemProxy */;
+		};
 		CFF5BA3B20BF5B480033D180 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CFF5BA2420BF5B460033D180 /* Access News */;
@@ -480,6 +571,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		CFB14203217A590F00F22CC1 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CFB14204217A590F00F22CC1 /* Base */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
 		CFF5BA2C20BF5B460033D180 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -499,6 +598,46 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		CFB1420A217A590F00F22CC1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = K6BD7WSV5V;
+				INFOPLIST_FILE = "Access-News-Uploader/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.societyfortheblind.Access-News-Reader.Access-News-Uploader";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CFB1420B217A590F00F22CC1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = K6BD7WSV5V;
+				INFOPLIST_FILE = "Access-News-Uploader/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.societyfortheblind.Access-News-Reader.Access-News-Uploader";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		CFF5BA4B20BF5B480033D180 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -617,6 +756,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1AD751AE5E0235EC177C2D85 /* Pods-Access News.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Access News/Access News.entitlements";
 				CODE_SIGN_STYLE = Automatic;
@@ -638,6 +778,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 25C001BC31280401C9640469 /* Pods-Access News.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Access News/Access News.entitlements";
 				CODE_SIGN_STYLE = Automatic;
@@ -744,6 +885,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		CFB1420C217A590F00F22CC1 /* Build configuration list for PBXNativeTarget "Access-News-Uploader" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CFB1420A217A590F00F22CC1 /* Debug */,
+				CFB1420B217A590F00F22CC1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		CFF5BA2020BF5B460033D180 /* Build configuration list for PBXProject "Access News" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
