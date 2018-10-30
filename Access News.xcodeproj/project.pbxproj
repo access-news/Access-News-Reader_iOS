@@ -14,6 +14,10 @@
 		CF1EB7AA20C079D500D36E36 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CF1EB7A720C079D400D36E36 /* GoogleService-Info.plist */; };
 		CF342A9C20F9763400DD1BF7 /* SubmitTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF342A9B20F9763400DD1BF7 /* SubmitTVC.swift */; };
 		CF3A496121419DBF007B6FC8 /* Aggregates.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3A496021419DBF007B6FC8 /* Aggregates.swift */; };
+		CF3FBEEE21890D59007BA4EE /* DropDown.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3FBEED21890D59007BA4EE /* DropDown.swift */; };
+		CF3FBEEF21890D59007BA4EE /* DropDown.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3FBEED21890D59007BA4EE /* DropDown.swift */; };
+		CF3FBEF121890F0A007BA4EE /* EmbeddedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3FBEF021890F0A007BA4EE /* EmbeddedViewController.swift */; };
+		CF3FBEF221890F0A007BA4EE /* EmbeddedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3FBEF021890F0A007BA4EE /* EmbeddedViewController.swift */; };
 		CF63AB1920EBE2F10069E05B /* SessionStartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF63AB1820EBE2F10069E05B /* SessionStartViewController.swift */; };
 		CF783B3D83CA6601AEBFFE66 /* Pods_Access_NewsUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F3C40D9DD2299E2C5C72541 /* Pods_Access_NewsUITests.framework */; };
 		CF804301214875530080687B /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF804300214875530080687B /* ResetPasswordViewController.swift */; };
@@ -84,6 +88,8 @@
 		CF1EB7A720C079D400D36E36 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CF342A9B20F9763400DD1BF7 /* SubmitTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitTVC.swift; sourceTree = "<group>"; };
 		CF3A496021419DBF007B6FC8 /* Aggregates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aggregates.swift; sourceTree = "<group>"; };
+		CF3FBEED21890D59007BA4EE /* DropDown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDown.swift; sourceTree = "<group>"; };
+		CF3FBEF021890F0A007BA4EE /* EmbeddedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedViewController.swift; sourceTree = "<group>"; };
 		CF63AB1820EBE2F10069E05B /* SessionStartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStartViewController.swift; sourceTree = "<group>"; };
 		CF8042FF214864200080687B /* Access News.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Access News.entitlements"; sourceTree = "<group>"; };
 		CF804300214875530080687B /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
@@ -180,6 +186,8 @@
 				CFB14203217A590F00F22CC1 /* MainInterface.storyboard */,
 				CFB14206217A590F00F22CC1 /* Info.plist */,
 				CF97C739217E7761008DB127 /* ShareViewController.swift */,
+				CF3FBEED21890D59007BA4EE /* DropDown.swift */,
+				CF3FBEF021890F0A007BA4EE /* EmbeddedViewController.swift */,
 			);
 			path = "Access-News-Uploader";
 			sourceTree = "<group>";
@@ -510,7 +518,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF3FBEEF21890D59007BA4EE /* DropDown.swift in Sources */,
 				CF97C73A217E7761008DB127 /* ShareViewController.swift in Sources */,
+				CF3FBEF221890F0A007BA4EE /* EmbeddedViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -520,6 +530,7 @@
 			files = (
 				CFEDE2D82155B1FF002A4FA7 /* ListRecordingsTVC.swift in Sources */,
 				CF63AB1920EBE2F10069E05B /* SessionStartViewController.swift in Sources */,
+				CF3FBEF121890F0A007BA4EE /* EmbeddedViewController.swift in Sources */,
 				CF9C587F213753EA00458D8C /* Commands.swift in Sources */,
 				CF804303214C0C9E0080687B /* RecordBucket.swift in Sources */,
 				CF87D17F20C1BA4600AF1AE0 /* RecordViewController.swift in Sources */,
@@ -530,6 +541,7 @@
 				CF87D18320C1BE6800AF1AE0 /* SettingsTVC.swift in Sources */,
 				CFF5BA2920BF5B460033D180 /* AppDelegate.swift in Sources */,
 				CFB9ACE521349862007DBEFE /* SelectPubicationTVC.swift in Sources */,
+				CF3FBEEE21890D59007BA4EE /* DropDown.swift in Sources */,
 				CF3A496121419DBF007B6FC8 /* Aggregates.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
