@@ -19,10 +19,10 @@ class EmbeddedViewController: UIViewController {
         self.navigationController?.navigationBar.layer.cornerRadius = 19
         self.navigationController?.navigationBar.clipsToBounds = true
 
-        self.volunteerTimeDropDown.optionArray = Array(1...250).map { String($0)}
+        self.volunteerTimeDropDown.optionArray = Array(1...250).filter { $0 % 5 == 0 }.map { "\($0 / 60) h \($0 % 60) min" }
 
         self.publicationDropDown.optionArray =
-            [ "Auburn Journal"
+            [ "Auburn Journal"	  	
             , "Braille Monitor"
             , "CVS"
             , "Capital Public Radio"
