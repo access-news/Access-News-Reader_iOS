@@ -70,6 +70,12 @@
                                 <attributedString key="attributedText"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="Optional. If left blank, the duration of the recordings will be used." textAlignment="justified" translatesAutoresizingMaskIntoConstraints="NO" id="f9k-5M-swK">
+                                <rect key="frame" x="16" y="245" width="246" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="0.95145284726890644" blue="0.9066570965853411" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="VGy-ht-Ge8"/>
@@ -79,10 +85,24 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
-                    <navigationItem key="navigationItem" id="MN7-hA-a1e"/>
+                    <navigationItem key="navigationItem" id="MN7-hA-a1e">
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="Vx1-dt-d6l">
+                            <connections>
+                                <action selector="cancelTapped:" destination="n8M-tp-4iY" id="Iy6-R7-0aT"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Submit" id="tdG-Z7-ZeT">
+                            <connections>
+                                <action selector="submitTapped:" destination="n8M-tp-4iY" id="frA-3G-w8x"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="cancelBarButton" destination="Vx1-dt-d6l" id="O3W-iR-2Lg"/>
                         <outlet property="publicationDropDown" destination="KxU-iY-b75" id="oQ7-2h-LB3"/>
+                        <outlet property="submitBarButton" destination="tdG-Z7-ZeT" id="rxo-GR-z36"/>
                         <outlet property="volunteerTimeDropDown" destination="kJk-bn-uiB" id="WlU-ji-atY"/>
+                        <outlet property="volunteerTimeNote" destination="f9k-5M-swK" id="NCU-di-Ng6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="822-2y-pYp" userLabel="First Responder" sceneMemberID="firstResponder"/>

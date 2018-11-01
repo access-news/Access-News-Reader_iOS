@@ -12,9 +12,22 @@ class EmbeddedViewController: UIViewController {
 
     @IBOutlet weak var publicationDropDown: DropDown!
     @IBOutlet weak var volunteerTimeDropDown: DropDown!
+    @IBOutlet weak var volunteerTimeNote: UITextView!
 
+    @IBOutlet weak var submitBarButton: UIBarButtonItem!
+    @IBAction func submitTapped(_ sender: Any) {
+        print("lfoa")
+    }
+
+    @IBOutlet weak var cancelBarButton: UIBarButtonItem!
+    @IBAction func cancelTapped(_ sender: Any) {
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        volunteerTimeNote.isEditable = false
+        volunteerTimeNote.isSelectable = false
 
         self.navigationController?.navigationBar.layer.cornerRadius = 19
         self.navigationController?.navigationBar.clipsToBounds = true
