@@ -6,7 +6,36 @@
 //  Copyright © 2018 Society for the Blind. All rights reserved.
 //
 
+// Finally managed to add Firebase and ilk to share extension in
+// commit 4f7528cf5e90f5395b7fa47e22855a1367497763
+// but here are the steps just to make sure:
+
+//   Started receiving this error:
+//   > `firebase 'sharedApplication' is unavailable: not
+//   > available on iOS (App Extension) - Use view controller
+//   > based solutions where appropriate instead.`
+
+//   Tried a bazillion things, got fed up,
+
+//   1. wiped everything clean by cloning the repo fresh from github,
+
+//   2. deleted
+//   + ~/Library/Developer/Xcode/DerivedData
+//   + ./Pods/
+//   + Podfile
+//   + Podfile.lock
+
+//   3. $ pod init
+
+//   4. copied over the Podfile that's in this repo
+
+//   5. $ pod update
+
+//   Probably won't work next time.
+///
+
 import UIKit
+import Firebase
 
 class ShareViewController: UIViewController {
 

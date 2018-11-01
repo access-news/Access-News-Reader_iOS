@@ -1,0 +1,6 @@
+framework module Pods_Access_News_Uploader {
+  umbrella header "Pods-Access-News-Uploader-umbrella.h"
+
+  export *
+  module * { export * }
+}

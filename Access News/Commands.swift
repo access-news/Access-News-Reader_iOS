@@ -68,7 +68,7 @@ struct Commands {
     */
 
     static func createNewStreamID() -> String {
-        return self.dbref.childByAutoId().key
+        return self.dbref.childByAutoId().key!
     }
 
     static var sessionID = ""

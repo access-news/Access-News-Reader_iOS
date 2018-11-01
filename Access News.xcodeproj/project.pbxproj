@@ -38,6 +38,7 @@
 		CFF5BA3320BF5B480033D180 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CFF5BA3120BF5B480033D180 /* LaunchScreen.storyboard */; };
 		CFF5BA3E20BF5B480033D180 /* Access_NewsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF5BA3D20BF5B480033D180 /* Access_NewsTests.swift */; };
 		CFF5BA4920BF5B480033D180 /* Access_NewsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF5BA4820BF5B480033D180 /* Access_NewsUITests.swift */; };
+		DB14A9B30F10D3F58AF2AB75 /* Pods_Access_News_Uploader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C9FE0C6636EE2FC42269011 /* Pods_Access_News_Uploader.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,8 +83,11 @@
 		0B129966D3C726BBD5992528 /* Pods-Access NewsUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Access NewsUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Access NewsUITests/Pods-Access NewsUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		1AD751AE5E0235EC177C2D85 /* Pods-Access News.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Access News.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Access News/Pods-Access News.debug.xcconfig"; sourceTree = "<group>"; };
 		25C001BC31280401C9640469 /* Pods-Access News.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Access News.release.xcconfig"; path = "Pods/Target Support Files/Pods-Access News/Pods-Access News.release.xcconfig"; sourceTree = "<group>"; };
+		3C2D632F2122D8DBA24F0E08 /* Pods-Access-News-Uploader.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Access-News-Uploader.release.xcconfig"; path = "Pods/Target Support Files/Pods-Access-News-Uploader/Pods-Access-News-Uploader.release.xcconfig"; sourceTree = "<group>"; };
 		68DD76CE84E70C2711A2D136 /* Pods-Access NewsTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Access NewsTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Access NewsTests/Pods-Access NewsTests.release.xcconfig"; sourceTree = "<group>"; };
+		6AB22DEA878E9B18425E445D /* Pods-Access-News-Uploader.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Access-News-Uploader.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Access-News-Uploader/Pods-Access-News-Uploader.debug.xcconfig"; sourceTree = "<group>"; };
 		7F3C40D9DD2299E2C5C72541 /* Pods_Access_NewsUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Access_NewsUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C9FE0C6636EE2FC42269011 /* Pods_Access_News_Uploader.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Access_News_Uploader.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DF637CD1CE903146043D448 /* Pods_Access_NewsTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Access_NewsTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF1EB7A720C079D400D36E36 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CF342A9B20F9763400DD1BF7 /* SubmitTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitTVC.swift; sourceTree = "<group>"; };
@@ -127,6 +131,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB14A9B30F10D3F58AF2AB75 /* Pods_Access_News_Uploader.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,6 +168,7 @@
 				FF4C11A75A913667D48DDEBF /* Pods_Access_News.framework */,
 				8DF637CD1CE903146043D448 /* Pods_Access_NewsTests.framework */,
 				7F3C40D9DD2299E2C5C72541 /* Pods_Access_NewsUITests.framework */,
+				8C9FE0C6636EE2FC42269011 /* Pods_Access_News_Uploader.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -176,6 +182,8 @@
 				68DD76CE84E70C2711A2D136 /* Pods-Access NewsTests.release.xcconfig */,
 				0B129966D3C726BBD5992528 /* Pods-Access NewsUITests.debug.xcconfig */,
 				DBB127247622CE5CB935FC7C /* Pods-Access NewsUITests.release.xcconfig */,
+				6AB22DEA878E9B18425E445D /* Pods-Access-News-Uploader.debug.xcconfig */,
+				3C2D632F2122D8DBA24F0E08 /* Pods-Access-News-Uploader.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -267,6 +275,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CFB1420C217A590F00F22CC1 /* Build configuration list for PBXNativeTarget "Access-News-Uploader" */;
 			buildPhases = (
+				CA0AB1AE2534513FB5B07A2F /* [CP] Check Pods Manifest.lock */,
 				CFB141FB217A590E00F22CC1 /* Sources */,
 				CFB141FC217A590E00F22CC1 /* Frameworks */,
 				CFB141FD217A590E00F22CC1 /* Resources */,
@@ -459,20 +468,38 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Access News/Pods-Access News-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Access News/Pods-Access News-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CA0AB1AE2534513FB5B07A2F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Access-News-Uploader-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E17BED5A57233DCF73D1F052 /* [CP] Check Pods Manifest.lock */ = {
@@ -612,6 +639,7 @@
 /* Begin XCBuildConfiguration section */
 		CFB1420A217A590F00F22CC1 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6AB22DEA878E9B18425E445D /* Pods-Access-News-Uploader.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = K6BD7WSV5V;
@@ -632,6 +660,7 @@
 		};
 		CFB1420B217A590F00F22CC1 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3C2D632F2122D8DBA24F0E08 /* Pods-Access-News-Uploader.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = K6BD7WSV5V;
