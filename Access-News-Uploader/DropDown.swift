@@ -173,8 +173,8 @@ open class DropDown : UITextField{
         self.isSelected = true
         UIView.animate(withDuration: 0.2,
                        delay: 0,
-                       usingSpringWithDamping: 0.4,
-                       initialSpringVelocity: 0.1,
+//                       usingSpringWithDamping: 0.4,
+//                       initialSpringVelocity: 0.1,
                        options: .curveEaseInOut,
                        animations: { () -> Void in
 
@@ -201,8 +201,8 @@ open class DropDown : UITextField{
         TableWillDisappearCompletion()
         UIView.animate(withDuration: 0.2,
                        delay: 0.1,
-                       usingSpringWithDamping: 0.9,
-                       initialSpringVelocity: 0.1,
+//                       usingSpringWithDamping: 0.9,
+//                       initialSpringVelocity: 0.1,
                        options: .curveEaseInOut,
                        animations: { () -> Void in
                         self.table.frame = CGRect(x: self.frame.minX,
@@ -234,8 +234,8 @@ open class DropDown : UITextField{
         }
         UIView.animate(withDuration: 0.2,
                        delay: 0.1,
-                       usingSpringWithDamping: 0.9,
-                       initialSpringVelocity: 0.1,
+//                       usingSpringWithDamping: 0.9,
+//                       initialSpringVelocity: 0.1,
                        options: .curveEaseInOut,
                        animations: { () -> Void in
                         self.table.frame = CGRect(x: self.frame.minX,
