@@ -35,9 +35,10 @@
 ///
 
 import UIKit
-import Firebase
 
 class ShareViewController: UIViewController {
+
+    let defaults = UserDefaults.init(suiteName: "group.org.societyfortheblind.access-news-reader-ag")!
 
     override func viewDidLoad() {
         super.viewDidLoad()

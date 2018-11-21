@@ -42,6 +42,7 @@ class LoginViewController: UIViewController {
                             self.signInError.text = error?.localizedDescription
                     }
                 } else {
+                    (UIApplication.shared.delegate as! AppDelegate).defaults.set(true, forKey: "user_logged_in")
                     let storyboard = UIStoryboard(name: "Main", bundle: .main)
                     let nvc = storyboard.instantiateViewController(withIdentifier: "NVC")
                     self.present(nvc, animated: true, completion: nil)
