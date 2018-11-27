@@ -66,8 +66,8 @@ class SessionStartViewController: UIViewController {
             try Auth.auth().signOut()
 
             let storyboard = UIStoryboard(name: "Main", bundle: .main)
-            let login = storyboard.instantiateInitialViewController()!
-            self.present(login, animated: true, completion: nil)
+            let loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController")
+            self.present(loginViewController, animated: true, completion: nil)
         } catch {
             fatalError()
         }
