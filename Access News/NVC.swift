@@ -7,13 +7,19 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class NVC: UINavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        if Auth.auth().currentUser == nil {
+            let storyboard = UIStoryboard(name: "Main", bundle: .main)
+            let loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController")
+            loginViewController.navigationItem.hidesBackButton = true
+            self.pushViewController(loginViewController, animated: false)
+        }
     }
     
 

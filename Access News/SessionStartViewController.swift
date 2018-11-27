@@ -67,7 +67,8 @@ class SessionStartViewController: UIViewController {
 
             let storyboard = UIStoryboard(name: "Main", bundle: .main)
             let loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController")
-            self.present(loginViewController, animated: true, completion: nil)
+            loginViewController.navigationItem.hidesBackButton = true
+            self.navigationController?.pushViewController(loginViewController, animated: true)
         } catch {
             fatalError()
         }

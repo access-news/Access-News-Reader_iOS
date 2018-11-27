@@ -45,9 +45,9 @@ class LoginViewController: UIViewController {
                     }
                 } else {
                     self.defaults.set(true, forKey: "user-logged-in")
-                    let storyboard = UIStoryboard(name: "Main", bundle: .main)
-                    let nvc = storyboard.instantiateViewController(withIdentifier: "NVC")
-                    self.present(nvc, animated: true, completion: nil)
+                    // Still not perfect, but at least now LoginViewController only
+                    // assumes that it is included in a navigation controller.
+                    self.navigationController?.popViewController(animated: false)
                 }
             }
         }
