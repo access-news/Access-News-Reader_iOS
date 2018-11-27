@@ -50,7 +50,7 @@ class ShareViewController: UIViewController {
         */
         // https://stackoverflow.com/questions/17041669/creating-a-blurring-overlay-view/25706250
         // only apply the blur if the user hasn't disabled transparency effects
-        if !UIAccessibilityIsReduceTransparencyEnabled() {
+        if UIAccessibilityIsReduceTransparencyEnabled() == false {
             view.backgroundColor = .clear
 
             let blurEffect = UIBlurEffect(style: .dark)

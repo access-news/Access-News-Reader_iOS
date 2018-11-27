@@ -52,23 +52,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Access-News-Uploader/ShareViewController.swift"
-            timestampString = "564515979.3460129"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "60"
-            endingLineNumber = "60"
-            landmarkName = "viewDidLoad()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Access-News-Uploader/ShareViewController.swift"
-            timestampString = "564515979.346365"
+            timestampString = "565052826.8388211"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "45"

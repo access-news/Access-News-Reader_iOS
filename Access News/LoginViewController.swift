@@ -11,6 +11,8 @@ import FirebaseAuth
 
 class LoginViewController: UIViewController {
 
+    let defaults = UserDefaults.init(suiteName: "group.org.societyfortheblind.access-news-reader-ag")!
+
     @IBOutlet weak var signInError: UILabel!
     @IBOutlet weak var username: UITextField!
     @IBOutlet weak var password: UITextField!
@@ -42,7 +44,7 @@ class LoginViewController: UIViewController {
                             self.signInError.text = error?.localizedDescription
                     }
                 } else {
-                    (UIApplication.shared.delegate as! AppDelegate).defaults.set(true, forKey: "user_logged_in")
+                    self.defaults.set(true, forKey: "user-logged-in")
                     let storyboard = UIStoryboard(name: "Main", bundle: .main)
                     let nvc = storyboard.instantiateViewController(withIdentifier: "NVC")
                     self.present(nvc, animated: true, completion: nil)
