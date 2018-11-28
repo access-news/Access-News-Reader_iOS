@@ -11,10 +11,12 @@ import FirebaseAuth
 
 class NVC: UINavigationController {
 
+    let defaults = UserDefaults.init(suiteName: "group.org.societyfortheblind.access-news-reader-ag")!
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if Auth.auth().currentUser == nil {
+        if self.defaults.bool(forKey: "user-logged-in") == false {
             let storyboard = UIStoryboard(name: "Main", bundle: .main)
             let loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController")
             loginViewController.navigationItem.hidesBackButton = true
