@@ -48,7 +48,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("Setting up audiosession failed somehow.")
         }
 
-        FirebaseApp.configure()
+        if FirebaseApp.app() == nil {
+            FirebaseApp.configure()
+        }
 
         return true
     }

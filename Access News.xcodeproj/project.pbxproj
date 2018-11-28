@@ -33,6 +33,8 @@
 		CFB9ACE521349862007DBEFE /* SelectPubicationTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB9ACE421349862007DBEFE /* SelectPubicationTVC.swift */; };
 		CFCC097C21ADFF030027BB13 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF5BA2A20BF5B460033D180 /* LoginViewController.swift */; };
 		CFCC097E21AE078C0027BB13 /* NVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCC097D21AE078C0027BB13 /* NVC.swift */; };
+		CFCC097F21AE15A30027BB13 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CFF5BA2C20BF5B460033D180 /* Main.storyboard */; };
+		CFCC098121AEFE9A0027BB13 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CFCC098021AEFE9A0027BB13 /* GoogleService-Info.plist */; };
 		CFEDE2D82155B1FF002A4FA7 /* ListRecordingsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEDE2D72155B1FF002A4FA7 /* ListRecordingsTVC.swift */; };
 		CFF5BA2920BF5B460033D180 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF5BA2820BF5B460033D180 /* AppDelegate.swift */; };
 		CFF5BA2B20BF5B460033D180 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF5BA2A20BF5B460033D180 /* LoginViewController.swift */; };
@@ -113,6 +115,7 @@
 		CFB14206217A590F00F22CC1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CFB9ACE421349862007DBEFE /* SelectPubicationTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPubicationTVC.swift; sourceTree = "<group>"; };
 		CFCC097D21AE078C0027BB13 /* NVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NVC.swift; sourceTree = "<group>"; };
+		CFCC098021AEFE9A0027BB13 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CFEDE2D72155B1FF002A4FA7 /* ListRecordingsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListRecordingsTVC.swift; sourceTree = "<group>"; };
 		CFF5BA2520BF5B460033D180 /* Access News.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Access News.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFF5BA2820BF5B460033D180 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -204,6 +207,7 @@
 				CF3FBEED21890D59007BA4EE /* DropDown.swift */,
 				CF3FBEF021890F0A007BA4EE /* EmbeddedViewController.swift */,
 				CF468D1E219C937100E32E22 /* UploaderNavigationViewController.swift */,
+				CFCC098021AEFE9A0027BB13 /* GoogleService-Info.plist */,
 			);
 			path = "Access-News-Uploader";
 			sourceTree = "<group>";
@@ -211,7 +215,6 @@
 		CFF5BA1C20BF5B460033D180 = {
 			isa = PBXGroup;
 			children = (
-				CF1EB7A720C079D400D36E36 /* GoogleService-Info.plist */,
 				CFF5BA2720BF5B460033D180 /* Access News */,
 				CFF5BA3C20BF5B480033D180 /* Access NewsTests */,
 				CFF5BA4720BF5B480033D180 /* Access NewsUITests */,
@@ -236,6 +239,7 @@
 		CFF5BA2720BF5B460033D180 /* Access News */ = {
 			isa = PBXGroup;
 			children = (
+				CF1EB7A720C079D400D36E36 /* GoogleService-Info.plist */,
 				CF804300214875530080687B /* ResetPasswordViewController.swift */,
 				CF8042FF214864200080687B /* Access News.entitlements */,
 				CFF5BA2820BF5B460033D180 /* AppDelegate.swift */,
@@ -426,6 +430,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				CFB14205217A590F00F22CC1 /* MainInterface.storyboard in Resources */,
+				CFCC097F21AE15A30027BB13 /* Main.storyboard in Resources */,
+				CFCC098121AEFE9A0027BB13 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
