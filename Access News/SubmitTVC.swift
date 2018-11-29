@@ -40,26 +40,27 @@ class SubmitTVC: UITableViewController {
 
     @objc func uploadRecording() {
 
-        /* Event -LMrdLN2qYagVhfOBYYG is for a recording, but has "seq = 2", which is only
-           possible if the "Done" button is hit multiple times. This could happen for longer
-           recordings, when exporting needs some time to complete.
+        /* ISSUE:
+           Event -LMrdLN2qYagVhfOBYYG is for a recording, but has "seq = 2",
+           which is only possible if the "Done" button is hit multiple times.
+           This could happen for longer recordings, when exporting needs
+           some time to complete.
 
-           Fixing it by (1) disabling the "Done" button once pressed and (2) showing an alert
-           until the we are ready to go back to recording.
+           FIX:
+           Fixing it by (1) disabling the "Done" button once pressed and (2)
+           showing an alert until the we are ready to go back to recording.
 
            TODO: This doesn't explain the missing 12th recording though...
                  See issue #17.
         */
         self.navigationItem.rightBarButtonItem?.isEnabled = false
+
         let exportAlert = UIAlertController(
             title: "Exporting...",
             message: "Getting ready to\nupload your recording.",
             preferredStyle: .alert)
         self.present(exportAlert, animated: true, completion: nil)
 
-        /* Making the text always fit the label
-         https://stackoverflow.com/questions/4865458/dynamically-changing-font-size-of-uilabel
-         */
         let bucket = self.recordVC.recordBucket!
 
         Commands.updateSession(
@@ -85,7 +86,7 @@ class SubmitTVC: UITableViewController {
 
             /* Calling Firebase.StorageReference.putFile from the main queue,
                as it won't run from the background. It is async and therefore
-               won't block, but this just a way how it needs to be done.
+               won't block, plus this just a way how it needs to be done.
                (Otherwise the app will crash.)
             */
             DispatchQueue.main.async {

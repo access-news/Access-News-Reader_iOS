@@ -45,6 +45,8 @@
 		CFF5BA4920BF5B480033D180 /* Access_NewsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF5BA4820BF5B480033D180 /* Access_NewsUITests.swift */; };
 		CFF8735E21B0591500B2450D /* CommonDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF8735D21B0591500B2450D /* CommonDefaults.swift */; };
 		CFF8735F21B0591500B2450D /* CommonDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF8735D21B0591500B2450D /* CommonDefaults.swift */; };
+		CFF8736121B0AAD000B2450D /* Commands.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9C587E213753EA00458D8C /* Commands.swift */; };
+		CFF8736221B0AADF00B2450D /* Aggregates.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3A496021419DBF007B6FC8 /* Aggregates.swift */; };
 		DB14A9B30F10D3F58AF2AB75 /* Pods_Access_News_Uploader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C9FE0C6636EE2FC42269011 /* Pods_Access_News_Uploader.framework */; };
 /* End PBXBuildFile section */
 
@@ -574,8 +576,10 @@
 			files = (
 				CFF8735F21B0591500B2450D /* CommonDefaults.swift in Sources */,
 				CF468D1F219C937100E32E22 /* UploaderNavigationViewController.swift in Sources */,
+				CFF8736121B0AAD000B2450D /* Commands.swift in Sources */,
 				CF3FBEEF21890D59007BA4EE /* DropDown.swift in Sources */,
 				CF97C73A217E7761008DB127 /* ShareViewController.swift in Sources */,
+				CFF8736221B0AADF00B2450D /* Aggregates.swift in Sources */,
 				CFCC097C21ADFF030027BB13 /* LoginViewController.swift in Sources */,
 				CF3FBEF221890F0A007BA4EE /* EmbeddedViewController.swift in Sources */,
 			);

@@ -340,20 +340,7 @@ class RecordViewController: UIViewController {
     // MARK: Audio command helpers
 
     func createNewRecordingURL() -> URL {
-
-        func nowString() -> String {
-
-            func dateString(_ date: Date) -> String {
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "yyyyMMddHHmmss"
-
-                return dateFormatter.string(from: date)
-            }
-
-            return dateString(Date())
-        }
-
-        let fileURL = nowString() + ".m4a"
+        let fileURL = CommonDefaults.nowString() + ".m4a"
         return self.documentDir.appendingPathComponent(fileURL)
     }
 

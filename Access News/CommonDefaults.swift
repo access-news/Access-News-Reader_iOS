@@ -33,6 +33,18 @@ struct CommonDefaults {
         }
     }
 
+    static func nowString() -> String {
+
+        func dateString(_ date: Date) -> String {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyyMMddHHmmss"
+
+            return dateFormatter.string(from: date)
+        }
+
+        return dateString(Date())
+    }
+
     static var publications : [String] =
         [ "Auburn Journal"
         , "Braille Monitor"
