@@ -14,7 +14,6 @@ struct Commands {
 //    static let db = Database.database()
     static let dbref = Database.database().reference()
     static let auth = Auth.auth()
-    static let userID = Auth.auth().currentUser!.uid
 
     /* No pun intended (but I would definitely do something like this
        on purpose).
@@ -133,7 +132,7 @@ struct Commands {
         self.seqs[aggregate] = seq + 1
 
         let payloadWithUserID =
-            payload.merging(["user_id": self.userID]) { (k,_) in k }
+            payload.merging(["user_id": CommonDefaults.userID()]) { (k,_) in k }
 
         let event: [String: Any] =
             [ "aggregate":  aggregate

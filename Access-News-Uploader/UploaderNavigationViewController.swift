@@ -11,8 +11,6 @@ import Firebase
 
 class UploaderNavigationViewController: UINavigationController {
 
-    let defaults = UserDefaults.init(suiteName: "group.org.societyfortheblind.access-news-reader-ag")!
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -27,13 +25,7 @@ class UploaderNavigationViewController: UINavigationController {
             FirebaseApp.configure()
         }
 
-        if self.defaults.bool(forKey: "user-logged-in") == false {
-            let storyboard = UIStoryboard(name: "Main", bundle: .main)
-            let loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController")
-            loginViewController.navigationItem.hidesBackButton = true
-            self.pushViewController(loginViewController, animated: false)
-        }
-        // Do any additional setup after loading the view.
+        CommonDefaults.showLoginIfNoUser(navController: self)
     }
     
 

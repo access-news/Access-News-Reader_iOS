@@ -12,8 +12,6 @@ import AVFoundation
 
 class SessionStartViewController: UIViewController {
 
-    let defaults = UserDefaults.init(suiteName: "group.org.societyfortheblind.access-news-reader-ag")!
-
     var seconds: String = ""
 
     @IBOutlet weak var startSessionButton: UIButton!
@@ -66,12 +64,9 @@ class SessionStartViewController: UIViewController {
     @objc func signOutTapped() {
         do {
             try Auth.auth().signOut()
-            self.defaults.set(false, forKey: "user-logged-in")
+            CommonDefaults.defaults.set(false, forKey: "is-user-logged-in")
 
-            let storyboard = UIStoryboard(name: "Main", bundle: .main)
-            let loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController")
-            loginViewController.navigationItem.hidesBackButton = true
-            self.navigationController?.pushViewController(loginViewController, animated: true)
+            CommonDefaults.showLogin(navController: self.navigationController!, animated: true)
         } catch {
             fatalError()
         }

@@ -10,6 +10,29 @@ import UIKit
 
 struct CommonDefaults {
 
+    static var defaults = UserDefaults.init(suiteName: "group.org.societyfortheblind.access-news-reader-ag")!
+
+    static func isUserLoggedIn() -> Bool {
+        return defaults.bool(forKey: "is-user-logged-in")
+    }
+
+    static func userID() -> String {
+        return self.defaults.string(forKey: "user-id")!
+    }
+
+    static func showLogin(navController nvc: UINavigationController, animated: Bool = false) {
+        let storyboard = UIStoryboard(name: "Main", bundle: .main)
+        let loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController")
+        loginViewController.navigationItem.hidesBackButton = true
+        nvc.pushViewController(loginViewController, animated: false)
+    }
+
+    static func showLoginIfNoUser(navController nvc: UINavigationController) {
+        if self.isUserLoggedIn() == false {
+            self.showLogin(navController: nvc, animated: false)
+        }
+    }
+
     static var publications : [String] =
         [ "Auburn Journal"
         , "Braille Monitor"

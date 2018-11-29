@@ -11,7 +11,7 @@ import FirebaseAuth
 
 class LoginViewController: UIViewController {
 
-    let defaults = UserDefaults.init(suiteName: "group.org.societyfortheblind.access-news-reader-ag")!
+    let auth = Auth.auth()
 
     @IBOutlet weak var signInError: UILabel!
     @IBOutlet weak var username: UITextField!
@@ -29,7 +29,7 @@ class LoginViewController: UIViewController {
             self.password.placeholder = "Password missing"
             self.password.becomeFirstResponder()
         } else {
-            Auth.auth().signIn(withEmail: username.text!, password: password.text!) {
+            self.auth.signIn(withEmail: username.text!, password: password.text!) {
                 (user, error) in
                 if error != nil {
                     let errorCode = AuthErrorCode(rawValue: (error! as NSError).code)!
@@ -44,7 +44,8 @@ class LoginViewController: UIViewController {
                             self.signInError.text = error?.localizedDescription
                     }
                 } else {
-                    self.defaults.set(true, forKey: "user-logged-in")
+                    CommonDefaults.defaults.set(true, forKey: "is-user-logged-in")
+                    CommonDefaults.defaults.set(self.auth.currentUser?.uid, forKey: "user-id")
                     // Still not perfect, but at least now LoginViewController only
                     // assumes that it is included in a navigation controller.
                     self.navigationController?.popViewController(animated: false)
