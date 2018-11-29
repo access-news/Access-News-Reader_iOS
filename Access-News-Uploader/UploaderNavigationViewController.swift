@@ -18,7 +18,9 @@ class UploaderNavigationViewController: UINavigationController {
 
         /* TODO:
          Should this config be in didSelectPost()`?
-         See http://www.talkmobiledev.com/2016/11/19/using-firebase-in-a-share-extension/
+         See
+         + https://stackoverflow.com/questions/49134868/how-to-officially-handle-unauthenticated-users-in-an-ios-share-extension/
+         + https://stackoverflow.com/questions/41114967/how-to-add-firebase-to-today-extension-ios/48213902#48213902
          */
         // https://stackoverflow.com/questions/37910766/
         if FirebaseApp.app() == nil {
