@@ -10,75 +10,6 @@ import UIKit
 
 class SelectPubicationTVC: UITableViewController {
 
-    var publications : [String] =
-        [ "Auburn Journal"
-        , "Braille Monitor"
-        , "CVS"
-        , "Capital Public Radio"
-        , "Client Assistance Program"
-        , "Comstocks"
-        , "Cooking Light"
-        , "Crosswords"
-        , "Davis Enterprise"
-        , "Earle Baum Center newsletter"
-        , "East Bay Times"
-        , "El Dorado County Mountain Democrat"
-        , "Entertainment Weekly"
-        , "Entrepreneur"
-        , "Eureka Times Standard"
-        , "Farm show"
-        , "Ferndale Enterprise"
-        , "Foods Co"
-        , "Forbes"
-        , "Fort Bragg Advocate News"
-        , "Fortune"
-        , "Grass Valley-Nevada City Union"
-        , "KQED Bay Area Bites"
-        , "La Superior Grocery Store Ads"
-        , "Lucky Supermarkets"
-        , "Mad River Union"
-        , "Meeting minutes of the California Council of the Blind"
-        , "Mental Floss"
-        , "Modesto Bee"
-        , "Money"
-        , "National Geographic"
-        , "Newsweek"
-        , "North Coast Journal"
-        , "People"
-        , "Raleys Bel Air"
-        , "Real Simple"
-        , "Rite Aid"
-        , "Roseville Press Tribune"
-        , "SF Gate"
-        , "SF Weekly"
-        , "SacTown"
-        , "Sacramento Business Journal"
-        , "Sacramento Magazine"
-        , "Sacramento News & Review"
-        , "Sacramento Press"
-        , "Safeway"
-        , "Santa Rosa Press Democrat"
-        , "Save Mart"
-        , "Senior News"
-        , "Sierra Services for the Blind newsletter"
-        , "Sprouts"
-        , "Stockton Record"
-        , "Sunset"
-        , "Target"
-        , "The Atlantic"
-        , "The Economist"
-        , "The Mendocino Beacon"
-        , "The Oprah Magazine"
-        , "Trader Joe's"
-        , "Trivia"
-        , "WalMart"
-        , "Walgreen's"
-        , "Wild West"
-        , "Woodland Daily Democrat"
-        , "Yuba-Sutter Meals on Wheels"
-        ]
-
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -103,7 +34,7 @@ class SelectPubicationTVC: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return self.publications.count
+        return CommonDefaults.publications.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -112,7 +43,7 @@ class SelectPubicationTVC: UITableViewController {
      let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 
      // Configure the cell...
-     cell.textLabel?.text = self.publications[indexPath.row]
+     cell.textLabel?.text = CommonDefaults.publications[indexPath.row]
 
      return cell
     }
@@ -123,7 +54,7 @@ class SelectPubicationTVC: UITableViewController {
             self.navigationController?.viewControllers[2]
                 as! SubmitTVC
 
-        submitTVC.selectedPublication.text = self.publications[indexPath.row]
+        submitTVC.selectedPublication.text = CommonDefaults.publications[indexPath.row]
 
         self.navigationController?.popViewController(animated: true)
     }

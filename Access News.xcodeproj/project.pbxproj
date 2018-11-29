@@ -43,6 +43,8 @@
 		CFF5BA3320BF5B480033D180 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CFF5BA3120BF5B480033D180 /* LaunchScreen.storyboard */; };
 		CFF5BA3E20BF5B480033D180 /* Access_NewsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF5BA3D20BF5B480033D180 /* Access_NewsTests.swift */; };
 		CFF5BA4920BF5B480033D180 /* Access_NewsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF5BA4820BF5B480033D180 /* Access_NewsUITests.swift */; };
+		CFF8735E21B0591500B2450D /* CommonDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF8735D21B0591500B2450D /* CommonDefaults.swift */; };
+		CFF8735F21B0591500B2450D /* CommonDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF8735D21B0591500B2450D /* CommonDefaults.swift */; };
 		DB14A9B30F10D3F58AF2AB75 /* Pods_Access_News_Uploader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C9FE0C6636EE2FC42269011 /* Pods_Access_News_Uploader.framework */; };
 /* End PBXBuildFile section */
 
@@ -130,6 +132,7 @@
 		CFF5BA4420BF5B480033D180 /* Access NewsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Access NewsUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFF5BA4820BF5B480033D180 /* Access_NewsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Access_NewsUITests.swift; sourceTree = "<group>"; };
 		CFF5BA4A20BF5B480033D180 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CFF8735D21B0591500B2450D /* CommonDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonDefaults.swift; sourceTree = "<group>"; };
 		DBB127247622CE5CB935FC7C /* Pods-Access NewsUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Access NewsUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Access NewsUITests/Pods-Access NewsUITests.release.xcconfig"; sourceTree = "<group>"; };
 		E43501CB2AC3500706A6AC0E /* Pods-Access NewsTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Access NewsTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Access NewsTests/Pods-Access NewsTests.debug.xcconfig"; sourceTree = "<group>"; };
 		FF4C11A75A913667D48DDEBF /* Pods_Access_News.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Access_News.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -259,6 +262,7 @@
 				CF804302214C0C9E0080687B /* RecordBucket.swift */,
 				CFEDE2D72155B1FF002A4FA7 /* ListRecordingsTVC.swift */,
 				CFCC097D21AE078C0027BB13 /* NVC.swift */,
+				CFF8735D21B0591500B2450D /* CommonDefaults.swift */,
 			);
 			path = "Access News";
 			sourceTree = "<group>";
@@ -568,6 +572,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CFF8735F21B0591500B2450D /* CommonDefaults.swift in Sources */,
 				CF468D1F219C937100E32E22 /* UploaderNavigationViewController.swift in Sources */,
 				CF3FBEEF21890D59007BA4EE /* DropDown.swift in Sources */,
 				CF97C73A217E7761008DB127 /* ShareViewController.swift in Sources */,
@@ -592,6 +597,7 @@
 				CFF5BA2B20BF5B460033D180 /* LoginViewController.swift in Sources */,
 				CF87D18320C1BE6800AF1AE0 /* SettingsTVC.swift in Sources */,
 				CFCC097E21AE078C0027BB13 /* NVC.swift in Sources */,
+				CFF8735E21B0591500B2450D /* CommonDefaults.swift in Sources */,
 				CFF5BA2920BF5B460033D180 /* AppDelegate.swift in Sources */,
 				CFB9ACE521349862007DBEFE /* SelectPubicationTVC.swift in Sources */,
 				CF3FBEEE21890D59007BA4EE /* DropDown.swift in Sources */,
