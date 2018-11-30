@@ -15,18 +15,12 @@ class SubmitTVC: UITableViewController {
     @IBOutlet weak var selectedPublication: UILabel!
 
     let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    let storage = Storage.storage()
     var recordVC: RecordViewController!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.recordVC =  self.navigationController?.viewControllers[1] as! RecordViewController
-
-        self.selectedPublication.numberOfLines = 1
-        self.selectedPublication.adjustsFontSizeToFitWidth = true
-        // This is the default, but making it explicit
-        self.selectedPublication.minimumScaleFactor = 0
 
         let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(self.uploadRecording))
         self.navigationItem.rightBarButtonItem = doneButton
@@ -80,7 +74,6 @@ class SubmitTVC: UITableViewController {
         }
 
         submitQueue.async {
-
             bucket.dispatchGroup.wait()
             bucket.dispatchGroup.enter()
 
@@ -91,57 +84,11 @@ class SubmitTVC: UITableViewController {
             */
             DispatchQueue.main.async {
 
-                let recordingName =
-                    articleURLToSubmit.pathComponents.last!
-
-                let path =
-                "recordings/\(self.selectedPublication.text!)/\(recordingName)"
-                let recordingRef =
-                    self.storage.reference().child(path)
-
-                let streamID = Commands.createNewStreamID();
-
-                let metadata = StorageMetadata()
-                metadata.customMetadata =
-                    [ "publication": "\(self.selectedPublication.text!)"
-                    , "reader":      "\(Auth.auth().currentUser!.uid)"
-                    , "duration":    "\(articleDuration)"
-                    , "stream_id":   streamID
-                    ]
-                
-                recordingRef.putFile(
-                    from: articleURLToSubmit,
-                    metadata: metadata) {
-
-                        (completionMetadata, error) in
-
-                        bucket.dispatchGroup.leave()
-
-                        guard let completionMetadata = completionMetadata else {
-                            return
-                        }
-
-                        print("\nBUCKET: \(completionMetadata.bucket)")
-
-                        recordingRef.downloadURL {
-                            (url, error) in
-
-                            guard let downloadURL = url else {
-                                return
-                            }
-                            print("\n\n\(downloadURL)\n\n")
-
-                            try! FileManager.default.removeItem(
-                                at: articleURLToSubmit
-                            )
-
-                            Commands.addRecording(
-                                streamID: streamID,
-                                publication: self.selectedPublication.text!,
-                                recordingName: recordingName,
-                                duration: articleDuration)
-                        }
-                }
+                Commands.submit(
+                    publication: self.selectedPublication.text!,
+                    recordingName: articleURLToSubmit.pathComponents.last!,
+                    duration: articleDuration,
+                    recordingURL: articleURLToSubmit)
             }
         }
 

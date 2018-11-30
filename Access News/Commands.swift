@@ -15,6 +15,60 @@ struct Commands {
     static let dbref = Database.database().reference()
     static let auth = Auth.auth()
 
+    static func submit
+        ( publication:   String
+        , recordingName: String
+        , duration:      Float64
+        , recordingURL:  URL
+        )
+    {
+        let path         = "recordings/\(publication)/\(recordingName)"
+        let recordingRef = Storage.storage().reference().child(path)
+        let streamID     = self.createNewStreamID();
+
+        let metadata = StorageMetadata()
+        metadata.customMetadata =
+            [ "publication": "\(publication)"
+            , "reader":      "\(CommonDefaults.userID())"
+            , "duration":    "\(duration)"
+            , "stream_id":   streamID
+            ]
+
+        recordingRef.putFile(
+            from:     recordingURL,
+            metadata: metadata)
+        {
+            (completionMetadata, error) in
+
+                // This may be left here by accident. The only place I could
+                // find `bucket.dispatchGroup.enter()` is in RecordVC's
+                // `exportArticle()`, but `leave()` is used upon successful
+                // export.
+                /* bucket.dispatchGroup.leave() */
+
+                recordingRef.downloadURL { (url, error) in
+
+                    guard let completionMetadata = completionMetadata else { return }
+                    print("\n\nBUCKET: \(completionMetadata.bucket)")
+                    print(CommonDefaults.userID())
+
+                    guard let downloadURL = url else { return }
+                    print("\(downloadURL)\n\n")
+
+                    /* TODO:
+                       Make deletion the users choice.
+                    */
+                    // try! FileManager.default.removeItem(at: articleURLToSubmit)
+
+                    Commands.addRecording(
+                        streamID:      streamID,
+                        publication:   publication,
+                        recordingName: recordingName,
+                        duration:      duration)
+                }
+        }
+    }
+
     /* No pun intended (but I would definitely do something like this
        on purpose).
 

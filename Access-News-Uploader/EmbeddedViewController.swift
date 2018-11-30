@@ -16,7 +16,7 @@ class EmbeddedViewController: UIViewController {
 
     @IBOutlet weak var submitBarButton: UIBarButtonItem!
     @IBAction func submitTapped(_ sender: Any) {
-        print("lfoa")
+        print(self.publicationDropDown.text!)
     }
 
     @IBOutlet weak var cancelBarButton: UIBarButtonItem!
