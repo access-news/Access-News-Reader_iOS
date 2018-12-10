@@ -6,5 +6,9 @@
 	<array>
 		<string>group.org.societyfortheblind.access-news-reader-ag</string>
 	</array>
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)org.societyfortheblind.Access-News-Reader-kg</string>
+	</array>
 </dict>
 </plist>

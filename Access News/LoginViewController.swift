@@ -29,7 +29,7 @@ class LoginViewController: UIViewController {
             self.password.placeholder = "Password missing"
             self.password.becomeFirstResponder()
         } else {
-            self.auth.signIn(withEmail: username.text!, password: password.text!) {
+            self.auth.signIn(withEmail: self.username.text!, password: self.password.text!) {
                 (user, error) in
                 if error != nil {
                     let errorCode = AuthErrorCode(rawValue: (error! as NSError).code)!
@@ -44,8 +44,30 @@ class LoginViewController: UIViewController {
                             self.signInError.text = error?.localizedDescription
                     }
                 } else {
-                    CommonDefaults.defaults.set(true, forKey: "is-user-logged-in")
-                    CommonDefaults.defaults.set(self.auth.currentUser?.uid, forKey: "user-id")
+                    CommonDefaults.defaults.set(self.auth.currentUser!.uid, forKey: "user-id")
+
+                    // Adding credentials to the keychain and sharing it
+                    // https://developer.apple.com/documentation/security/keychain_services/keychain_items/adding_a_password_to_the_keychain
+                    // https://stackoverflow.com/questions/44387242/keychain-sharing-between-two-apps
+
+//                    enum KeychainError: Error {
+//                        case noPassword
+//                        case unexpectedPasswordData
+//                        case unhandledError(status: OSStatus)
+//                    }
+
+                    let addQuery: [String: Any] =
+                        [ kSecClass as String: kSecClassGenericPassword
+                        , kSecAttrAccount as String: self.username.text!
+                        , kSecValueData as String: self.password.text!.data(using: String.Encoding.utf8)
+                        , kSecAttrGeneric as String: self.auth.currentUser!.uid
+                        , kSecAttrAccessGroup as String: "org.societyfortheblind.Access-News-Reader-kg"
+                        ]
+
+                    let status = SecItemAdd(addQuery as CFDictionary, nil)
+                    print("\n\n\(status)\n\n")
+//                    guard status == errSecSuccess else { throw KeychainError.unhandledError(status: status)}
+
                     // Still not perfect, but at least now LoginViewController only
                     // assumes that it is included in a navigation controller.
                     self.navigationController?.popViewController(animated: false)

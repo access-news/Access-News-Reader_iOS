@@ -13,10 +13,10 @@ struct CommonDefaults {
     static var defaults = UserDefaults.init(suiteName: "group.org.societyfortheblind.access-news-reader-ag")!
 
     static func isUserLoggedIn() -> Bool {
-        return defaults.bool(forKey: "is-user-logged-in")
+        return defaults.string(forKey: "user-id") != ""
     }
 
-    static func userID() -> String {
+    static func userID() -> String? {
         return self.defaults.string(forKey: "user-id")!
     }
 

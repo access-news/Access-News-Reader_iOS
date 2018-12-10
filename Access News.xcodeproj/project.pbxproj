@@ -9,9 +9,8 @@
 /* Begin PBXBuildFile section */
 		1A5D44F5873D6B4A668549FC /* Pods_Access_NewsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DF637CD1CE903146043D448 /* Pods_Access_NewsTests.framework */; };
 		40B9C62F95F0F1C9BC19F3EA /* Pods_Access_News.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF4C11A75A913667D48DDEBF /* Pods_Access_News.framework */; };
-		CF1EB7A820C079D500D36E36 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CF1EB7A720C079D400D36E36 /* GoogleService-Info.plist */; };
-		CF1EB7A920C079D500D36E36 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CF1EB7A720C079D400D36E36 /* GoogleService-Info.plist */; };
-		CF1EB7AA20C079D500D36E36 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CF1EB7A720C079D400D36E36 /* GoogleService-Info.plist */; };
+		CF05CA6A21B9EC90000FA9FD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CF05CA6921B9EC90000FA9FD /* GoogleService-Info.plist */; };
+		CF05CA6E21B9F41B000FA9FD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CF05CA6921B9EC90000FA9FD /* GoogleService-Info.plist */; };
 		CF342A9C20F9763400DD1BF7 /* SubmitTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF342A9B20F9763400DD1BF7 /* SubmitTVC.swift */; };
 		CF3A496121419DBF007B6FC8 /* Aggregates.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3A496021419DBF007B6FC8 /* Aggregates.swift */; };
 		CF3FBEEE21890D59007BA4EE /* DropDown.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3FBEED21890D59007BA4EE /* DropDown.swift */; };
@@ -34,7 +33,6 @@
 		CFCC097C21ADFF030027BB13 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF5BA2A20BF5B460033D180 /* LoginViewController.swift */; };
 		CFCC097E21AE078C0027BB13 /* NVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCC097D21AE078C0027BB13 /* NVC.swift */; };
 		CFCC097F21AE15A30027BB13 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CFF5BA2C20BF5B460033D180 /* Main.storyboard */; };
-		CFCC098121AEFE9A0027BB13 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CFCC098021AEFE9A0027BB13 /* GoogleService-Info.plist */; };
 		CFEDE2D82155B1FF002A4FA7 /* ListRecordingsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEDE2D72155B1FF002A4FA7 /* ListRecordingsTVC.swift */; };
 		CFF5BA2920BF5B460033D180 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF5BA2820BF5B460033D180 /* AppDelegate.swift */; };
 		CFF5BA2B20BF5B460033D180 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF5BA2A20BF5B460033D180 /* LoginViewController.swift */; };
@@ -98,7 +96,7 @@
 		7F3C40D9DD2299E2C5C72541 /* Pods_Access_NewsUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Access_NewsUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C9FE0C6636EE2FC42269011 /* Pods_Access_News_Uploader.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Access_News_Uploader.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DF637CD1CE903146043D448 /* Pods_Access_NewsTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Access_NewsTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		CF1EB7A720C079D400D36E36 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		CF05CA6921B9EC90000FA9FD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CF342A9B20F9763400DD1BF7 /* SubmitTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitTVC.swift; sourceTree = "<group>"; };
 		CF3A496021419DBF007B6FC8 /* Aggregates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aggregates.swift; sourceTree = "<group>"; };
 		CF3FBEED21890D59007BA4EE /* DropDown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDown.swift; sourceTree = "<group>"; };
@@ -119,7 +117,6 @@
 		CFB14206217A590F00F22CC1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CFB9ACE421349862007DBEFE /* SelectPubicationTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPubicationTVC.swift; sourceTree = "<group>"; };
 		CFCC097D21AE078C0027BB13 /* NVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NVC.swift; sourceTree = "<group>"; };
-		CFCC098021AEFE9A0027BB13 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CFEDE2D72155B1FF002A4FA7 /* ListRecordingsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListRecordingsTVC.swift; sourceTree = "<group>"; };
 		CFF5BA2520BF5B460033D180 /* Access News.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Access News.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFF5BA2820BF5B460033D180 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -212,7 +209,6 @@
 				CF3FBEED21890D59007BA4EE /* DropDown.swift */,
 				CF3FBEF021890F0A007BA4EE /* EmbeddedViewController.swift */,
 				CF468D1E219C937100E32E22 /* UploaderNavigationViewController.swift */,
-				CFCC098021AEFE9A0027BB13 /* GoogleService-Info.plist */,
 			);
 			path = "Access-News-Uploader";
 			sourceTree = "<group>";
@@ -244,7 +240,7 @@
 		CFF5BA2720BF5B460033D180 /* Access News */ = {
 			isa = PBXGroup;
 			children = (
-				CF1EB7A720C079D400D36E36 /* GoogleService-Info.plist */,
+				CF05CA6921B9EC90000FA9FD /* GoogleService-Info.plist */,
 				CF804300214875530080687B /* ResetPasswordViewController.swift */,
 				CF8042FF214864200080687B /* Access News.entitlements */,
 				CFF5BA2820BF5B460033D180 /* AppDelegate.swift */,
@@ -383,6 +379,9 @@
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
 							};
+							com.apple.Keychain = {
+								enabled = 1;
+							};
 						};
 					};
 					CFF5BA2420BF5B460033D180 = {
@@ -392,6 +391,9 @@
 								enabled = 1;
 							};
 							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Keychain = {
 								enabled = 1;
 							};
 							com.apple.Push = {
@@ -437,7 +439,7 @@
 			files = (
 				CFB14205217A590F00F22CC1 /* MainInterface.storyboard in Resources */,
 				CFCC097F21AE15A30027BB13 /* Main.storyboard in Resources */,
-				CFCC098121AEFE9A0027BB13 /* GoogleService-Info.plist in Resources */,
+				CF05CA6E21B9F41B000FA9FD /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -446,7 +448,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CFF5BA3320BF5B480033D180 /* LaunchScreen.storyboard in Resources */,
-				CF1EB7A820C079D500D36E36 /* GoogleService-Info.plist in Resources */,
+				CF05CA6A21B9EC90000FA9FD /* GoogleService-Info.plist in Resources */,
 				CFF5BA3020BF5B480033D180 /* Assets.xcassets in Resources */,
 				CFF5BA2E20BF5B460033D180 /* Main.storyboard in Resources */,
 			);
@@ -456,7 +458,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CF1EB7A920C079D500D36E36 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -464,7 +465,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CF1EB7AA20C079D500D36E36 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

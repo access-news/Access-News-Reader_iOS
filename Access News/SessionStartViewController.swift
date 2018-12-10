@@ -64,8 +64,19 @@ class SessionStartViewController: UIViewController {
     @objc func signOutTapped() {
         do {
             try Auth.auth().signOut()
-            CommonDefaults.defaults.set(false, forKey: "is-user-logged-in")
 
+            // Remove user credentials from the keychain
+            // https://developer.apple.com/documentation/security/keychain_services/keychain_items/searching_for_keychain_items
+            // https://developer.apple.com/documentation/security/keychain_services/keychain_items/updating_and_deleting_keychain_items
+            let query: [String: Any] =
+                [ kSecClass as String: kSecClassGenericPassword
+                , kSecAttrGeneric as String: CommonDefaults.userID()
+                , kSecAttrAccessGroup as String: "org.societyfortheblind.Access-News-Reader-kg"
+                ]
+            let status = SecItemDelete(query as CFDictionary)
+            print("\n\n\(status)\n\n")
+
+            CommonDefaults.defaults.set("", forKey: "user-id")
             CommonDefaults.showLogin(navController: self.navigationController!, animated: true)
         } catch {
             fatalError()
