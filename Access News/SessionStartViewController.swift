@@ -70,13 +70,20 @@ class SessionStartViewController: UIViewController {
             // https://developer.apple.com/documentation/security/keychain_services/keychain_items/updating_and_deleting_keychain_items
             let query: [String: Any] =
                 [ kSecClass as String: kSecClassGenericPassword
-                , kSecAttrGeneric as String: CommonDefaults.userID()
-                , kSecAttrAccessGroup as String: "org.societyfortheblind.Access-News-Reader-kg"
+                , kSecAttrGeneric as String: CommonDefaults.defaults.string(forKey: "user-id")!
+                , kSecAttrAccessGroup as String: "K6BD7WSV5V.org.societyfortheblind.Access-News-Reader-kg"
                 ]
             let status = SecItemDelete(query as CFDictionary)
+//            let alert = UIAlertController(title: "", message: String(status), preferredStyle: .alert)
+//            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in
+//                NSLog("The \"OK\" alert occured.")
+//            }))
+//            self.present(alert, animated: true, completion: nil)
             print("\n\n\(status)\n\n")
 
             CommonDefaults.defaults.set("", forKey: "user-id")
+            CommonDefaults.defaults.set("", forKey: "username")
+            CommonDefaults.defaults.set("", forKey: "password")
             CommonDefaults.showLogin(navController: self.navigationController!, animated: true)
         } catch {
             fatalError()

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class EmbeddedViewController: UIViewController {
 
@@ -16,7 +17,12 @@ class EmbeddedViewController: UIViewController {
 
     @IBOutlet weak var submitBarButton: UIBarButtonItem!
     @IBAction func submitTapped(_ sender: Any) {
-        print(self.publicationDropDown.text!)
+//        print(self.publicationDropDown.text!)
+        let alert = UIAlertController(title: "", message: Auth.auth().currentUser?.uid, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in
+            NSLog("The \"OK\" alert occured.")
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
 
     @IBOutlet weak var cancelBarButton: UIBarButtonItem!

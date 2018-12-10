@@ -23,9 +23,27 @@ class UploaderNavigationViewController: UINavigationController {
         // https://stackoverflow.com/questions/37910766/
         if FirebaseApp.app() == nil {
             FirebaseApp.configure()
+
         }
 
-        CommonDefaults.showLoginIfNoUser(navController: self)
+        if CommonDefaults.defaults.string(forKey: "username") != "" {
+            Auth.auth().signIn(
+                withEmail: CommonDefaults.defaults.string(forKey: "username")!,
+                password: CommonDefaults.defaults.string(forKey: "password")!) {
+                    (user, error) in
+                    if error != nil {
+                        let errorCode = AuthErrorCode(rawValue: (error! as NSError).code)!
+
+                        print("\n\n\(errorCode)\n\n")
+                    } else {
+                        print("\n\n\(String(describing: user?.user.uid))\n\n")
+                    }
+            }
+        } else {
+            print("\n\nnot logged in main\n\n")
+        }
+
+//        CommonDefaults.showLoginIfNoUser(navController: self)
     }
     
 

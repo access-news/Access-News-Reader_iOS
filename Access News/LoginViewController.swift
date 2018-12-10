@@ -44,7 +44,6 @@ class LoginViewController: UIViewController {
                             self.signInError.text = error?.localizedDescription
                     }
                 } else {
-                    CommonDefaults.defaults.set(self.auth.currentUser!.uid, forKey: "user-id")
 
                     // Adding credentials to the keychain and sharing it
                     // https://developer.apple.com/documentation/security/keychain_services/keychain_items/adding_a_password_to_the_keychain
@@ -56,16 +55,27 @@ class LoginViewController: UIViewController {
 //                        case unhandledError(status: OSStatus)
 //                    }
 
-                    let addQuery: [String: Any] =
-                        [ kSecClass as String: kSecClassGenericPassword
-                        , kSecAttrAccount as String: self.username.text!
-                        , kSecValueData as String: self.password.text!.data(using: String.Encoding.utf8)
-                        , kSecAttrGeneric as String: self.auth.currentUser!.uid
-                        , kSecAttrAccessGroup as String: "org.societyfortheblind.Access-News-Reader-kg"
+                    if CommonDefaults.defaults.string(forKey: "user-id") == "" {
+                        let addQuery: [String: Any] =
+                            [ kSecClass as String: kSecClassGenericPassword
+                                , kSecAttrAccount as String: self.username.text!
+                                , kSecValueData as String: self.password.text!.data(using: String.Encoding.utf8)!
+                                , kSecAttrGeneric as String: self.auth.currentUser!.uid
+                                , kSecAttrAccessGroup as String: "K6BD7WSV5V.org.societyfortheblind.Access-News-Reader-kg"
                         ]
 
-                    let status = SecItemAdd(addQuery as CFDictionary, nil)
-                    print("\n\n\(status)\n\n")
+                        let status = SecItemAdd(addQuery as CFDictionary, nil)
+                        print("\n\n\(status)\n\n")
+
+                        CommonDefaults.defaults.set(Auth.auth().currentUser?.uid, forKey: "user-id")
+                        CommonDefaults.defaults.set(self.username.text!, forKey: "username")
+                        CommonDefaults.defaults.set(self.password.text!, forKey: "password")
+                    }
+//                    let alert = UIAlertController(title: "", message: String(status), preferredStyle: .alert)
+//                    alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in
+//                        NSLog("The \"OK\" alert occured.")
+//                    }))
+//                    self.present(alert, animated: true, completion: nil)
 //                    guard status == errSecSuccess else { throw KeychainError.unhandledError(status: status)}
 
                     // Still not perfect, but at least now LoginViewController only
