@@ -45,9 +45,38 @@ class LoginViewController: UIViewController {
                     }
                 } else {
 
-                    // Adding credentials to the keychain and sharing it
-                    // https://developer.apple.com/documentation/security/keychain_services/keychain_items/adding_a_password_to_the_keychain
-                    // https://stackoverflow.com/questions/44387242/keychain-sharing-between-two-apps
+                    /* Adding credentials to the keychain and sharing it
+                       https://developer.apple.com/documentation/security/keychain_services/keychain_items/adding_a_password_to_the_keychain
+                       https://stackoverflow.com/questions/44387242/keychain-sharing-between-two-apps
+
+                       Abandoned this idea briefly, because error -34018 (errSecMissingEntitlement)
+                       kept popping up no matter what, and whatever info I found was about dubious
+                       fixes, and mostly that this is a bug that hasn't been fixed. The only option
+                       left was to use `Userdefaults` for storing the credentials, but that would
+                       have been unsafe.
+
+                       Errors: (almost useless though)
+                       https://developer.apple.com/documentation/security/1542001-security_framework_result_codes?language=objc
+
+                       Fortunately found the below github issue, and the solution was adding the
+                       app prefix as described in the linked comment.
+                       https://github.com/jrendel/SwiftKeychainWrapper/issues/78#issuecomment-424960801
+                       So instead of
+                                      "org.societyfortheblind.Access-News-Reader-kg"
+                       use
+                           "K6BD7WSV5V.org.societyfortheblind.Access-News-Reader-kg"
+                       and then just follow the guides.
+
+                       Some links for posterity:
+
+                       + https://developer.apple.com/documentation/security/ksecvaluedata
+                         (linking because it is not in the place where one would expect)
+                       + https://developer.apple.com/documentation/security/keychain_services/keychain_items/item_return_result_keys
+                       + https://developer.apple.com/documentation/security/keychain_services/keychain_items/adding_a_password_to_the_keychain
+                       + https://developer.apple.com/documentation/security/keychain_services/keychain_items/searching_for_keychain_items
+                       + https://developer.apple.com/documentation/security/keychain_services/keychain_items/item_class_keys_and_values
+                       + https://developer.apple.com/documentation/security/keychain_services/keychain_items/item_attribute_keys_and_values
+                    */
 
 //                    enum KeychainError: Error {
 //                        case noPassword
@@ -55,14 +84,14 @@ class LoginViewController: UIViewController {
 //                        case unhandledError(status: OSStatus)
 //                    }
 
-                    if CommonDefaults.defaults.string(forKey: "user-id") == "" {
+                    if CommonDefaults.isUserLoggedIn() == false {
                         let addQuery: [String: Any] =
-                            [ kSecClass as String: kSecClassGenericPassword
-                                , kSecAttrAccount as String: self.username.text!
-                                , kSecValueData as String: self.password.text!.data(using: String.Encoding.utf8)!
-                                , kSecAttrGeneric as String: self.auth.currentUser!.uid
-                                , kSecAttrAccessGroup as String: "K6BD7WSV5V.org.societyfortheblind.Access-News-Reader-kg"
-                        ]
+                            [ kSecClass as String:           kSecClassGenericPassword
+                            , kSecAttrAccount as String:     self.username.text!
+                            , kSecValueData as String:       self.password.text!.data(using: String.Encoding.utf8)!
+                            , kSecAttrGeneric as String:     self.auth.currentUser!.uid
+                            , kSecAttrAccessGroup as String: "K6BD7WSV5V.org.societyfortheblind.Access-News-Reader-kg"
+                            ]
 
                         let status = SecItemAdd(addQuery as CFDictionary, nil)
                         print("\n\n\(status)\n\n")
@@ -71,6 +100,7 @@ class LoginViewController: UIViewController {
                         CommonDefaults.defaults.set(self.username.text!, forKey: "username")
                         CommonDefaults.defaults.set(self.password.text!, forKey: "password")
                     }
+
 //                    let alert = UIAlertController(title: "", message: String(status), preferredStyle: .alert)
 //                    alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in
 //                        NSLog("The \"OK\" alert occured.")

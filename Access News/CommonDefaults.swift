@@ -7,19 +7,17 @@
 //
 
 import UIKit
-import Firebase
 
 struct CommonDefaults {
 
     static var defaults = UserDefaults.init(suiteName: "group.org.societyfortheblind.access-news-reader-ag")!
 
-    static func isUserLoggedIn() -> Bool {
-        return defaults.string(forKey: "user-id") != ""
+    static func userID() -> String {
+        return self.defaults.string(forKey: "user-id")!
     }
 
-    static func userID() -> String? {
-//        return self.defaults.string(forKey: "user-id")!
-        return Auth.auth().currentUser?.uid
+    static func isUserLoggedIn() -> Bool {
+        return self.userID() != ""
     }
 
     static func showLogin(navController nvc: UINavigationController, animated: Bool = false) {
@@ -30,8 +28,7 @@ struct CommonDefaults {
     }
 
     static func showLoginIfNoUser(navController nvc: UINavigationController) {
-//        if self.isUserLoggedIn() == false {
-        if Auth.auth().currentUser == nil {
+        if self.isUserLoggedIn() == false {
             self.showLogin(navController: nvc, animated: false)
         }
     }

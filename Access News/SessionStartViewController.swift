@@ -70,7 +70,7 @@ class SessionStartViewController: UIViewController {
             // https://developer.apple.com/documentation/security/keychain_services/keychain_items/updating_and_deleting_keychain_items
             let query: [String: Any] =
                 [ kSecClass as String: kSecClassGenericPassword
-                , kSecAttrGeneric as String: CommonDefaults.defaults.string(forKey: "user-id")!
+                , kSecAttrGeneric as String: CommonDefaults.userID()
                 , kSecAttrAccessGroup as String: "K6BD7WSV5V.org.societyfortheblind.Access-News-Reader-kg"
                 ]
             let status = SecItemDelete(query as CFDictionary)

@@ -52,10 +52,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             FirebaseApp.configure()
         }
 
-        if /* CommonDefaults.isUserLoggedIn() == true && */ Auth.auth().currentUser == nil {
-            
-        }
-
         return true
     }
 
