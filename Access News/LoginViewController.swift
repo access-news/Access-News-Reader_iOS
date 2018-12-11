@@ -78,6 +78,23 @@ class LoginViewController: UIViewController {
                        + https://developer.apple.com/documentation/security/keychain_services/keychain_items/item_attribute_keys_and_values
                     */
 
+                    /* NOTE ON SHARING firebase project BETWEEN CONTAINING APP AND SHARE EXTENSION
+
+                       No clue what the official solution, and most sources say that
+                       an extra app should be created, blabla. Probably, but right
+                       now the main "GoogleService-Info.plist" is copied into the
+                       share extension as well, with the BUNDLE_ID changed
+                       from the containing app's id
+                          ("org.societyfortheblind.Access-News")
+                       to the share extension one
+                          ("org.societyfortheblind.Access-News-Reader.Access-News-Uploader").
+
+                       With that said, the "uploader" app is still present in the
+                       Firebase project (see console), and probably won't dare to
+                       delete it (even though unused) until Firebase is abandoned
+                       completely.
+                    */
+
 //                    enum KeychainError: Error {
 //                        case noPassword
 //                        case unexpectedPasswordData
