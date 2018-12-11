@@ -23,27 +23,78 @@ class UploaderNavigationViewController: UINavigationController {
         // https://stackoverflow.com/questions/37910766/
         if FirebaseApp.app() == nil {
             FirebaseApp.configure()
-
         }
 
-        if CommonDefaults.defaults.string(forKey: "username") != "" {
-            Auth.auth().signIn(
-                withEmail: CommonDefaults.defaults.string(forKey: "username")!,
-                password: CommonDefaults.defaults.string(forKey: "password")!) {
-                    (user, error) in
-                    if error != nil {
-                        let errorCode = AuthErrorCode(rawValue: (error! as NSError).code)!
+        /* 2 `if` cases because:
 
-                        print("\n\n\(errorCode)\n\n")
-                    } else {
-                        print("\n\n\(String(describing: user?.user.uid))\n\n")
-                    }
+           1. Userdefaults shows that user signed in to containing app
+                 AND
+              No one is signed in the current share extension instance
+              SO
+                sign the user in automatically using their credentials
+                from the keychain.
+
+           2. User not signed in the containing app
+              SO
+                redirect them to the login page.
+        */
+        if CommonDefaults.isUserLoggedIn() == true && Auth.auth().currentUser == nil {
+
+            let query: [String: Any] =
+                [ kSecClass as String:           kSecClassGenericPassword
+                , kSecAttrGeneric as String:     CommonDefaults.userID()
+                , kSecAttrAccessGroup as String: "K6BD7WSV5V.org.societyfortheblind.Access-News-Reader-kg"
+                , kSecReturnAttributes as String: true
+                , kSecReturnData as String:       true
+                ]
+
+            enum KeychainError: Error {
+                case noPassword
+                case unexpectedPasswordData
+                case unhandledError(status: OSStatus)
             }
-        } else {
-            print("\n\nnot logged in main\n\n")
+
+            var item: CFTypeRef?
+            let status = SecItemCopyMatching(query as CFDictionary, &item)
+//            guard status != errSecItemNotFound
+//                else { throw KeychainError.noPassword }
+//            guard status == errSecSuccess
+//                else { throw KeychainError.unhandledError(status: status) }
+            print("\n\n\(status)\n\n")
+
+//            guard
+            let existingItem = item as! [String : Any]
+            let passwordData = existingItem[kSecValueData as String] as! Data
+            let password = String(data: passwordData, encoding: String.Encoding.utf8)!
+            let account = existingItem[kSecAttrAccount as String] as! String
+
+//            print("\n\n\(account)\n\n")
+//            print("\n\n\(password)\n\n")
+//                else {
+//                    throw KeychainError.unexpectedPasswordData
+//            }
+//            let credentials = Credentials(username: account, password: password)
+
+            Auth.auth().signIn(withEmail: account, password: password) {
+                (user, error) in
+
+                /* If sign-in is not successful, show log in screen
+                   TODO: show error text
+                   Otherwise do nothing, and let the nvc load the default
+                   root controller.
+                */
+                if error != nil {
+                    print("\n\n\(error!.localizedDescription)\n\n")
+                    CommonDefaults.showLogin(navController: self)
+                } else {
+                    print("\n\nyay?\n\n")
+                }
+            }
         }
 
-//        CommonDefaults.showLoginIfNoUser(navController: self)
+        if CommonDefaults.isUserLoggedIn() == false {
+            CommonDefaults.showLogin(navController: self)
+        }
     }
     
 
@@ -56,5 +107,4 @@ class UploaderNavigationViewController: UINavigationController {
         // Pass the selected object to the new view controller.
     }
     */
-
 }

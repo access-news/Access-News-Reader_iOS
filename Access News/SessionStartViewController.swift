@@ -68,12 +68,24 @@ class SessionStartViewController: UIViewController {
             // Remove user credentials from the keychain
             // https://developer.apple.com/documentation/security/keychain_services/keychain_items/searching_for_keychain_items
             // https://developer.apple.com/documentation/security/keychain_services/keychain_items/updating_and_deleting_keychain_items
+
+            enum KeychainError: Error {
+                case noPassword
+                case unexpectedPasswordData
+                case unhandledError(status: OSStatus)
+            }
+
             let query: [String: Any] =
-                [ kSecClass as String: kSecClassGenericPassword
-                , kSecAttrGeneric as String: CommonDefaults.userID()
+                [ kSecClass as String:           kSecClassGenericPassword
+                , kSecAttrGeneric as String:     CommonDefaults.userID()
                 , kSecAttrAccessGroup as String: "K6BD7WSV5V.org.societyfortheblind.Access-News-Reader-kg"
                 ]
+
             let status = SecItemDelete(query as CFDictionary)
+
+            guard status == errSecSuccess || status == errSecItemNotFound
+                else {throw KeychainError.unhandledError(status: status)}
+
 //            let alert = UIAlertController(title: "", message: String(status), preferredStyle: .alert)
 //            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in
 //                NSLog("The \"OK\" alert occured.")
@@ -82,8 +94,8 @@ class SessionStartViewController: UIViewController {
             print("\n\n\(status)\n\n")
 
             CommonDefaults.defaults.set("", forKey: "user-id")
-            CommonDefaults.defaults.set("", forKey: "username")
-            CommonDefaults.defaults.set("", forKey: "password")
+//            CommonDefaults.defaults.set("", forKey: "username")
+//            CommonDefaults.defaults.set("", forKey: "password")
             CommonDefaults.showLogin(navController: self.navigationController!, animated: true)
         } catch {
             fatalError()

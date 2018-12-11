@@ -114,8 +114,8 @@ class LoginViewController: UIViewController {
                         print("\n\n\(status)\n\n")
 
                         CommonDefaults.defaults.set(Auth.auth().currentUser?.uid, forKey: "user-id")
-                        CommonDefaults.defaults.set(self.username.text!, forKey: "username")
-                        CommonDefaults.defaults.set(self.password.text!, forKey: "password")
+//                        CommonDefaults.defaults.set(self.username.text!, forKey: "username")
+//                        CommonDefaults.defaults.set(self.password.text!, forKey: "password")
                     }
 
 //                    let alert = UIAlertController(title: "", message: String(status), preferredStyle: .alert)
